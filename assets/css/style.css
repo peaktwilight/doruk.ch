@@ -211,11 +211,15 @@ article.active {
   100% { opacity: 1; }
 }
 
+ul li {
+  color: var(--white-2);
+}
+
 .h2,
 .h3,
 .h4,
 .h5 {
-  color: var(--white-2);
+  color: var(--white-1);
   text-transform: capitalize;
 }
 
@@ -823,7 +827,6 @@ main {
   font-weight: var(--fw-300);
   line-height: 1.6;
 }
-
 
 /**
  * skills 
