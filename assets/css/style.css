@@ -329,7 +329,7 @@ main {
 }
 
 .avatar-box img {
-  border-radius: 1cap;
+  border-radius: 20px;
 }
 
 .info-content .name {
@@ -518,20 +518,20 @@ main {
 
 
 /**
- * #service 
+ * #skill 
  */
 
-.service { margin-bottom: 35px; }
+.skill { margin-bottom: 35px; }
 
-.service-title { margin-bottom: 20px; }
+.skill-title { margin-bottom: 20px; }
 
-.service-list {
+.skill-list {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
 }
 
-.service-item {
+.skill-item {
   position: relative;
   background: var(--border-gradient-onyx);
   padding: 20px;
@@ -542,10 +542,11 @@ main {
 }
 
 /* hover go up smoothly animated, go back down smoothly*/
-.service-item:hover { transform: translateY(-5px); 
+/* Add it to skill-item, awards item, and testimonials item */
+.skill-item:hover { transform: translateY(-5px); 
   }
 
-.service-item::before {
+.skill-item::before {
   content: "";
   position: absolute;
   inset: 1px;
@@ -554,15 +555,15 @@ main {
   z-index: -1;
 }
 
-.service-icon-box { margin-bottom: 10px; }
+.skill-icon-box { margin-bottom: 10px; }
 
-.service-icon-box img { margin: auto; }
+.skill-icon-box img { margin: auto; }
 
-.service-content-box { text-align: center; }
+.skill-content-box { text-align: center; }
 
-.service-item-title { margin-bottom: 7px; }
+.skill-item-title { margin-bottom: 7px; }
 
-.service-item-text {
+.skill-item-text {
   color: var(--light-gray);
   font-size: var(--fs-6);
   font-weight: var(--fw-3);
@@ -595,7 +596,11 @@ main {
 .testimonials-item {
   min-width: 100%;
   scroll-snap-align: center;
+  transition: all 0.3s ease-in-out;
 }
+
+/* make smaller on hover */
+.testimonials-item:hover { transform: scale(0.95); }
 
 .testimonials-avatar-box {
   position: absolute;
@@ -604,6 +609,7 @@ main {
   transform: translate(15px, -25px);
   background: var(--bg-gradient-onyx);
   border-radius: 14px;
+  overflow: hidden;
   box-shadow: var(--shadow-1);
 }
 
@@ -851,8 +857,20 @@ main {
 
 .skills-list { padding: 20px; }
 
+.skills-item {
+  position: relative;
+  background: var(--border-gradient-onyx);
+  border: 1px solid var(--jet);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-2);
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+}
 
-.skills-item:not(:last-child) { margin-bottom: 15px; }
+.skills-item:hover { transform: translateY(-5px); }
+
+.skills-item:not(:last-chil1d) { margin-bottom: 15px; }
 
 .skill .title-wrapper {
   display: flex;
@@ -1403,9 +1421,9 @@ textarea.form-input::-webkit-resizer { display: none; }
 
   .about-text { margin-bottom: 40px; }
 
-  /* service */
+  /* skill */
 
-  .service-item {
+  .skill-item {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -1413,12 +1431,12 @@ textarea.form-input::-webkit-resizer { display: none; }
     padding: 30px;
   }
 
-  .service-icon-box {
+  .skill-icon-box {
     margin-bottom: 0;
     margin-top: 5px;
   }
 
-  .service-content-box { text-align: left; }
+  .skill-content-box { text-align: left; }
 
   /* testimonials */
 
@@ -1737,9 +1755,9 @@ textarea.form-input::-webkit-resizer { display: none; }
    * ABOUT
    */
 
-  /* service */
+  /* skill */
 
-  .service-list {
+  .skill-list {
     grid-template-columns: 1fr 1fr;
     gap: 20px 25px;
   }
