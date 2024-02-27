@@ -302,9 +302,6 @@ main {
 }
 
 
-
-
-
 /*-----------------------------------*\
   #SIDEBAR
 \*-----------------------------------*/
@@ -446,25 +443,25 @@ main {
 .social-item .social-link:hover { color: var(--light-gray); }
 
 
-
-
-
 /*-----------------------------------*\
   #NAVBAR
 \*-----------------------------------*/
+
 
 .navbar {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 1000%;
   background: hsla(240, 1%, 17%, 0.75);
   backdrop-filter: blur(10px);
   border: 1px solid var(--jet);
   border-radius: 12px 12px 0 0;
   box-shadow: var(--shadow-2);
   z-index: 5;
+  transition: all 0.3s ease-in-out;
 }
+
 
 .navbar-list {
   display: flex;
@@ -479,12 +476,25 @@ main {
   font-size: var(--fs-8);
   padding: 20px 7px;
   transition: color var(--transition-1);
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
 }
 
-.navbar-link:hover,
-.navbar-link:focus { color: var(--light-gray-70); }
+.navbar-link:hover {
+  color: var(--orange-yellow-crayola);
+  transform: translateY(-2px);
 
-.navbar-link.active { color: var(--orange-yellow-crayola); }
+}
+.navbar-link:focus { color: var(--light-gray-70); 
+  /* Cool animation on hover */
+  transform: translateY(0px); 
+  /* Cool animation on hover let go */
+}
+
+.navbar-link.active {
+  color: var(--orange-yellow-crayola);
+}
 
 
 
@@ -528,7 +538,12 @@ main {
   border-radius: 14px;
   box-shadow: var(--shadow-2);
   z-index: 1;
+  transition: all 0.3s ease-in-out; /* Add this line */
 }
+
+/* hover go up smoothly animated, go back down smoothly*/
+.service-item:hover { transform: translateY(-5px); 
+  }
 
 .service-item::before {
   content: "";
@@ -919,6 +934,7 @@ main {
 
 .select-item button {
   background: var(--eerie-black-2);
+  box-sizing: border-box;
   color: var(--light-gray);
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
