@@ -555,7 +555,7 @@ main {
 
 .skill-icon-box { margin-bottom: 10px; }
 
-.skill-icon-box img { margin: auto; }
+.skill-icon-box img { margin: auto; fill: blue; }
 
 .skill-content-box { text-align: center; }
 
