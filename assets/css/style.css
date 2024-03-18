@@ -1926,4 +1926,11 @@ textarea.form-input::-webkit-resizer { display: none; }
 
   .timeline-text { max-width: 700px; }
 
+  .h2.article-title a {
+    display: inline;    
+  } 
+
+  .cv-download {
+    color:hsl(45, 100%, 72%)
+  }
 }
