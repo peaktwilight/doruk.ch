@@ -785,6 +785,15 @@ main {
 .article-title { margin-bottom: 30px; }
 
 
+.h2.article-title a {
+  display: inline;    
+} 
+
+ .cv-download {
+  color:hsl(45, 100%, 72%)
+}
+
+
 /**
  * education and experience 
  */
@@ -1518,6 +1527,14 @@ textarea.form-input::-webkit-resizer { display: none; }
    * #RESUME
    */
 
+   .h2.article-title a {
+    display: inline;    
+} 
+
+   .cv-download {
+    color:hsl(45, 100%, 72%)
+  }
+   
   .timeline-list { margin-left: 65px; }
 
   .timeline-item:not(:last-child)::before { left: -40px; }
