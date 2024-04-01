@@ -1378,7 +1378,7 @@ textarea.form-input::-webkit-resizer { display: none; }
 
   .avatar-box { border-radius: 30px; }
 
-  .avatar-box img { width: 140px; }
+  .avatar-box img { width: 120px; }
 
   .info-content .name { margin-bottom: 15px; }
 
@@ -1531,7 +1531,7 @@ textarea.form-input::-webkit-resizer { display: none; }
     display: inline;    
 } 
 
-   .cv-download {
+  .cv-download {
     color:hsl(45, 100%, 72%)
   }
    
