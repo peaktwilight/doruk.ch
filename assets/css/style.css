@@ -134,6 +134,16 @@
   transform: scale(0.9);
 }
 
+.modal-title::after {
+  content: "";
+  display: block; /* Centers the pseudo-element */
+  width: 40px;
+  height: 5px;
+  background: var(--text-gradient-yellow);
+  border-radius: 5px;
+  margin: 20px auto 20px; /* Centers the block and adds space above it */
+}
+
 /* Media query for devices with a max width of 600px (common breakpoint for mobile devices) */
 @media (max-width: 1000px) {
   .modal-content {
