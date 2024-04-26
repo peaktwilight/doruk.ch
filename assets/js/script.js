@@ -1,6 +1,28 @@
 'use strict';
 
 
+document.getElementById('showCV').addEventListener('click', function() {
+  document.getElementById('choiceModal').style.display = 'none';
+});
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === "Escape" || event.keyCode === 27) {
+    document.getElementById('choiceModal').style.display = 'none';
+  }
+});
+
+document.getElementById('choiceModal').addEventListener('click', function(event) {
+  // Check if the event target is the modal itself and not its children
+  if (event.target === this) {
+    this.style.display = 'none';
+  }
+});
+
+window.onload = function() {
+  document.getElementById('choiceModal').style.display = 'block';
+}
+
+
 
 // element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
