@@ -1,6 +1,6 @@
 'use strict';
 
-
+/*
 document.getElementById('showCV').addEventListener('click', function() {
   document.getElementById('choiceModal').style.display = 'none';
 });
@@ -21,6 +21,8 @@ document.getElementById('choiceModal').addEventListener('click', function(event)
 window.onload = function() {
   document.getElementById('choiceModal').style.display = 'block';
 }
+
+*/
 
 
 
