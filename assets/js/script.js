@@ -2,6 +2,7 @@
 
 // INITIAL POPUP MODAL
 
+
 document.getElementById('showCV').addEventListener('click', function() {
   document.getElementById('choiceModal').style.display = 'none';
 });
