@@ -854,12 +854,12 @@ main {
 .navbar-link:hover {
   color: var(--orange-yellow-crayola);
   /* transform: translateY(-2px); */
-  letter-spacing: 1px;
+  transform:scale(1.2);
 }
 
 .navbar-link.active {
   color: var(--orange-yellow-crayola);
-  letter-spacing: 1px;
+  transform:scale(1.2);
 }
 
 .navbar-link:before,
