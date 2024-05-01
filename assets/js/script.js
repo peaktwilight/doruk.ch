@@ -1,5 +1,7 @@
 'use strict';
 
+// INITIAL POPUP MODAL
+
 document.getElementById('showCV').addEventListener('click', function() {
   document.getElementById('choiceModal').style.display = 'none';
 });
@@ -20,8 +22,6 @@ document.getElementById('choiceModal').addEventListener('click', function(event)
 window.onload = function() {
   document.getElementById('choiceModal').style.display = 'block';
 }
-
-
 
 // element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
