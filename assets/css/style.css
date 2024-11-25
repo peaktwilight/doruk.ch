@@ -979,6 +979,7 @@ main {
   box-shadow: var(--shadow-2);
   z-index: 1;
   transition: all 0.3s ease-in-out;
+  margin-top: 10px;
 }
 
 .skills-item:hover { transform: translateY(-5px); }
