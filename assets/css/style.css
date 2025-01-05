@@ -546,62 +546,74 @@ main {
   text-decoration: none;
   color: var(--light-gray);
   font-size: var(--fs-8);
-  padding: 20px 7px;
-  transition: color var(--transition-1);
-  transition: all 0.3s ease-in-out;
+  padding: 10px 10px;
+  margin: 10px 5px;
+  border-radius: 8px;
+  transition: all var(--transition-1);
 }
 
 .navbar-link:hover {
-  color: var(--orange-yellow-crayola);
-  /* transform: translateY(-2px); */
-  transform:scale(1.2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
 }
 
 .navbar-link.active {
-  color: var(--orange-yellow-crayola);
-  transform:scale(1.2);
+  transform: translateY(-2px);
 }
 
-.navbar-link:before,
-.navbar-link:after {
-  height: 14px;
-  width: 14px;
+/* Ubuntu specific styles */
+.navbar-item:last-child .navbar-link {
+  background: var(--orange-yellow-crayola);
+  color: var(--smoky-black);
+  font-weight: var(--fw-600);
+  /* border: 1px solid hsla(45, 100%, 50%, 0.2); */
+  position: relative;
+}
+
+.navbar-item:last-child .navbar-link::after {
+  content: "↗";
   position: absolute;
-  content: '';
-  -webkit-transition: all 0.35s ease;
-  transition: all 0.35s ease;
-  opacity: 0;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  opacity: 0.7;
+  transition: opacity var(--transition-1);
 }
 
-.navbar-link:before {
-  margin-top: 16px;
-  left: 0;
-  top: 0;
-  border-radius: 30%;
-  border-left: 4px solid var(--orange-yellow-crayola);
-  border-top: 4px solid var(--orange-yellow-crayola);
-  -webkit-transform: translate(100%, 50%);
-  transform: translate(100%, 50%);
+.navbar-item:last-child .navbar-link:hover {
+  transform: scale(1.05) translateY(-2px);
 }
 
-.navbar-link:after {
-  margin-bottom: 16px;
-  right: 0;
-  bottom: 0;
-  border-radius: 30%;
-  border-right: 4px solid var(--orange-yellow-crayola);
-  border-bottom: 4px solid var(--orange-yellow-crayola);
-  -webkit-transform: translate(-100%, -50%);
-  transform: translate(-100%, -50%);
-}
-
-.navbar-link:hover:before,
-.navbar-link.active:before,
-.navbar-link:hover:after,
-.navbar-link.active:after {
-  -webkit-transform: translate(0%, 0%);
-  transform: translate(0%, 0%);
+.navbar-item:last-child .navbar-link:hover::after {
   opacity: 1;
+}
+
+.navbar-link {
+  overflow: hidden;
+}
+
+.navbar-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--orange-yellow-crayola);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-1);
+}
+
+.navbar-link:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.navbar-link.active::before {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /*-----------------------------------*\
