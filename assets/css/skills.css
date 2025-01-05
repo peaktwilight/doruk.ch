@@ -1,0 +1,56 @@
+
+
+/**
+ * #skill 
+ */
+
+ .skill { margin-bottom: 35px; }
+
+ .skill-title { margin-bottom: 20px; }
+ 
+ .skill-list {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 20px;
+ }
+ 
+ .skill-item {
+   position: relative;
+   background: var(--border-gradient-onyx);
+   padding: 20px;
+   border-radius: 14px;
+   box-shadow: var(--shadow-2);
+   z-index: 1;
+   transition: all 0.3s ease-in-out; /* Add this line */
+ }
+ 
+ /* hover go up smoothly animated, go back down smoothly*/
+ /* Add it to skill-item, awards item, and testimonials item */
+ .skill-item:hover { transform: translateY(-5px); 
+   }
+ 
+ .skill-item::before {
+   content: "";
+   position: absolute;
+   inset: 1px;
+   background: var(--bg-gradient-jet);
+   border-radius: inherit;
+   z-index: -1;
+ }
+ 
+ .skill-icon-box { margin-bottom: 10px; }
+ 
+ .skill-icon-box img { margin: auto; fill: blue; }
+ 
+ .skill-content-box { text-align: center; }
+ 
+ .skill-item-title { margin-bottom: 7px; }
+ 
+ .skill-item-text {
+   color: var(--light-gray);
+   font-size: var(--fs-6);
+   font-weight: var(--fw-3);
+   line-height: 1.6;
+ }
+ 
+ 
