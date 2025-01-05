@@ -2,54 +2,70 @@
 <html lang="en">
 
 <head>
-  <!-- Set character encoding for the document -->
+  <!-- ============================================
+       BASIC META TAGS
+       ============================================ -->
   <meta charset="UTF-8">
-  <!-- Ensure compatibility with older IE versions -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <!-- Set viewport for responsive design -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-+  
-+  <!-- Page Title -->
-+  <title>Doruk Tan Öztürk - Personal Portfolio</title>
 
-  <!-- Favicon -->
+  <!-- ============================================
+       PAGE TITLE & FAVICON
+       ============================================ -->
+  <title>Doruk Tan Öztürk - Personal Portfolio</title>
   <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon">
- 
-  <!-- Custom CSS Link -->
-  <link rel="stylesheet" href="./assets/css/style.css">
 
-  <!-- Google Font Links -->
+  <!-- ============================================
+       STYLESHEETS
+       ============================================ -->
+  <!-- Local Styles -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
- 
-+  <!-- Motion.js Library -->
-+  <script src="https://cdn.jsdelivr.net/npm/motion@10.17.0/dist/motion.umd.min.js"></script>
-+
- </head>
- 
- 
- <body>
- 
-  <!-- =================================================================
-       CHOICE MODAL
-       ================================================================= -->
 
+  <!-- ============================================
+       EXTERNAL SCRIPTS
+       ============================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/motion@10.17.0/dist/motion.umd.min.js"></script>
+</head>
+ 
+ 
+<body>
+
+  <!-- ============================================
+       CHOICE MODAL - INITIAL WELCOME SCREEN
+       ============================================ -->
   <div id="choiceModal" class="modal">
     <div class="modal-content">
-      <!-- Modal Title and Subtitle -->
+      
+      <!-- MODAL HEADER SECTION -->
       <div class="h2 modal-title">
         <h2>Welcome! I'm Doruk Tan Öztürk.</h2>
         <p>⊂(O‿O)つ</p>
         <p class="underscore"></p>
       </div>
-      <!-- Modal Buttons -->
+
+      <!-- MODAL CONTENT SECTION -->
       <h3>Explore my work through these portals:</h3>
-        <div class="button-container">
-          <button class="h4 skill-item" id="showCV">Business vCard</button>
-          <button class="skill-item" onclick="window.location.href='https://pc.doruk.ch';">Ubuntu PC Simulator</button>
-          <button class="skill-item" onclick="window.location.href='https://peaktwilight.com';">Music Producer Website</button>
-        </div>
+      <div class="button-container">
+        <!-- Business vCard Button -->
+        <button class="h4 skill-item" id="showCV">Business vCard</button>
+        
+        <!-- Ubuntu PC Simulator Button -->
+        <button class="skill-item" 
+                onclick="window.location.href='https://pc.doruk.ch';">
+          Ubuntu PC Simulator
+        </button>
+        
+        <!-- Music Producer Website Button -->
+        <button class="skill-item" 
+                onclick="window.location.href='https://peaktwilight.com';">
+          Music Producer Website
+        </button>
+      </div>
 
     </div>
   </div>
@@ -59,128 +75,129 @@
   -->
   <main>
     
-    <!--
-      - #SIDEBAR
-    -->
-
+    <!-- ============================================
+         SIDEBAR - PROFILE & CONTACT INFORMATION
+         ============================================ -->
     <aside class="sidebar" data-sidebar>
 
+      <!-- PROFILE SECTION -->
       <div class="sidebar-info">
-
         <figure class="avatar-box">
-          <img src="assets/images/Doruk_Black_picture.jpg" alt="Doruk Tan Öztürk" width="90">
+          <img src="assets/images/Doruk_Black_picture.jpg" 
+               alt="Doruk Tan Öztürk" 
+               width="90">
         </figure>
 
         <div class="info-content">
           <h1 class="name" title="Doruk Tan Öztürk">Doruk Tan Öztürk</h1>
-          <a class="title" href="https://sootherecords.com" style="display: block;">Co-Founder @ Soothe</a>
+          <a class="title" 
+             href="https://sootherecords.com" 
+             style="display: block;">
+            Co-Founder @ Soothe
+          </a>
         </div>
-      
 
+        <!-- CONTACT TOGGLE BUTTON -->
         <button class="info_more-btn" data-sidebar-btn>
           <span>Show Contacts</span>
-
           <ion-icon name="chevron-down"></ion-icon>
         </button>
-
       </div>
 
+      <!-- EXPANDED CONTACT INFORMATION -->
       <div class="sidebar-info_more">
 
+        <!-- CONTACT DETAILS SECTION -->
         <div class="separator"></div>
-
         <ul class="contacts-list">
 
-
+          <!-- WORK INFORMATION -->
           <li class="contact-item">
-
             <div class="icon-box">
               <ion-icon name="briefcase-outline"></ion-icon>
             </div>
-
             <div class="contact-info">
               <p class="contact-title">Working Student @ MGB</p>
-
               <time datetime="2024">Cyber Defense Engineer</time>
             </div>
-
           </li>
 
+          <!-- EMAIL INFORMATION -->
           <li class="contact-item">
-
             <div class="icon-box">
               <ion-icon name="mail-outline"></ion-icon>
             </div>
-
             <div class="contact-info">
-              <p class="contact-title">Email </p>
-
-              <a href="mailto:doruk@peaktwilight.com"  id="email-link" class="contact-link">doruk@peaktwilight.com</a>
-              <!-- make font smaller for email-->
+              <p class="contact-title">Email</p>
+              <a href="mailto:doruk@peaktwilight.com" 
+                 id="email-link" 
+                 class="contact-link">
+                doruk@peaktwilight.com
+              </a>
             </div>
-
           </li>
 
+          <!-- PHONE INFORMATION -->
           <li class="contact-item">
-
             <div class="icon-box">
               <ion-icon name="phone-portrait-outline"></ion-icon>
             </div>
-
             <div class="contact-info">
               <p class="contact-title">Phone</p>
-
               <a href="#" class="contact-link">Not public, sorry!</a>
             </div>
-
           </li>
 
+          <!-- LOCATION INFORMATION -->
           <li class="contact-item">
-
             <div class="icon-box">
               <ion-icon name="location-outline"></ion-icon>
             </div>
-
             <div class="contact-info">
               <p class="contact-title">Location</p>
-
               <address>Zürich, Switzerland</address>
             </div>
-
           </li>
 
         </ul>
 
+        <!-- SOCIAL MEDIA SECTION -->
         <div class="separator"></div>
-
         <ul class="social-list">
 
+          <!-- LINKEDIN -->
           <li class="social-item">
-            <a href="https://linkedin.com/in/doruk-ozturk" class="social-link">
+            <a href="https://linkedin.com/in/doruk-ozturk" 
+               class="social-link">
               <ion-icon name="logo-linkedin"></ion-icon>
             </a>
           </li>
 
+          <!-- GITHUB -->
           <li class="social-item">
-            <a href="https://github.com/peaktwilight" class="social-link">
+            <a href="https://github.com/peaktwilight" 
+               class="social-link">
               <ion-icon name="logo-github"></ion-icon>
             </a>
           </li>
 
+          <!-- SPOTIFY -->
           <li class="social-item">
-            <a href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=VbgWcfMdQMyKZufCFqfLyg" class="social-link">
+            <a href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=VbgWcfMdQMyKZufCFqfLyg" 
+               class="social-link">
               <ion-icon name="musical-notes-outline"></ion-icon>
             </a>
           </li>
 
+          <!-- INSTAGRAM -->
           <li class="social-item">
-            <a href="https://instagram.com/peaktwilight" class="social-link">
+            <a href="https://instagram.com/peaktwilight" 
+               class="social-link">
               <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 
         </ul>
-
       </div>
 
     </aside>
@@ -236,16 +253,17 @@
 
 
 
-      <!--
-        - #ABOUT
-      -->
+      <!-- ============================================
+           ABOUT SECTION - PERSONAL INTRODUCTION & SKILLS
+           ============================================ -->
+      <article class="about active" data-page="about">
 
-      <article class="about  active" data-page="about">
-
+        <!-- SECTION HEADER -->
         <header>
           <h2 class="h2 article-title">About me</h2>
         </header>
 
+        <!-- PERSONAL INTRODUCTION -->
         <section class="about-text">
           <style>
             .about-text strong {
@@ -253,16 +271,19 @@
               font-weight: 500;
             }
           </style>
+          
           <p>
             Hey! I'm Doruk, a Computer Science student at <strong>FHNW</strong>. 
             When I'm not in class, you'll find me working as a <strong>Cyber Defense Engineer</strong> at MGB, 
             where I help protect Switzerland's largest retail company from digital threats.
           </p>
+          
           <p>
             But I don't just code for a living - I also produce <strong>lofi music</strong> that's been listened to by millions of people 
             on Spotify, coach <strong>table tennis</strong> to at the largest academic club in Switzerland, and build <strong>AI Tools</strong> 
             that make life a little easier.
           </p>
+          
           <p>
             My journey started with <strong>web development</strong>, evolved through <strong>digital marketing</strong>, 
             and led me to co-founding my own label, <strong>Soothe Records</strong>. I thrive on learning new things and 
@@ -271,39 +292,36 @@
           </p>
         </section>
 
-        <!--
-          - skill
-        -->
-
+        <!-- TECHNICAL SKILLS SECTION -->
         <section class="skill">
-
           <h3 class="h3 skill-title">Technical Skills</h3>
 
           <ul class="skill-list">
 
+            <!-- CYBERSECURITY SKILL -->
             <li class="skill-item">
-
               <div class="skill-icon-box">
-                <img src="./assets/images/icon-design.svg
-                " alt="design icon" width="40">
+                <img src="./assets/images/icon-design.svg" 
+                     alt="design icon" 
+                     width="40">
               </div>
-
               <div class="skill-content-box">
                 <h4 class="h4 skill-item-title">Cybersecurity</h4>
                 <p class="skill-item-text">
                   Working with SIEM/SOAR implementations, EDR management and incident response.
-                  Certified in Swimlane Developer & Administrator - helping create custom tools, playbooks and automations for our SOC analysts.
+                  Certified in Swimlane Developer & Administrator - helping create custom tools, 
+                  playbooks and automations for our SOC analysts.
                 </p>
               </div>
-
             </li>
 
+            <!-- DEVELOPMENT EXPERIENCE -->
             <li class="skill-item">
-
               <div class="skill-icon-box">
-                <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40">
+                <img src="./assets/images/icon-dev.svg" 
+                     alt="Web development icon" 
+                     width="40">
               </div>
-
               <div class="skill-content-box">
                 <h4 class="h4 skill-item-title">Development Experience</h4>
                 <p class="skill-item-text">
@@ -311,46 +329,44 @@
                   <br>Frontend: HTML/CSS/JavaScript, WordPress, WooCommerce, Shopify
                   <br>API Integration: Building with Spotify, Discord, Google Maps, and Office 365 APIs
                 </p>
-
               </div>
             </li>
 
+            <!-- AI & AUTOMATION -->
             <li class="skill-item">
-
               <div class="skill-icon-box">
-                <img src="./assets/images/icon-app.svg" alt="mobile app icon" width="40">
+                <img src="./assets/images/icon-app.svg" 
+                     alt="mobile app icon" 
+                     width="40">
               </div>
-
               <div class="skill-content-box">
                 <h4 class="h4 skill-item-title">AI & Automation</h4>
                 <p class="skill-item-text">
-                  Actively implementing cutting-edge AI technologies to enhance workflow efficiency and project outcomes.
-                  Experienced with both open-source and commercial AI models like Ollama, DeepSeek Coder, Claude, and OpenAI.
+                  Actively implementing cutting-edge AI technologies to enhance workflow efficiency 
+                  and project outcomes. Experienced with both open-source and commercial AI models 
+                  like Ollama, DeepSeek Coder, Claude, and OpenAI.
                 </p>
               </div>
-            
-
             </li>
 
+            <!-- DATA ANALYTICS -->
             <li class="skill-item">
-
               <div class="skill-icon-box">
-                <img src="./assets/images/icon-photo.svg" alt="camera icon" width="40">
+                <img src="./assets/images/icon-photo.svg" 
+                     alt="camera icon" 
+                     width="40">
               </div>
-
               <div class="skill-content-box">
                 <h4 class="h4 skill-item-title">Data Analytics</h4>
-
                 <p class="skill-item-text">
-                  Competent with analytical platforms like Google/YouTube Analytics, Spotify for Artists and Meta Business Suite,
-                  creating visualisations to identify trends and to make informed decisions. Using standards like Office 365.
+                  Competent with analytical platforms like Google/YouTube Analytics, Spotify for Artists 
+                  and Meta Business Suite, creating visualisations to identify trends and to make informed 
+                  decisions. Using standards like Office 365.
                 </p>
               </div>
-
             </li>
 
           </ul>
-
         </section>
 
 
@@ -582,388 +598,356 @@
       </article>
 
 
-      <!--
-        - #RESUME
-      -->
-
+      <!-- ============================================
+           RESUME SECTION - EDUCATION & EXPERIENCE
+           ============================================ -->
       <article class="resume" data-page="resume">
 
-        <h2 class="h2 article-title">Resume <a href="assets/images/EN & DE - CV - Doruk Tan Ozturk - EXPERIENCE BASED - V10.pdf" download class="cv-download">Download</a> </h2>
+        <!-- SECTION HEADER -->
+        <header>
+          <h2 class="h2 article-title">
+            Resume 
+            <a href="assets/images/EN & DE - CV - Doruk Tan Ozturk - EXPERIENCE BASED - V10.pdf" 
+               download 
+               class="cv-download">
+              Download
+            </a>
+          </h2>
+        </header>
+
+        <!-- EDUCATION TIMELINE -->
         <section class="timeline">
 
+          <!-- SECTION TITLE -->
           <div class="title-wrapper">
             <div class="icon-box">
               <ion-icon name="book-outline"></ion-icon>
             </div>
-
             <h3 class="h3">Education</h3>
           </div>
 
+          <!-- EDUCATION ITEMS -->
           <ol class="timeline-list">
 
+            <!-- FHNW -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">FHNW - BSc Computer Science - Design & Management.</h4>
-
+              <h4 class="h4 timeline-item-title">
+                FHNW - BSc Computer Science - Design & Management
+              </h4>
               <span>2024 - Present</span>
-
               <p class="timeline-text">
                 (Part-time) Continuing BSc in Computer Science with a focus on Design & Management
               </p>
-
             </li>
 
+            <!-- ETH ZURICH -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">ETH Zurich - Bsc. Computer Science</h4>
-
+              <h4 class="h4 timeline-item-title">
+                ETH Zurich - Bsc. Computer Science
+              </h4>
               <span>2021 - 2024</span>
-
               <p class="timeline-text">
-                (full-time) Pursuing a BSc. in Computer Science.
+                (full-time) Pursuing a BSc. in Computer Science
               </p>
-
             </li>
 
+            <!-- MNG RÄMIBÜHL -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">MNG Rämibühl - Applied Mathematics & Physics</h4>
-
+              <h4 class="h4 timeline-item-title">
+                MNG Rämibühl - Applied Mathematics & Physics
+              </h4>
               <span>2017 - 2021</span>
-
               <p class="timeline-text">
-                High-school education with a focus on applied mathematics and physics.
+                High-school education with a focus on applied mathematics and physics
               </p>
-
             </li>
 
+            <!-- EPFL -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">EPFL - Euler Mathematics Certification Programme</h4>
-
+              <h4 class="h4 timeline-item-title">
+                EPFL - Euler Mathematics Certification Programme
+              </h4>
               <span>2014 — 2017</span>
-
               <p class="timeline-text">
-                Completed the Euler Mathematics Certification Programme at EPFL, deepening my knowledge
-                of mathematics and physics in parallel to my secondary education.
+                Completed the Euler Mathematics Certification Programme at EPFL, 
+                deepening my knowledge of mathematics and physics in parallel to 
+                my secondary education
               </p>
-
             </li>
 
           </ol>
-
         </section>
 
+        <!-- EXPERIENCE TIMELINE -->
         <section class="timeline">
 
+          <!-- SECTION TITLE -->
           <div class="title-wrapper">
             <div class="icon-box">
               <ion-icon name="briefcase-outline"></ion-icon>
             </div>
-
             <h3 class="h3">Experience</h3>
           </div>
 
+          <!-- EXPERIENCE ITEMS -->
           <ol class="timeline-list">
             
+            <!-- MIGROS-GENOSSENSCHAFT-BUND -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Migros-Genossenschaft-Bund | Cyber Defense Engineer | Working Student - SecOps</h4>
-
+              <h4 class="h4 timeline-item-title">
+                Migros-Genossenschaft-Bund | Cyber Defense Engineer | Working Student - SecOps
+              </h4>
               <span>2024 — Present | Part-Time</span>
               <ul>
-                <li>- Working in the Security Operations Center at MGB Security & Risk.</li>
-                <li>- Developing security monitoring and incident response tools for analysts.</li>
-                <li>- Centralised log management and automation of security processes.</li>
-                <li>- Integrating SIEM, SOAR, and EDR systems across partner companies.</li>
+                <li>- Working in the Security Operations Center at MGB Security & Risk</li>
+                <li>- Developing security monitoring and incident response tools for analysts</li>
+                <li>- Centralised log management and automation of security processes</li>
+                <li>- Integrating SIEM, SOAR, and EDR systems across partner companies</li>
               </ul>
-
             </li>
 
+            <!-- MRBRUNCH -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">MrBrunch | Web Developer & Software Engineer</h4>
-
+              <h4 class="h4 timeline-item-title">
+                MrBrunch | Web Developer & Software Engineer
+              </h4>
               <span>2024 — Present | Part-Time</span>
               <ul>
-                <li>- Complete front-end redesign of the MrBrunch online store,</li>
-                <li>- Drastically improved the user experience and conversion rate,</li>
-                <li>- Optimized webshop loading times by 5 seconds (8.3s -> 3.3s).</li>
-                <li>- Worked on the back-end to improve the order processing system,</li>
-                <li>- Implemented AI-based chatbot for customer support,</li>
-                <li>- Created interactive cost-calculator for B2B customers,</li>
+                <li>- Complete front-end redesign of the MrBrunch online store</li>
+                <li>- Drastically improved the user experience and conversion rate</li>
+                <li>- Optimized webshop loading times by 5 seconds (8.3s → 3.3s)</li>
+                <li>- Worked on the back-end to improve the order processing system</li>
+                <li>- Implemented AI-based chatbot for customer support</li>
+                <li>- Created interactive cost-calculator for B2B customers</li>
               </ul>
-            
-
             </li>
 
+            <!-- SOOTHE STUDIOS -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Soothe Studios | Co-Founder / Web Developer / Mix & Master Engineer</h4>
-
+              <h4 class="h4 timeline-item-title">
+                Soothe Studios | Co-Founder / Web Developer / Mix & Master Engineer
+              </h4>
               <span>2022 — Present | Part-Time</span>
               <ul>
-                <li>- Co-founded Soothe Records & Soothe Studios, the first in-house mix & mastering studio for a lofi record label.</li>
-                <li>- Designed and built the Soothe Studios website, now available in English and French.</li>
-                <li>- Mixed and mastered 150+ tracks for Soothe Records and independent artists.</li>
-                <li>- Provided remote, niche-specialised consultancy services to independent artists.</li>
+                <li>- Co-founded Soothe Records & Soothe Studios, the first in-house mix & mastering studio for a lofi record label</li>
+                <li>- Designed and built the Soothe Studios website, now available in English and French</li>
+                <li>- Mixed and mastered 150+ tracks for Soothe Records and independent artists</li>
+                <li>- Provided remote, niche-specialised consultancy services to independent artists</li>
               </ul>
-            
-
             </li>
 
+            <!-- SLEEP TALES - FREELANCE -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Sleep Tales | Freelance Consultant / Head Community Moderator</h4>
-
+              <h4 class="h4 timeline-item-title">
+                Sleep Tales | Freelance Consultant / Head Community Moderator
+              </h4>
               <span>2022 — Present | Freelance</span>
-
               <ul>
-                <li>- Gave consultancy services from idea to foundation of the company.</li>
-                <li>- Advised on strategic label-wide decisions and PR implications.</li>
+                <li>- Gave consultancy services from idea to foundation of the company</li>
+                <li>- Advised on strategic label-wide decisions and PR implications</li>
                 <li>- Maintained, promoted, and moderated the community. Built the Discord server and helped organize live digital events</li>
-                      Now with an ever-growing member count of 2600+ talented producers, artists and listeners.</li>
-                <li>- Provided remote, niche-specialised consultancy services to independent artists.</li>
+                <li>- Provided remote, niche-specialised consultancy services to independent artists</li>
               </ul>
-
             </li>
 
+            <!-- SLEEP TALES - PART-TIME -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Sleep Tales | Art Director / Community Manager / Python Discord Bot Developer</h4>
-
+              <h4 class="h4 timeline-item-title">
+                Sleep Tales | Art Director / Community Manager / Python Discord Bot Developer
+              </h4>
               <span>2021 — 2022 | Part-Time</span>
-
               <ul>
-                <li>- Conceptualized and optimized the community ecosystem through a Discord server and Instagram.</li>
-                <li>- Implemented and maintained Discord bots (Python back-end with Discord API) for community activities.</li>
-                <li>- Created, designed, and edited branded/promotional assets, such as animated videos and other digital art.</li>
+                <li>- Conceptualized and optimized the community ecosystem through a Discord server and Instagram</li>
+                <li>- Implemented and maintained Discord bots (Python back-end with Discord API) for community activities</li>
+                <li>- Created, designed, and edited branded/promotional assets, such as animated videos and other digital art</li>
               </ul>
-
             </li>
 
-
+            <!-- DREAMHOP MUSIC & STUDIO -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Dreamhop Music & Studio | Web Designer / Community Manager / Moderator</h4>
-
+              <h4 class="h4 timeline-item-title">
+                Dreamhop Music & Studio | Web Designer / Community Manager / Moderator
+              </h4>
               <span>2021 — 2022 | Part-Time</span>
-
               <ul>
-                <li>- Dreamhop Studio - Designed and built the portfolio website, the studio, and the B2B side of Dreamhop.</li>
-                <li>- Dreamhop Music - Designed and built the e-commerce website for an international record label
-                      with the aim of promoting underground low-fidelity music. Integrated & optimised their vinyl sales</li>
-                <li>- Worked remotely in collaboration with graphic designers and video-editors to further optimise the design.</li>
-                <li>- Optimized and future-proofed the WordPress installation and plugins for non-technical maintenance.</li>
-                <li>- Worked with the Belgium's national postal service API to integrate orders as well as other companies that have B2B logistical integrations with Wordpress.</li>
+                <li>- Dreamhop Studio: Designed and built the portfolio website, the studio, and the B2B side of Dreamhop</li>
+                <li>- Dreamhop Music: Designed and built the e-commerce website for an international record label with the aim of promoting underground low-fidelity music</li>
+                <li>- Integrated & optimized vinyl sales and worked with Belgium's national postal service API</li>
+                <li>- Optimized and future-proofed WordPress installation and plugins for non-technical maintenance</li>
               </ul>
-            
-
             </li>
 
+            <!-- SOOTHE RECORDS -->
             <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Soothe Records | Co-Founder / Web Developer</h4>
-
+              <h4 class="h4 timeline-item-title">
+                Soothe Records | Co-Founder / Web Developer
+              </h4>
               <span>2020 — Present | Part-Time</span>
               <ul>
-                <li>- Curated, coordinated and promoted a music label concentrated on ambient music.</li>
-                <li>- Designed and built the Soothe Records website, one of the first lofi label sites.</li>
-                <li>- Planned and executed dozens of music ad campaigns using A/B testing across multiple platforms
-                      (Facebook, Instagram, Google Search & YouTube, ...).</li>
-                <li>- Regular remote-work with an international staff and artist roaster featuring over 100 talented artists.</li>
-                <li>- Mixed and mastered Soothe Records releases at my studio before co-founding Soothe Studios.</li>
-              
+                <li>- Curated, coordinated and promoted a music label concentrated on ambient music</li>
+                <li>- Designed and built the Soothe Records website, one of the first lofi label sites</li>
+                <li>- Planned and executed dozens of music ad campaigns using A/B testing across multiple platforms</li>
+                <li>- Regular remote-work with an international staff and artist roster featuring over 100 talented artists</li>
+                <li>- Mixed and mastered Soothe Records releases at my studio before co-founding Soothe Studios</li>
               </ul>
-            
-
             </li>
 
           </ol>
-
         </section>
 
       </article>
 
-      <!--
-        - #PORTFOLIO
-      -->
-
+      <!-- ============================================
+           PORTFOLIO SECTION - PROJECT SHOWCASE
+           ============================================ -->
       <article class="portfolio" data-page="portfolio">
 
+        <!-- SECTION HEADER -->
         <header>
           <h2 class="h2 article-title">Portfolio</h2>
         </header>
 
+        <!-- PROJECTS SECTION -->
         <section class="projects">
 
-          <!--
-            - In Case I want to use filter buttons
-          <ul class="filter-list">
-
-            <li class="filter-item">
-              <button class="active" data-filter-btn>All</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Web design</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Applications</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Web development</button>
-            </li>
-
-          </ul>
-          -->
+          <!-- FILTER SELECTION -->
           <div class="filter-select-box">
-
             <button class="filter-select" data-select>
-
               <div class="select-value" data-selecct-value>Select category</div>
-
               <div class="select-icon">
                 <ion-icon name="chevron-down"></ion-icon>
               </div>
-
             </button>
 
+            <!-- FILTER OPTIONS -->
             <ul class="select-list">
-
               <li class="select-item">
                 <button data-select-item>All</button>
               </li>
-
               <li class="select-item">
                 <button data-select-item>Web design</button>
               </li>
-
               <li class="select-item">
                 <button data-select-item>Applications</button>
               </li>
-
               <li class="select-item">
                 <button data-select-item>Web development</button>
               </li>
-
             </ul>
-
           </div>
 
+          <!-- PROJECT LIST -->
           <ul class="project-list">
 
-            <li class="project-item  active" data-filter-item data-category="web development">
+            <!-- DREAMHOP MUSIC -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web development">
               <a href="https://dreamhopmusic.com">
-
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-                  <img src="./assets/images/Dreamhop_Website.gif" alt="Dreamhop Website">
+                  <img src="./assets/images/Dreamhop_Website.gif" 
+                       alt="Dreamhop Website" 
+                       loading="lazy">
                 </figure>
-
                 <h3 class="project-title">Dreamhop Music</h3>
-
                 <p class="project-category">Web Development</p>
-
               </a>
             </li>
 
-            <li class="project-item  active" data-filter-item data-category="web development">
+            <!-- STUDIO DREAMHOP -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web development">
               <a href="https://studiodreamhop.com">
-
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/Studio_Dreamhop.gif" alt="Studio Dreamhop" loading="lazy">
+                  <img src="./assets/images/Studio_Dreamhop.gif" 
+                       alt="Studio Dreamhop" 
+                       loading="lazy">
                 </figure>
-
                 <h3 class="project-title">Studio Dreamhop</h3>
-
                 <p class="project-category">Web Development</p>
-
               </a>
             </li>
 
-            <li class="project-item  active" data-filter-item data-category="web design">
+            <!-- SOOTHE RECORDS -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web design">
               <a href="https://sootherecords.com">
-
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/Soothe_Records.gif" alt="Soothe Records" loading="lazy">
+                  <img src="./assets/images/Soothe_Records.gif" 
+                       alt="Soothe Records" 
+                       loading="lazy">
                 </figure>
-
                 <h3 class="project-title">Soothe Records</h3>
-
-                 <p class="project-category">Web Design</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="https://soothestudios.ch">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/Soothe_Studios.gif" alt="Soothe Studios" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Soothe Studios</h3>
-
-                <p class="project-category">Web Application</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="https://peaktwilight.com">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="./assets/images/Peak_Twilight_Website.gif" alt="Peak Twilight" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Peak Twilight Homepage</h3>
-
                 <p class="project-category">Web Design</p>
-
               </a>
             </li>
 
-            <li class="project-item  active" data-filter-item data-category="music production">
-              <a href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=QLMUy6OCTRu0dZ8xdXbRxg">
-
+            <!-- SOOTHE STUDIOS -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="applications">
+              <a href="https://soothestudios.ch">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/Peak_Twilight_Spotify.gif" alt="Peak Twilight Spotify" loading="lazy">
+                  <img src="./assets/images/Soothe_Studios.gif" 
+                       alt="Soothe Studios" 
+                       loading="lazy">
                 </figure>
+                <h3 class="project-title">Soothe Studios</h3>
+                <p class="project-category">Web Application</p>
+              </a>
+            </li>
 
+            <!-- PEAK TWILIGHT HOMEPAGE -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web design">
+              <a href="https://peaktwilight.com">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <img src="./assets/images/Peak_Twilight_Website.gif" 
+                       alt="Peak Twilight" 
+                       loading="lazy">
+                </figure>
+                <h3 class="project-title">Peak Twilight Homepage</h3>
+                <p class="project-category">Web Design</p>
+              </a>
+            </li>
+
+            <!-- PEAK TWILIGHT SPOTIFY -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="music production">
+              <a href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=QLMUy6OCTRu0dZ8xdXbRxg">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <img src="./assets/images/Peak_Twilight_Spotify.gif" 
+                       alt="Peak Twilight Spotify" 
+                       loading="lazy">
+                </figure>
                 <h3 class="project-title">Peak Twilight Spotify</h3>
-
                 <p class="project-category">Music Production</p>
-
               </a>
             </li>
 
           </ul>
-
         </section>
 
       </article>
@@ -972,21 +956,26 @@
 
 
 
-      <!--
-        - #CONTACT
-      -->
-
+      <!-- ============================================
+           CONTACT SECTION - LOCATION & CONTACT INFO
+           ============================================ -->
       <article class="contact" data-page="contact">
 
+        <!-- SECTION HEADER -->
         <header>
           <h2 class="h2 article-title">Contact</h2>
         </header>
 
+        <!-- GOOGLE MAPS EMBED -->
         <section class="mapbox" data-mapbox>
           <figure>
             <iframe
               src="https://www.google.com/maps/embed/v1/place?q=8008+Zürich,+Switzerland&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
-              width="400" height="300" loading="lazy"></iframe>
+              width="400" 
+              height="300" 
+              loading="lazy"
+              title="Location Map - Zürich, Switzerland">
+            </iframe>
           </figure>
         </section>
 
@@ -996,16 +985,20 @@
 
   </main>
 
-  <!--
-    - custom js link
-  -->
+  <!-- ============================================
+       FOOTER SCRIPTS - APPLICATION FUNCTIONALITY
+       ============================================ -->
+  
+  <!-- LOCAL SCRIPT - MAIN APPLICATION LOGIC -->
   <script src="./assets/js/script.js"></script>
 
-  <!--
-    - ionicon link
-  -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <!-- IONICONS - ICON LIBRARY -->
+  <script type="module" 
+          src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js">
+  </script>
+  <script nomodule 
+          src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js">
+  </script>
 
 </body>
 </html>
