@@ -573,9 +573,8 @@ main {
 .navbar-item:last-child .navbar-link::after {
   content: "↗";
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 5px;
+  top: 0px;
   font-size: 12px;
   opacity: 0.7;
   transition: opacity var(--transition-1);
