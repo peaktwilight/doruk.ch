@@ -737,10 +737,9 @@
         </section>
 
       </article>
-
       <!-- ============================================
-           PORTFOLIO SECTION - PROJECT SHOWCASE
-           ============================================ -->
+      PORTFOLIO SECTION - PROJECT SHOWCASE
+      ============================================ -->
       <article class="portfolio" data-page="portfolio">
 
         <!-- SECTION HEADER -->
@@ -759,42 +758,112 @@
                 <ion-icon name="chevron-down"></ion-icon>
               </div>
             </button>
-
-            <!-- FILTER OPTIONS -->
-            <ul class="select-list">
-              <li class="select-item">
-                <button data-select-item>All</button>
-              </li>
-              <li class="select-item">
-                <button data-select-item>Web design</button>
-              </li>
-              <li class="select-item">
-                <button data-select-item>Applications</button>
-              </li>
-              <li class="select-item">
-                <button data-select-item>Web development</button>
-              </li>
-            </ul>
           </div>
 
           <!-- PROJECT LIST -->
           <ul class="project-list">
 
+            <!-- NON-WORDPRESS PROJECTS -->
+
+            <!-- BUNZLI METER -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web development">
+              <a href="https://bunzlimeter.ch" target="_blank">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <img src="./assets/images/Bunzlimeter.gif" 
+                      alt="BunzliMeter" 
+                      loading="lazy">
+                </figure>
+                <h3 class="project-title">BunzliMeter</h3>
+                <p class="project-category">
+                  Next.js 14 (App Router), TypeScript, Tailwind CSS, Firebase (Firestore), DeepSeek AI API, Google Analytics 4, Framer Motion, Vercel Edge Functions
+                </p>
+              </a>
+            </li>
+
+            <!-- TTSTATS -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web development">
+              <a href="https://ttstats.ch" target="_blank">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <img src="./assets/images/TTStats.gif" 
+                      alt="TTStats" 
+                      loading="lazy">
+                </figure>
+                <h3 class="project-title">TTStats</h3>
+                <p class="project-category">
+                  Swiss Table Tennis Statistics built with vanilla HTML/CSS/JS, Tailwind CSS, and a Python backend for scraping the clicktt website.
+                </p>
+              </a>
+            </li>
+
+            <!-- FHNW DASHBOARD -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="applications">
+              <a href="https://fhnw.doruk.ch" target="_blank">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <img src="./assets/images/FHNW_Dashboard.gif" 
+                      alt="FHNW Dashboard" 
+                      loading="lazy">
+                </figure>
+                <h3 class="project-title">FHNW Dashboard</h3>
+                <p class="project-category">
+                  Next.js 14, Tailwind CSS, Framer Motion, Dark Mode, Mobile First design, and Intersection Observer for smart scroll tracking.
+                </p>
+              </a>
+            </li>
+
+            <!-- WITELLI20 -->
+            <li class="project-item active" 
+                data-filter-item 
+                data-category="web development">
+              <a href="https://witelli20.ch" target="_blank">
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <img src="./assets/images/Witelli20.gif" 
+                      alt="Witelli20" 
+                      loading="lazy">
+                </figure>
+                <h3 class="project-title">Witelli20</h3>
+                <p class="project-category">
+                  Next.js, Firebase, Tailwind CSS, TypeScript, Framer Motion, Phosphor Icons
+                </p>
+              </a>
+            </li>
+
+            <!-- WORDPRESS PROJECTS -->
+
             <!-- DREAMHOP MUSIC -->
             <li class="project-item active" 
                 data-filter-item 
                 data-category="web development">
-              <a href="https://dreamhopmusic.com">
+              <a href="https://dreamhopmusic.com" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
                   <img src="./assets/images/Dreamhop_Website.gif" 
-                       alt="Dreamhop Website" 
-                       loading="lazy">
+                      alt="Dreamhop Website" 
+                      loading="lazy">
                 </figure>
                 <h3 class="project-title">Dreamhop Music</h3>
-                <p class="project-category">Web Development</p>
+                <p class="project-category">
+                  Designed & built with WordPress, WooCommerce, Divi &amp; custom code for the record label.
+                </p>
               </a>
             </li>
 
@@ -802,17 +871,19 @@
             <li class="project-item active" 
                 data-filter-item 
                 data-category="web development">
-              <a href="https://studiodreamhop.com">
+              <a href="https://studiodreamhop.com" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
                   <img src="./assets/images/Studio_Dreamhop.gif" 
-                       alt="Studio Dreamhop" 
-                       loading="lazy">
+                      alt="Studio Dreamhop" 
+                      loading="lazy">
                 </figure>
                 <h3 class="project-title">Studio Dreamhop</h3>
-                <p class="project-category">Web Development</p>
+                <p class="project-category">
+                  Designed & built with WordPress, WooCommerce, Divi &amp; custom code for the record label.
+                </p>
               </a>
             </li>
 
@@ -820,17 +891,19 @@
             <li class="project-item active" 
                 data-filter-item 
                 data-category="web design">
-              <a href="https://sootherecords.com">
+              <a href="https://sootherecords.com" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
                   <img src="./assets/images/Soothe_Records.gif" 
-                       alt="Soothe Records" 
-                       loading="lazy">
+                      alt="Soothe Records" 
+                      loading="lazy">
                 </figure>
                 <h3 class="project-title">Soothe Records</h3>
-                <p class="project-category">Web Design</p>
+                <p class="project-category">
+                  Designed & built with WordPress, Divi &amp; custom code and embeds for the record label.
+                </p>
               </a>
             </li>
 
@@ -838,17 +911,19 @@
             <li class="project-item active" 
                 data-filter-item 
                 data-category="applications">
-              <a href="https://soothestudios.ch">
+              <a href="https://soothestudios.ch" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
                   <img src="./assets/images/Soothe_Studios.gif" 
-                       alt="Soothe Studios" 
-                       loading="lazy">
+                      alt="Soothe Studios" 
+                      loading="lazy">
                 </figure>
                 <h3 class="project-title">Soothe Studios</h3>
-                <p class="project-category">Web Application</p>
+                <p class="project-category">
+                  Designed & built with WordPress, Divi &amp; custom code for the record label.
+                </p>
               </a>
             </li>
 
@@ -856,35 +931,40 @@
             <li class="project-item active" 
                 data-filter-item 
                 data-category="web design">
-              <a href="https://peaktwilight.com">
+              <a href="https://peaktwilight.com" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
                   <img src="./assets/images/Peak_Twilight_Website.gif" 
-                       alt="Peak Twilight" 
-                       loading="lazy">
+                      alt="Peak Twilight" 
+                      loading="lazy">
                 </figure>
                 <h3 class="project-title">Peak Twilight Homepage</h3>
-                <p class="project-category">Web Design</p>
+                <p class="project-category">
+                  Built with WordPress, Divi + custom code | compressed into a static page.
+                </p>
               </a>
             </li>
+
 
             <!-- PEAK TWILIGHT SPOTIFY -->
             <li class="project-item active" 
                 data-filter-item 
                 data-category="music production">
-              <a href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=QLMUy6OCTRu0dZ8xdXbRxg">
+              <a href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=QLMUy6OCTRu0dZ8xdXbRxg" target="_blank">
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
                   <img src="./assets/images/Peak_Twilight_Spotify.gif" 
-                       alt="Peak Twilight Spotify" 
-                       loading="lazy">
+                      alt="Peak Twilight Spotify" 
+                      loading="lazy">
                 </figure>
                 <h3 class="project-title">Peak Twilight Spotify</h3>
-                <p class="project-category">Music Production</p>
+                <p class="project-category">
+                  Music production alias & Spotify Profile with over 100m+ streams accross all platforms.
+                </p>
               </a>
             </li>
 
@@ -892,9 +972,6 @@
         </section>
 
       </article>
-
-
-
 
 
       <!-- ============================================

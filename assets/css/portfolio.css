@@ -85,7 +85,7 @@
 .project-img {
   position: relative;
   width: 100%;
-  height: 200px;
+  aspect-ratio: 16/9;  /* This creates a consistent ratio */
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 15px;
