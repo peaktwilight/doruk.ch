@@ -60,7 +60,7 @@
       cursor.style.zIndex = '9999';
       cursor.style.opacity = '0.6';
       cursor.style.mixBlendMode = 'difference';
-      cursor.style.transition = 'width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s';
+      cursor.style.transition = 'width 0.3s ease-out, height 0.3s ease-out, opacity 0.2s ease-out, transform 0.1s ease-out';
       cursor.style.transform = 'translate(-50%, -50%)';
       
       // Add cursor to body
@@ -95,7 +95,7 @@
           isHovering = true;
           cursor.style.width = '40px';
           cursor.style.height = '40px';
-          cursor.style.opacity = '0.8';
+          cursor.style.opacity = '1';
           cursor.style.backgroundColor = 'var(--vegas-gold)';
           element.style.cursor = 'none';
         });
@@ -122,7 +122,7 @@
         } else {
           cursor.style.width = '15px';
           cursor.style.height = '15px';
-          cursor.style.opacity = '1';
+          cursor.style.opacity = '0.6';
         }
       });
       
@@ -133,11 +133,11 @@
         if (isHovering) {
           cursor.style.width = '40px';
           cursor.style.height = '40px';
-          cursor.style.opacity = '0.8';
+          cursor.style.opacity = '1';
         } else {
           cursor.style.width = '20px';
           cursor.style.height = '20px';
-          cursor.style.opacity = '0.6';
+          cursor.style.opacity = '0.4';
         }
       });
       
