@@ -43,6 +43,103 @@
        EXTERNAL SCRIPTS
        ============================================ -->
   <script src="https://cdn.jsdelivr.net/npm/motion@10.17.0/dist/motion.umd.min.js"></script>
+
+  <!-- Cursor Follower Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Create cursor element
+      const cursor = document.createElement('div');
+      
+      // Set initial styles
+      cursor.style.position = 'fixed';
+      cursor.style.width = '24px';
+      cursor.style.height = '24px';
+      cursor.style.backgroundColor = 'transparent';
+      cursor.style.border = '2px solid var(--vegas-gold)';
+      cursor.style.borderRadius = '50%';
+      cursor.style.pointerEvents = 'none';
+      cursor.style.zIndex = '9999';
+      cursor.style.transition = 'width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s';
+      cursor.style.transform = 'translate(-50%, -50%)';
+      
+      // Add cursor to body
+      document.body.appendChild(cursor);
+      
+      // Track positions and velocity
+      let mouseX = 0;
+      let mouseY = 0;
+      let cursorX = 0;
+      let cursorY = 0;
+      let lastX = 0;
+      let velocityX = 0;
+      
+      // Interactive elements
+      const interactiveElements = 'a, button, .project-item, .navbar-link, .social-link, .timeline-item';
+      
+      // Update mouse position and calculate velocity
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // Calculate velocity for rotation
+        velocityX = mouseX - lastX;
+        lastX = mouseX;
+      });
+      
+      // Handle interactive elements
+      document.querySelectorAll(interactiveElements).forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          cursor.style.width = '48px';
+          cursor.style.height = '48px';
+          cursor.style.backgroundColor = 'rgba(var(--vegas-gold-rgb), 0.1)';
+          cursor.style.borderColor = 'var(--vegas-gold)';
+          element.style.cursor = 'none';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+          cursor.style.width = '24px';
+          cursor.style.height = '24px';
+          cursor.style.backgroundColor = 'transparent';
+          cursor.style.borderColor = 'var(--vegas-gold)';
+          element.style.cursor = 'auto';
+        });
+      });
+      
+      // Handle click animation
+      document.addEventListener('mousedown', () => {
+        cursor.style.transform = `translate(-50%, -50%) scale(0.8)`;
+      });
+      
+      document.addEventListener('mouseup', () => {
+        cursor.style.transform = `translate(-50%, -50%) scale(1)`;
+      });
+      
+      // Animation loop with smooth easing
+      function animate() {
+        const ease = 0.15;
+        
+        // Smooth position
+        cursorX += (mouseX - cursorX) * ease;
+        cursorY += (mouseY - cursorY) * ease;
+        
+        // Calculate rotation based on velocity
+        const rotation = velocityX * 0.5;
+        velocityX *= 0.9; // Decay velocity
+        
+        // Apply position and rotation
+        cursor.style.left = `${cursorX}px`;
+        cursor.style.top = `${cursorY}px`;
+        cursor.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+      
+      // Hide default cursor
+      document.body.style.cursor = 'none';
+    });
+  </script>
 </head>
  
  
@@ -1041,3 +1138,4 @@
 
 </body>
 </html>
+
