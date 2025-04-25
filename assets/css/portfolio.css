@@ -164,15 +164,32 @@
   margin-top: 5px; /* Space below title */
 }
 
+/* Define pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px; /* Increased size */
+  height: 10px; /* Increased size */
   border-radius: 50%;
   background-color: var(--light-gray-70); /* Default offline color */
 }
 
 .project-status.status-live .status-dot {
   background-color: hsl(100, 60%, 60%); /* Green for live */
+  animation: pulse 2s infinite ease-in-out; /* Apply animation */
 }
 
 .project-status.status-offline .status-dot {

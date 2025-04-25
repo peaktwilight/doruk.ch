@@ -297,11 +297,20 @@
   width: 100%; /* Take full width */
 }
 
+/* Base dot style (copied from portfolio.css) */
+.project-status-modal .status-dot { 
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%;
+  background-color: var(--light-gray-70);
+}
+
 /* Reuse dot style from portfolio.css (assuming it loads before or scope is fine) */
 /* If needed, copy .status-dot styles here */
 
 .project-status-modal.status-live .status-dot {
   background-color: hsl(100, 60%, 60%);
+  animation: pulse 2s infinite ease-in-out; /* Apply animation here too */
 }
 
 .project-status-modal.status-offline .status-dot {
