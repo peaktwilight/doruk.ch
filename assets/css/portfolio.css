@@ -63,11 +63,25 @@
 .project-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 30px;
+  gap: 25px;
   margin-bottom: 10px;
 }
 
-.project-item { display: none; }
+.project-item {
+  display: none;
+  background: var(--eerie-black-1);
+  padding: 15px;
+  border-radius: 16px;
+  border: 1px solid var(--jet);
+  transition: border-color var(--transition-1), transform var(--transition-1);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.project-item:hover {
+  border-color: var(--vegas-gold);
+  transform: translateY(-3px);
+}
 
 .project-item.active {
   display: block;
@@ -85,9 +99,10 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16/9;  /* This creates a consistent ratio */
-  border-radius: 16px;
+  border-radius: 10px;
   overflow: hidden;
   margin-bottom: 15px;
+  border: 1px solid var(--jet);
 }
 
 .project-img::before {
@@ -138,7 +153,11 @@
 .project-item > a:hover img { transform: scale(1.1); }
 
 .project-title,
-.project-category { margin-left: 10px; }
+.project-category,
+.project-status,
+.project-title-link .github-link {
+  margin-left: 0;
+}
 
 .project-title {
   color: var(--white-2);
@@ -152,7 +171,7 @@
   color: var(--light-gray-70);
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
-  margin-top: 8px; /* Add margin to separate from status */
+  margin-top: 8px;
 }
 
 /* --- Project Status Indicator (List View) --- */
@@ -160,8 +179,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-left: 10px; /* Align with title/category */
-  margin-top: 5px; /* Space below title */
+  margin-top: 8px;
 }
 
 /* Define pulse animation */
