@@ -229,6 +229,7 @@
   gap: 15px;
   flex-wrap: wrap;
   width: 100%;
+  margin-bottom: 15px; /* Added space below buttons */
 }
 
 .project-modal-buttons .form-btn {
