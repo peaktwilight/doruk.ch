@@ -406,7 +406,8 @@
 
   .input-wrapper { grid-template-columns: 1fr 1fr; }
 
-  .form-btn {
+  /* Target only the button directly inside the form */
+  form[data-form] > .form-btn {
     width: max-content;
     margin-left: auto;
   }

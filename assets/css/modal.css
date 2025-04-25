@@ -228,6 +228,7 @@
   align-items: center;
   gap: 15px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .project-modal-buttons .form-btn {
@@ -275,6 +276,8 @@
   padding-top: 25px;
   justify-content: center; 
   flex-wrap: wrap; 
+  width: 100%;
+  gap: 15px; /* Added gap for spacing */
 }
 
 /* Remove these rules as buttons now use .form-btn */
