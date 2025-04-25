@@ -1,32 +1,53 @@
 'use strict';
 
-// INITIAL POPUP MODAL
-
-
-document.getElementById('showCV').addEventListener('click', function() {
-  document.getElementById('choiceModal').style.display = 'none';
-});
-
-document.addEventListener('keydown', function(event) {
-  if (event.key === "Escape" || event.keyCode === 27) {
-    document.getElementById('choiceModal').style.display = 'none';
-  }
-});
-
-document.getElementById('choiceModal').addEventListener('click', function(event) {
-  // Check if the event target is the modal itself and not its children
-  if (event.target === this) {
-    this.style.display = 'none';
-  }
-});
-
-window.onload = function() {
-  document.getElementById('choiceModal').style.display = 'block';
-}
-
 // element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
 
+
+// Initial Choice Modal Functionality
+const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
+const choiceModalOverlay = document.querySelector("[data-choice-modal-overlay]");
+const choiceModalCloseBtn = document.querySelector("[data-choice-modal-close-btn]");
+const showCVButton = document.getElementById('showCV'); // Keep reference to the specific button
+
+// Function to close the choice modal
+const closeChoiceModal = () => {
+  if (choiceModalContainer) {
+    choiceModalContainer.classList.remove("active");
+  }
+}
+
+// Function to open the choice modal
+const openChoiceModal = () => {
+  if (choiceModalContainer) {
+    choiceModalContainer.classList.add("active");
+  }
+}
+
+// Open modal on page load
+window.addEventListener('load', openChoiceModal);
+
+// Close modal via Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === "Escape" || event.keyCode === 27) {
+    closeChoiceModal();
+  }
+});
+
+// Close modal via CV button click
+if (showCVButton) {
+  showCVButton.addEventListener('click', closeChoiceModal);
+}
+
+// Close modal via overlay click
+if (choiceModalOverlay) {
+  choiceModalOverlay.addEventListener('click', closeChoiceModal);
+}
+
+// Close modal via close button click
+if (choiceModalCloseBtn) {
+  choiceModalCloseBtn.addEventListener('click', closeChoiceModal);
+}
 
 
 // sidebar variables

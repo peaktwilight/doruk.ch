@@ -52,36 +52,42 @@
   <!-- ============================================
        CHOICE MODAL - INITIAL WELCOME SCREEN
        ============================================ -->
-  <div id="choiceModal" class="modal">
-    <div class="modal-content">
-      
-      <!-- MODAL HEADER SECTION -->
-      <div class="h2 modal-title">
-        <h2>Welcome! I'm Doruk Tan Öztürk.</h2>
-        <p>⊂(O‿O)つ</p>
-        <p class="underscore"></p>
-      </div>
-
-      <!-- MODAL CONTENT SECTION -->
-      <h3>Explore my work through these portals:</h3>
-      <div class="button-container">
-        <!-- Business vCard Button -->
-        <button class="h4 skill-item" id="showCV">Business vCard</button>
+  <div class="modal-container choice-modal-container" data-choice-modal-container>
+    <div class="project-modal-overlay choice-modal-overlay" data-choice-modal-overlay></div>
+    <section class="modal choice-modal" id="choiceModal">
+      <button class="modal-close-btn choice-modal-close-btn" data-choice-modal-close-btn aria-label="Close Welcome Modal">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div class="modal-content choice-modal-content">
         
-        <!-- Ubuntu PC Simulator Button -->
-        <button class="skill-item" 
-                onclick="window.location.href='https://pc.doruk.ch';">
-          Ubuntu PC Simulator
-        </button>
-        
-        <!-- Music Producer Website Button -->
-        <button class="skill-item" 
-                onclick="window.location.href='https://peaktwilight.com';">
-          Music Producer Website
-        </button>
-      </div>
+        <!-- MODAL HEADER SECTION -->
+        <div class="h2 modal-title choice-modal-title">
+          <h2>Welcome! I'm Doruk Tan Öztürk.</h2>
+          <p>⊂(O‿O)つ</p>
+          <p class="underscore"></p>
+        </div>
 
-    </div>
+        <!-- MODAL CONTENT SECTION -->
+        <h3>Explore my work through these portals:</h3>
+        <div class="button-container">
+          <!-- Business vCard Button -->
+          <button class="form-btn" id="showCV">Business vCard</button>
+          
+          <!-- Ubuntu PC Simulator Button -->
+          <button class="form-btn" 
+                  onclick="window.location.href='https://pc.doruk.ch';">
+            Ubuntu PC Simulator
+          </button>
+          
+          <!-- Music Producer Website Button -->
+          <button class="form-btn" 
+                  onclick="window.location.href='https://peaktwilight.com';">
+            Music Producer Website
+          </button>
+        </div>
+
+      </div>
+    </section>
   </div>
 
   <!--
