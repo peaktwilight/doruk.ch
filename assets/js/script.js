@@ -213,6 +213,7 @@ const projectModalCategory = document.querySelector("[data-project-modal-categor
 const projectModalLiveBtn = document.querySelector("[data-project-modal-live-btn]");
 const projectModalSourceBtn = document.querySelector("[data-project-modal-source-btn]");
 const projectModalStatus = document.querySelector("[data-project-modal-status]");
+const projectModalAppStoreBtn = document.querySelector("[data-project-modal-appstore-btn]");
 
 // Select all project items with the trigger attribute
 const projectItems = document.querySelectorAll("[data-modal-trigger]");
@@ -232,6 +233,7 @@ const openProjectModal = function (item) {
   const sourceUrl = item.dataset.modalSourceUrl;
   const liveStatus = item.dataset.liveStatus;
   const statusReason = item.dataset.statusReason;
+  const appStoreUrl = item.dataset.appstoreUrl;
 
   // Populate modal content
   projectModalImg.src = imgSrc;
@@ -257,6 +259,14 @@ const openProjectModal = function (item) {
     projectModalSourceBtn.style.display = 'flex';
   } else {
     projectModalSourceBtn.style.display = 'none';
+  }
+  
+  // Show/hide App Store button based on URL
+  if (appStoreUrl && appStoreUrl !== "") {
+    projectModalAppStoreBtn.href = appStoreUrl;
+    projectModalAppStoreBtn.style.display = 'flex';
+  } else {
+    projectModalAppStoreBtn.style.display = 'none';
   }
 
   // Show the modal
