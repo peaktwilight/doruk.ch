@@ -286,3 +286,39 @@
 
 /* Remove Responsive block for project modal as it's always single column now */
 /* @media (min-width: 768px) { ... } */ 
+
+/* --- Project Status Indicator (Modal View) --- */
+.project-status-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center in modal */
+  gap: 8px;
+  margin-bottom: 20px; /* Space before buttons */
+  width: 100%; /* Take full width */
+}
+
+/* Reuse dot style from portfolio.css (assuming it loads before or scope is fine) */
+/* If needed, copy .status-dot styles here */
+
+.project-status-modal.status-live .status-dot {
+  background-color: hsl(100, 60%, 60%);
+}
+
+.project-status-modal.status-offline .status-dot {
+  background-color: hsl(0, 60%, 60%);
+}
+
+.project-status-modal .status-text {
+  font-size: var(--fs-7); /* Slightly larger in modal */
+  color: var(--light-gray);
+  font-weight: var(--fw-400);
+}
+
+.project-modal-buttons {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  width: 100%;
+}

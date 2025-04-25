@@ -212,6 +212,7 @@ const projectModalTitle = document.querySelector("[data-project-modal-title]");
 const projectModalCategory = document.querySelector("[data-project-modal-category]");
 const projectModalLiveBtn = document.querySelector("[data-project-modal-live-btn]");
 const projectModalSourceBtn = document.querySelector("[data-project-modal-source-btn]");
+const projectModalStatus = document.querySelector("[data-project-modal-status]");
 
 // Select all project items with the trigger attribute
 const projectItems = document.querySelectorAll("[data-modal-trigger]");
@@ -223,19 +224,32 @@ const openProjectModal = function (item) {
   const titleElement = item.querySelector('.project-title');
   const categoryElement = item.querySelector('.project-category');
 
-  // Extract data from elements and item's dataset for URLs
-  const imgSrc = imgElement ? imgElement.src : ''; // Get src from img tag
-  const title = titleElement ? titleElement.textContent : 'Project Title'; // Get text from h3
-  const category = categoryElement ? categoryElement.textContent : ''; // Get text from p
-  const liveUrl = item.dataset.modalUrl; // Get live URL from item data
-  const sourceUrl = item.dataset.modalSourceUrl; // Get source URL from item data
+  // Extract data from elements and item's dataset for URLs and status
+  const imgSrc = imgElement ? imgElement.src : '';
+  const title = titleElement ? titleElement.textContent : 'Project Title';
+  const category = categoryElement ? categoryElement.textContent : '';
+  const liveUrl = item.dataset.modalUrl;
+  const sourceUrl = item.dataset.modalSourceUrl;
+  const liveStatus = item.dataset.liveStatus;
+  const statusReason = item.dataset.statusReason;
 
   // Populate modal content
   projectModalImg.src = imgSrc;
-  projectModalImg.alt = title; // Use extracted title for alt text
+  projectModalImg.alt = title;
   projectModalTitle.textContent = title;
   projectModalCategory.textContent = category;
   projectModalLiveBtn.href = liveUrl;
+
+  // Populate Status Indicator
+  if (liveStatus && statusReason) {
+    projectModalStatus.innerHTML = 
+      `<span class="status-dot"></span><span class="status-text">${statusReason}</span>`;
+    projectModalStatus.className = 'project-status-modal';
+    projectModalStatus.classList.add(liveStatus === 'live' ? 'status-live' : 'status-offline');
+    projectModalStatus.style.display = 'flex';
+  } else {
+    projectModalStatus.style.display = 'none';
+  }
 
   // Show/hide source button based on URL
   if (sourceUrl && sourceUrl !== "") {

@@ -152,6 +152,38 @@
   color: var(--light-gray-70);
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
+  margin-top: 8px; /* Add margin to separate from status */
+}
+
+/* --- Project Status Indicator (List View) --- */
+.project-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px; /* Align with title/category */
+  margin-top: 5px; /* Space below title */
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--light-gray-70); /* Default offline color */
+}
+
+.project-status.status-live .status-dot {
+  background-color: hsl(100, 60%, 60%); /* Green for live */
+}
+
+.project-status.status-offline .status-dot {
+  background-color: hsl(0, 60%, 60%); /* Red for offline (optional) */
+  /* background-color: var(--light-gray-70); /* Or keep grey */
+}
+
+.status-text {
+  font-size: var(--fs-8);
+  color: var(--light-gray-70);
+  font-weight: var(--fw-300);
 }
 
 /* GitHub Icon Link Styles */
