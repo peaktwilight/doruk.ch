@@ -179,3 +179,98 @@ for (let i = 0; i < navigationLinks.length; i++) {
   });
 }
 
+
+// Project Details Modal Functionality
+const projectModalContainer = document.querySelector("[data-project-modal-container]");
+const projectModalCloseBtn = document.querySelector("[data-project-modal-close-btn]");
+const projectModalOverlay = document.querySelector("[data-project-modal-overlay]");
+
+// Modal content elements
+const projectModalImg = document.querySelector("[data-project-modal-img]");
+const projectModalTitle = document.querySelector("[data-project-modal-title]");
+const projectModalCategory = document.querySelector("[data-project-modal-category]");
+const projectModalLiveBtn = document.querySelector("[data-project-modal-live-btn]");
+const projectModalSourceBtn = document.querySelector("[data-project-modal-source-btn]");
+
+// Select all project items with the trigger attribute
+const projectItems = document.querySelectorAll("[data-modal-trigger]");
+
+// Function to open and populate the modal
+const openProjectModal = function (item) {
+  // Find elements within the clicked item
+  const imgElement = item.querySelector('.project-img img');
+  const titleElement = item.querySelector('.project-title');
+  const categoryElement = item.querySelector('.project-category');
+
+  // Extract data from elements and item's dataset for URLs
+  const imgSrc = imgElement ? imgElement.src : ''; // Get src from img tag
+  const title = titleElement ? titleElement.textContent : 'Project Title'; // Get text from h3
+  const category = categoryElement ? categoryElement.textContent : ''; // Get text from p
+  const liveUrl = item.dataset.modalUrl; // Get live URL from item data
+  const sourceUrl = item.dataset.modalSourceUrl; // Get source URL from item data
+
+  // Populate modal content
+  projectModalImg.src = imgSrc;
+  projectModalImg.alt = title; // Use extracted title for alt text
+  projectModalTitle.textContent = title;
+  projectModalCategory.textContent = category;
+  projectModalLiveBtn.href = liveUrl;
+
+  // Show/hide source button based on URL
+  if (sourceUrl && sourceUrl !== "") {
+    projectModalSourceBtn.href = sourceUrl;
+    projectModalSourceBtn.style.display = 'flex';
+  } else {
+    projectModalSourceBtn.style.display = 'none';
+  }
+
+  // Show the modal
+  projectModalContainer.classList.add("active");
+}
+
+// Function to close the modal
+const closeProjectModal = function () {
+  projectModalContainer.classList.remove("active");
+}
+
+// Add click listener to all project items
+projectItems.forEach(item => {
+  // We listen on the item itself now
+  item.addEventListener("click", (event) => {
+    // Prevent modal opening if the click was on the title link or github link
+    if (event.target.closest('.project-title-link') || event.target.closest('.github-link')) {
+        return; // Don't open modal if specific links are clicked
+    }
+    
+    // If the click wasn't on a specific link, open the modal
+    event.preventDefault(); // Prevent default anchor behavior if any remains
+    openProjectModal(item);
+  });
+});
+
+// Add click listener to overlay and close button
+projectModalOverlay.addEventListener("click", closeProjectModal);
+projectModalCloseBtn.addEventListener("click", closeProjectModal);
+
+
+// Add this inside the DOMContentLoaded listener if not already there
+document.addEventListener('DOMContentLoaded', (event) => {
+  // ... (keep existing DOMContentLoaded code) ...
+
+  // Initial choice modal logic (keep this)
+  const choiceModal = document.getElementById('choiceModal');
+  const showCVButton = document.getElementById('showCV');
+  if (choiceModal && showCVButton) {
+    // Show the modal automatically
+    choiceModal.style.display = 'flex'; 
+
+    showCVButton.onclick = function() {
+      choiceModal.style.display = 'none';
+    }
+  } else {
+    console.error('Choice modal or button not found');
+  }
+
+  // ... (potentially other existing code)
+});
+

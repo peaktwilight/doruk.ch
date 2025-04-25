@@ -1,4 +1,3 @@
-
 /*-----------------------------------*\
   #PORTFOLIO
 \*-----------------------------------*/
@@ -153,4 +152,21 @@
   color: var(--light-gray-70);
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
+}
+
+/* GitHub Icon Link Styles */
+.github-link {
+  color: var(--light-gray-70); /* Match category color */
+  font-size: var(--fs-4); /* Slightly larger than category */
+  margin-left: 8px; /* Space after title */
+  vertical-align: middle; /* Align with title text */
+  transition: color var(--transition-1);
+}
+
+.github-link:hover {
+  color: var(--vegas-gold); /* Highlight color on hover */
+}
+
+.github-link ion-icon {
+  display: block; /* Prevents extra space below icon */
 }
