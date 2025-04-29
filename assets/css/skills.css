@@ -24,9 +24,8 @@
  }
  
  .skill-item:hover {
-   transform: scale(1.03) translateY(-2px);
+   transform: translateY(-3px);
    border-color: var(--vegas-gold);
-   box-shadow: 0 5px 15px rgba(var(--vegas-gold-rgb), 0.15);
  }
  
  .skill-icon-box { margin-bottom: 10px; }
@@ -75,21 +74,12 @@
 .language-item.lang-c2:hover,
 .language-item.lang-c1:hover,
 .language-item.lang-b2:hover {
-  transform: scale(1.03) translateY(-2px);
+  transform: translateY(-3px); /* Keep transform */
 }
 
-.language-item.lang-c2:hover {
-  border-color: var(--vegas-gold);
-  box-shadow: 0 5px 15px rgba(var(--vegas-gold-rgb), 0.15);
-}
-.language-item.lang-c1:hover {
-  border-color: hsl(180, 50%, 60%);
-  box-shadow: 0 5px 15px hsla(180, 50%, 60%, 0.15);
-}
-.language-item.lang-b2:hover {
-  border-color: hsl(210, 50%, 60%);
-  box-shadow: 0 5px 15px hsla(210, 50%, 60%, 0.15);
-}
+.language-item.lang-c2:hover { border-color: var(--vegas-gold); }
+.language-item.lang-c1:hover { border-color: hsl(180, 50%, 60%); }
+.language-item.lang-b2:hover { border-color: hsl(210, 50%, 60%); }
 
 .language-item .skill-icon-box {
   margin-bottom: 0; /* Remove bottom margin as we use flex gap */

@@ -3,8 +3,8 @@
 \*-----------------------------------*/
 
 .sidebar {
-  position: sticky;
-  top: 15px;
+  position: relative; /* Explicitly set non-sticky default */
+  top: 15px; /* This might not be needed if not sticky, review */
   left: 0;
   /* background: var(--eerie-black-2); REMOVE opaque background */
   background: rgba(var(--eerie-black-2-rgb), 0.75); /* Apply semi-transparent background */
@@ -19,8 +19,7 @@
   overflow: hidden; /* Hide overflow initially */
   /* Restore transition for all relevant properties */
   transition: max-height var(--transition-2), padding var(--transition-2); /* Transition max-height and potentially padding */
-  margin-bottom: 30px; /* Add margin below the sidebar */
-  position: relative; /* Default position */
+  margin-bottom: 30px; /* Adjust margin for mobile */
 }
 
 .sidebar.active {
