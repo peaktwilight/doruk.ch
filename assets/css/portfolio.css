@@ -20,6 +20,7 @@
   border: 1px solid var(--jet);
   overflow: hidden;
   cursor: pointer;
+  transition: border-color var(--transition-1), transform var(--transition-1);
 }
 
 .project-item:hover {

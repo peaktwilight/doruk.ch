@@ -58,10 +58,10 @@
   background: var(--jet);
 }
 
-.timeline-item:hover { 
+/*.timeline-item:hover { 
   transform: scale(1.02); /* Subtle scale */
-  box-shadow: 0 8px 20px hsla(0, 0%, 0%, 0.2); /* Enhance shadow slightly */
-}
+/*  box-shadow: 0 8px 20px hsla(0, 0%, 0%, 0.2); /* Enhance shadow slightly */
+/*}*/
 
 .timeline-item::after {
   content: "";
