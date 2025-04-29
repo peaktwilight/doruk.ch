@@ -51,34 +51,68 @@
   list-style: none; 
   display: flex; /* Use Flexbox */
   flex-wrap: wrap; /* Allow wrapping */
-  /* grid-template-columns: 1fr; Remove grid */
   gap: 15px; /* Keep gap */
+  /* Removed grid-template-columns and media query */
 }
 
-/* Remove grid media query */
-/* @media (min-width: 580px) { 
-  .language-skills {
-    grid-template-columns: 1fr 1fr;
-  }
-} */
-
 .language-item {
-  /* Inherits .skill-item styles */
-  /* Remove flex-grow or other sizing if present */
+  /* Explicitly inherit styles from .skill-item for flat look */
+  background: var(--eerie-black-1);
+  border: 1px solid var(--jet);
+  padding: 12px; /* Reduced padding */
+  border-radius: 16px; /* Consistent border-radius */
+  box-shadow: var(--shadow-1); /* Consistent shadow */
+  flex: 1 1 calc(50% - 15px); /* Allow two items per row with gap */
+  min-width: 180px; /* Prevent items from becoming too small */
+  display: flex; /* Use flex for internal alignment */
+  align-items: center; /* Center items vertically */
+  gap: 12px; /* Reduced gap */
+  transition: border-color var(--transition-1), transform var(--transition-1); /* Inherit transition */
+}
+
+.language-item:hover {
+  transform: translateY(-3px); /* Consistent hover effect */
+  border-color: var(--vegas-gold); /* Consistent hover effect */
+}
+
+.language-item .skill-icon-box {
+  margin-bottom: 0; /* Remove bottom margin as we use flex gap */
+  /* Optional: Adjust icon size if needed */
+  /* width: 30px; 
+     height: 30px; */
+}
+
+.language-item .skill-content-box {
+  text-align: left; /* Align text to the left */
+  flex-grow: 1; /* Allow content box to take remaining space */
 }
 
 .language-item .title-wrapper {
   display: flex; 
-  align-items: center; /* Align items vertically */
-  gap: 8px; /* Space between title and badge */
-  /* justify-content: space-between; Remove */
-  /* width: 100%; Remove */
+  align-items: center; 
+  gap: 8px; 
+  margin-bottom: 2px; /* Small gap below title/badge row */
+}
+
+.language-item .title-wrapper h5 {
+  margin: 0; /* Reset default margin */
+}
+
+.language-item .title-wrapper h5 {
+  margin: 0; /* Reset default margin */
+}
+
+/* Add style for the description text */
+.language-description {
+  font-size: var(--fs-7); /* Smaller font size */
+  color: var(--light-gray-70); /* Slightly muted color */
+  line-height: 1.4;
+  margin-top: 4px; /* Add a small space above the description */
 }
 
 .cefr-badge {
   /* Styles are fine, remove margin-left if still present */
-  /* margin-left: 10px; Remove */
-  flex-shrink: 0; /* Keep */
+  flex-shrink: 0; 
 }
 
 /* Level-specific colors */

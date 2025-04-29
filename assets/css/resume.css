@@ -86,7 +86,6 @@
 
 .skills-item {
   position: relative;
-  background: var(--border-gradient-onyx);
   border: 1px solid var(--jet);
   padding: 20px;
   border-radius: 14px;
