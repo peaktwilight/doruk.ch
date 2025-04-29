@@ -319,3 +319,36 @@ document.addEventListener('DOMContentLoaded', (event) => {
   // ... (potentially other existing code)
 });
 
+
+// Language Skills Animation on Scroll - REMOVED
+/*
+document.addEventListener('DOMContentLoaded', () => {
+  const languageSkillsSection = document.querySelector('.language-skills');
+  const languageItems = document.querySelectorAll('.language-item');
+
+  if (!languageSkillsSection || languageItems.length === 0) return;
+
+  const observerOptions = {
+    root: null, // relative to document viewport 
+    rootMargin: '0px',
+    threshold: 0.1 // trigger when 10% of the section is visible
+  };
+
+  const observerCallback = (entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        languageItems.forEach((item, index) => {
+          // Add a delay based on the item's index
+          item.style.transitionDelay = `${index * 0.1}s`; 
+          item.classList.add('animate');
+        });
+        observer.unobserve(entry.target); // Stop observing once animated
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(observerCallback, observerOptions);
+  observer.observe(languageSkillsSection); 
+});
+*/
+

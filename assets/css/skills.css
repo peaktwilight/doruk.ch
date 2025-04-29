@@ -67,13 +67,19 @@
   display: flex; /* Use flex for internal alignment */
   align-items: center; /* Center items vertically */
   gap: 12px; /* Reduced gap */
-  transition: border-color var(--transition-1), transform var(--transition-1); /* Inherit transition */
+  transition: border-color var(--transition-1), transform var(--transition-1); /* Keep transitions for hover */
 }
 
-.language-item:hover {
-  transform: translateY(-3px); /* Consistent hover effect */
-  border-color: var(--vegas-gold); /* Consistent hover effect */
+/* Specific hover styles */
+.language-item.lang-c2:hover,
+.language-item.lang-c1:hover,
+.language-item.lang-b2:hover {
+  transform: translateY(-3px); /* Keep transform */
 }
+
+.language-item.lang-c2:hover { border-color: var(--vegas-gold); }
+.language-item.lang-c1:hover { border-color: hsl(180, 50%, 60%); }
+.language-item.lang-b2:hover { border-color: hsl(210, 50%, 60%); }
 
 .language-item .skill-icon-box {
   margin-bottom: 0; /* Remove bottom margin as we use flex gap */
@@ -98,9 +104,28 @@
   margin: 0; /* Reset default margin */
 }
 
-.language-item .title-wrapper h5 {
-  margin: 0; /* Reset default margin */
+/* Proficiency Indicator Styles */
+.proficiency-indicator {
+  display: inline-flex; /* Use inline-flex */
+  gap: 3px; /* Space between blocks */
+  margin-left: 8px; /* Space after CEFR badge */
+  vertical-align: middle; /* Align with text */
 }
+
+.proficiency-indicator .block {
+  width: 10px; /* Block width */
+  height: 10px; /* Block height */
+  border-radius: 2px; /* Slightly rounded corners */
+  background-color: var(--jet); /* Default (empty) color */
+}
+
+.proficiency-indicator .block.filled {
+  /* Colors will be set based on parent lang class */
+}
+
+.lang-c2 .proficiency-indicator .block.filled { background-color: var(--vegas-gold); }
+.lang-c1 .proficiency-indicator .block.filled { background-color: hsl(180, 80%, 70%); }
+.lang-b2 .proficiency-indicator .block.filled { background-color: hsl(210, 80%, 70%); }
 
 /* Add style for the description text */
 .language-description {
