@@ -48,69 +48,82 @@
 .language-skills {
   padding: 0; 
   list-style: none; 
-  display: flex; /* Arrange cards */
-  flex-wrap: wrap; /* Allow wrapping */
-  gap: 15px; /* Spacing between cards */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* Two columns on larger screens */
+@media (min-width: 580px) { 
+  .language-skills {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
 }
 
 .language-item {
-  /* Inherit .skills-item styles (background, border, shadow, etc.) */
-  flex-grow: 1; /* Allow cards to grow */
-  min-width: 180px; /* Minimum width before wrapping */
-  /* Remove cursor override if needed */
-  /* style="cursor: default;" can be removed from HTML */
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  min-width: auto;
+  border-radius: 0;
+}
+
+.language-item:hover {
+  transform: none;
+  border: none;
 }
 
 .language-item .title-wrapper {
   display: flex; 
-  justify-content: space-between; /* Push badge+desc group right */
-  align-items: center;
-  width: 100%; /* Make wrapper full width */
-  /* margin-bottom: 10px; Removed, padding handles internal space */
+  align-items: baseline;
+  width: 100%; 
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
-.language-item .title-wrapper > div { /* Target the div wrapping badge+desc */
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Space between badge and description */
+.language-item .title-wrapper .h5 {
+  flex-shrink: 0;
 }
 
 .cefr-badge {
   display: inline-block;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: var(--fs-8); 
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: var(--fw-600); 
   line-height: 1.2;
   text-transform: uppercase;
-  /* margin-left: 10px; Removed, handled by gap in wrapper */
   background-color: var(--onyx); 
   color: var(--light-gray); 
   border: 1px solid var(--jet);
+  flex-shrink: 0;
 }
 
 .language-description {
-  font-size: var(--fs-7); /* Slightly larger than badge */
+  font-size: var(--fs-7);
   color: var(--light-gray-70);
   font-style: italic;
-  white-space: nowrap; /* Prevent wrapping */
+  text-align: right;
+  flex-grow: 1;
 }
 
 /* Level-specific colors (adjust as desired) */
 .cefr-badge.c2 {
-  background-color: hsla(45, 100%, 72%, 0.15); /* Light yellow background */
+  background-color: hsla(45, 100%, 72%, 0.15);
   border-color: var(--vegas-gold);
   color: var(--orange-yellow-crayola);
 }
 
 .cefr-badge.c1 {
-  background-color: hsla(180, 50%, 60%, 0.15); /* Light cyan background */
+  background-color: hsla(180, 50%, 60%, 0.15);
   border-color: hsl(180, 50%, 60%);
   color: hsl(180, 80%, 70%);
 }
 
 .cefr-badge.b2 {
-  background-color: hsla(210, 50%, 60%, 0.15); /* Light blue background */
+  background-color: hsla(210, 50%, 60%, 0.15);
   border-color: hsl(210, 50%, 60%);
   color: hsl(210, 80%, 70%);
 }
