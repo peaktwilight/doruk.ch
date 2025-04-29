@@ -3,6 +3,15 @@
 \*-----------------------------------*/
 
 /**
+ * Hide choice modal close button on small screens
+ */
+@media (max-width: 579px) {
+  .choice-modal-close-btn {
+    display: none;
+  }
+}
+
+/**
  * responsive larger than 450px screen
  */
 

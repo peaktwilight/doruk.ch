@@ -25,7 +25,7 @@
 .sidebar.active {
   overflow: auto; /* Allow scroll when active/expanded */
   /* Set max-height for expanded state (adjust if needed) */
-  max-height: 405px;
+  max-height: 415px;
 }
 
 .sidebar-info {
