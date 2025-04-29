@@ -16,14 +16,15 @@
    position: relative;
    background: var(--eerie-black-1);
    border: 1px solid var(--jet);
-   padding: 20px;
-   border-radius: 10px;
+   padding: 15px;
+   border-radius: 16px;
    box-shadow: var(--shadow-1);
    z-index: 1;
-   transition: transform var(--transition-1), border-color var(--transition-1);
+   transition: border-color var(--transition-1), transform var(--transition-1);
  }
  
  .skill-item:hover {
+   transform: translateY(-3px);
    border-color: var(--vegas-gold);
  }
  
@@ -50,63 +51,42 @@
   list-style: none; 
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 15px;
 }
 
-/* Two columns on larger screens */
+/* Keep 2 columns on larger screens */
 @media (min-width: 580px) { 
   .language-skills {
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
   }
 }
 
 .language-item {
-  background: none;
-  border: none;
-  padding: 0;
-  box-shadow: none;
-  min-width: auto;
-  border-radius: 0;
-}
-
-.language-item:hover {
-  transform: none;
-  border: none;
+  /* Remove overrides, it will inherit from .skill-item */
 }
 
 .language-item .title-wrapper {
   display: flex; 
-  align-items: baseline;
+  justify-content: space-between; /* Push badge to the right */
+  align-items: center; /* Align items vertically */
   width: 100%; 
   gap: 10px;
-  flex-wrap: nowrap;
-}
-
-.language-item .title-wrapper .h5 {
-  flex-shrink: 0;
+  /* flex-wrap: nowrap; Not needed */
 }
 
 .cefr-badge {
   display: inline-block;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 10px;
+  padding: 3px 8px; /* Restore padding */
+  border-radius: 6px; /* Restore radius */
+  font-size: var(--fs-8); /* Restore font size */
   font-weight: var(--fw-600); 
   line-height: 1.2;
   text-transform: uppercase;
   background-color: var(--onyx); 
   color: var(--light-gray); 
   border: 1px solid var(--jet);
-  flex-shrink: 0;
-}
-
-.language-description {
-  font-size: var(--fs-7);
-  color: var(--light-gray-70);
-  font-style: italic;
-  text-align: right;
-  flex-grow: 1;
+  flex-shrink: 0; 
+  margin-left: 10px; /* Restore margin */
 }
 
 /* Level-specific colors (adjust as desired) */
