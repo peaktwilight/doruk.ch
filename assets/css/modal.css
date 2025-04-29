@@ -123,21 +123,20 @@
 
 /* --- Base Modal Box --- */
 .modal {
-  background: var(--eerie-black-1);
+  /* background: var(--eerie-black-1); REMOVE opaque background */
+  background: rgba(var(--eerie-black-2-rgb), 0.8); /* Apply semi-transparent background */
+  backdrop-filter: blur(10px); /* Apply blur effect */
   position: relative;
-  width: auto; 
-  height: auto; 
-  max-width: min(1000px, 90vw); /* Default max-width */
-  max-height: 85vh; /* Default max-height */
-  margin: auto; 
-  padding: 25px; /* Add some base padding */
-  border-radius: 14px;
+  max-width: 1000px; /* Limit width */
+  margin: auto 15px; /* Center horizontally with margin */
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid var(--jet);
   box-shadow: var(--shadow-5);
-  overflow-y: auto; 
-  z-index: 10001;
   transform: scale(0.9);
   opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Keep existing transitions */
+  z-index: 10; /* Ensure modal is above overlay */
 }
 
 .modal-container.active .modal {
@@ -253,7 +252,7 @@
 /* --- Choice Modal Specifics --- */
 .choice-modal {
   /* Example: Override max-width if needed */
-  max-width: min(700px, 90vw);
+  max-width: 600px; /* Slightly wider for choice modal */
 }
 
 .choice-modal-content {
@@ -331,4 +330,11 @@
   gap: 15px;
   flex-wrap: wrap;
   width: 100%;
+}
+
+/* Specific modal types (adjust if needed) */
+.testimonials-modal,
+.project-modal {
+   /* Inherits .modal styles, ensure no conflicting background */
+   /* background: transparent; Could be added if needed, but rgba should work */
 }

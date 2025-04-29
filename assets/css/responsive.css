@@ -534,19 +534,21 @@
 @media (min-width: 1250px) {
 
   /**
-   * RESET
+   * BASE
    */
+
+  body { overflow: hidden; }
 
   body::-webkit-scrollbar { width: 20px; }
 
   body::-webkit-scrollbar-track { background: var(--smoky-black); }
 
   body::-webkit-scrollbar-thumb {
+    background: hsl(0, 0%, 22%);
     border: 5px solid var(--smoky-black);
-    background: hsla(0, 0%, 100%, 0.1);
     border-radius: 20px;
-    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.11),
-                inset -1px -1px 0 hsla(0, 0%, 100%, 0.11);
+    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.11), 
+                inset -1px -1px 0 hsla(0, 0%, 0%, 0.11);
   }
 
   body::-webkit-scrollbar-thumb:hover { background: hsla(0, 0%, 100%, 0.15); }
@@ -556,48 +558,51 @@
 
 
   /**
-   * REUSED STYLE
+   * #MAIN
    */
 
   .sidebar, article { width: auto; }
 
   article { min-height: 100%; }
 
-
-
-  /**
-   * MAIN
-   */
-
   main {
-    max-width: 1300px;
-    margin-inline: auto;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr 3.5fr;
     gap: 25px;
+    align-items: flex-start;
+    margin: 40px 0;
   }
 
   .main-content {
-    min-width: 75%;
-    width: 75%;
-    margin: 0;
+    position: relative;
+    width: max-content;
+    height: 100vh;
+    overflow-y: auto;
+    padding-right: 15px;
+    margin-top: 0;
   }
+
+  .main-content::-webkit-scrollbar-thumb { background: hsl(0, 0%, 32%); }
 
 
 
   /**
-   * SIDEBAR
+   * #SIDEBAR
    */
 
   .sidebar {
     position: sticky;
     top: 60px;
-    max-height: max-content;
-    height: 100%;
+    max-height: calc(100vh - 120px);
     margin-bottom: 0;
-    padding-top: 40px;
+    overflow: auto;
+    padding: 30px;
+    box-shadow: var(--shadow-1);
     z-index: 1;
+  }
+
+  .sidebar.active { 
+    max-height: calc(100vh - 120px);
   }
 
   .sidebar-info { flex-direction: column; }

@@ -58,6 +58,10 @@
   --light-gray-70: hsla(0, 0%, 84%, 0.7);
   --bittersweet-shimmer: hsl(0, 43%, 51%);
 
+  /* RGB versions for semi-transparent backgrounds */
+  --eerie-black-2-rgb: 30, 30, 33;
+  --vegas-gold-rgb: 196, 164, 85;
+
   /**
    * typography
    */

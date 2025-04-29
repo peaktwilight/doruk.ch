@@ -54,6 +54,14 @@
    overflow: hidden;
  }
  
+ .testimonials-item .content-card {
+   transition: transform var(--transition-1), box-shadow var(--transition-1);
+ }
+ 
+ .testimonials-item .content-card:hover {
+   transform: scale(1.03);
+   box-shadow: var(--shadow-4);
+ }
  
  /**
   * #testimonials-modal

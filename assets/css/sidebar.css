@@ -1,16 +1,33 @@
-
 /*-----------------------------------*\
   #SIDEBAR
 \*-----------------------------------*/
 
 .sidebar {
-  margin-bottom: 15px;
-  max-height: 125px;
-  overflow: hidden;
-  transition: var(--transition-2);
+  position: sticky;
+  top: 15px;
+  left: 0;
+  /* background: var(--eerie-black-2); REMOVE opaque background */
+  background: rgba(var(--eerie-black-2-rgb), 0.75); /* Apply semi-transparent background */
+  backdrop-filter: blur(10px); /* Apply blur effect */
+  border: 1px solid var(--jet);
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: var(--shadow-2); /* Use a softer shadow? */
+  z-index: 4; /* Ensure sidebar is above page content */
+  /* Set default max-height to fit only the top info */
+  max-height: 115px; /* Adjust this value based on actual height */
+  overflow: hidden; /* Hide overflow initially */
+  /* Restore transition for all relevant properties */
+  transition: max-height var(--transition-2), padding var(--transition-2); /* Transition max-height and potentially padding */
+  margin-bottom: 30px; /* Add margin below the sidebar */
+  position: relative; /* Default position */
 }
 
-.sidebar.active { max-height: 405px; }
+.sidebar.active {
+  overflow: auto; /* Allow scroll when active/expanded */
+  /* Set max-height for expanded state (adjust if needed) */
+  max-height: 405px;
+}
 
 .sidebar-info {
   position: relative;
@@ -83,7 +100,8 @@
 .sidebar-info_more {
   opacity: 0;
   visibility: hidden;
-  transition: var(--transition-2);
+  /* Add transition specifically for opacity/visibility */
+  transition: opacity var(--transition-2), visibility var(--transition-2);
 }
 
 .sidebar.active .sidebar-info_more {
@@ -133,9 +151,12 @@
 }
 
 .social-item .social-link {
-  color: var(--light-gray-70);
+  color: var(--light-gray);
   font-size: 18px;
+  transition: color var(--transition-1), transform var(--transition-1); /* Add transform transition */
 }
 
-
-.social-item .social-link:hover { color: var(--light-gray); }
+.social-item .social-link:hover {
+  color: var(--white-2); /* Brighter color */
+  transform: scale(1.1) translateY(-2px); /* Scale and lift */
+}
