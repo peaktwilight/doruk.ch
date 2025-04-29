@@ -84,8 +84,6 @@
 
 .skills-title { margin-bottom: 20px; }
 
-.skills-list { padding: 20px; cursor: pointer;}
-
 .skills-item {
   position: relative;
   background: var(--border-gradient-onyx);
