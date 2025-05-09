@@ -3,6 +3,123 @@
 // element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
 
+// Initialize tsParticles with a professional animated background
+window.addEventListener('load', async function() {
+  if (typeof tsParticles !== 'undefined') {
+    try {
+      const container = document.getElementById("tsparticles");
+      await tsParticles.load("tsparticles", {
+        fullScreen: {
+          enable: true,
+          zIndex: -1
+        },
+        fpsLimit: 60,
+        particles: {
+          number: {
+            value: 100,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#C4A455" // Using the vegas-gold color from your palette
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.7,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 0.5,
+              opacity_min: 0.3,
+              sync: false
+            }
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#C4A455", // Using the vegas-gold color for connections
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 1.5,
+            direction: "none",
+            random: true,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: true,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: true,
+              mode: "push"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 150,
+              line_linked: {
+                opacity: 0.8
+              }
+            },
+            push: {
+              particles_nb: 5
+            }
+          }
+        },
+        retina_detect: true,
+        background: {
+          color: "transparent",
+          image: "",
+          position: "50% 50%",
+          repeat: "no-repeat",
+          size: "cover"
+        }
+      });
+
+      // Add loaded class for fade-in effect
+      setTimeout(() => {
+        if (container) {
+          container.classList.add("loaded");
+          console.log("Particles loaded and animated");
+        }
+      }, 500);
+    } catch (error) {
+      console.error("Failed to initialize particles:", error);
+    }
+  } else {
+    console.warn("tsParticles library not loaded");
+  }
+});
+
 
 // Initial Choice Modal Functionality
 const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
@@ -24,8 +141,11 @@ const openChoiceModal = () => {
   }
 }
 
-// Open modal on page load
-window.addEventListener('load', openChoiceModal);
+// Open modal on page load - ensure this runs after particles
+window.addEventListener('load', function() {
+  // Small delay to ensure particles are initialized first
+  setTimeout(openChoiceModal, 100);
+});
 
 // Close modal via Escape key
 document.addEventListener('keydown', function(event) {
@@ -218,26 +338,8 @@ projectModalOverlay.addEventListener("click", closeProjectModal);
 projectModalCloseBtn.addEventListener("click", closeProjectModal);
 
 
-// Add this inside the DOMContentLoaded listener if not already there
-document.addEventListener('DOMContentLoaded', (event) => {
-  // ... (keep existing DOMContentLoaded code) ...
-
-  // Initial choice modal logic (keep this)
-  const choiceModal = document.getElementById('choiceModal');
-  const showCVButton = document.getElementById('showCV');
-  if (choiceModal && showCVButton) {
-    // Show the modal automatically
-    choiceModal.style.display = 'flex'; 
-
-    showCVButton.onclick = function() {
-      choiceModal.style.display = 'none';
-    }
-  } else {
-    console.error('Choice modal or button not found');
-  }
-
-  // ... (potentially other existing code)
-});
+// Remove duplicate initialization for choice modal
+// The choice modal is already handled by the dedicated functions above
 
 
 // Language Skills Animation on Scroll - REMOVED

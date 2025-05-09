@@ -87,13 +87,13 @@
   display: flex;
   justify-content: center;
   align-items: center; /* Keep centered */
-  z-index: 10000;
+  z-index: 10000; /* Keep this high to ensure modals are above everything */
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
   box-sizing: border-box;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .modal-container.active {
