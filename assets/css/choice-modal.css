@@ -1,0 +1,46 @@
+/*-----------------------------------*\
+  #CHOICE MODAL SPECIFIC STYLES
+\*-----------------------------------*/
+
+/* Special styles for the choice modal with birds background */
+.choice-modal {
+  background: rgba(var(--eerie-black-2-rgb), 0.8); /* Slightly more opaque than regular modals */
+  border: 1px solid rgba(var(--vegas-gold-rgb), 0.4); /* More visible gold border */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 32px rgba(var(--vegas-gold-rgb), 0.2); /* Enhanced gold glow */
+}
+
+/* Make modal title more prominent */
+.choice-modal-title h2 {
+  background: var(--text-gradient-yellow); /* Use the existing gradient */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  letter-spacing: 0.5px;
+}
+
+/* Match the underscore line style from other titles */
+.choice-modal-title .underscore {
+  display: block;
+  width: 40px;
+  height: 5px;
+  margin: 16px 0;
+  background: var(--text-gradient-yellow);
+  border-radius: 5px;
+}
+
+/* Ensure buttons stand out against the birds */
+.choice-modal .form-btn {
+  background: rgba(var(--eerie-black-2-rgb), 0.9);
+  border: 1px solid rgba(var(--vegas-gold-rgb), 0.4);
+  transition: transform 0.3s ease, background 0.3s ease, border 0.3s ease, color 0.3s ease;
+  color: var(--vegas-gold); /* Match the existing color theme */
+}
+
+.choice-modal .form-btn:hover {
+  transform: translateY(-3px);
+  background: rgba(var(--eerie-black-2-rgb), 1);
+  border: 1px solid var(--vegas-gold);
+  color: var(--orange-yellow-crayola); /* Brighter gold on hover */
+}

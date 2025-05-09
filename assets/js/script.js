@@ -3,49 +3,152 @@
 // Element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
 
-// Initialize Vanta.js waves effect
+// Initialize Vanta.js background effects
 window.addEventListener('load', function() {
   if (typeof VANTA !== 'undefined' && typeof THREE !== 'undefined') {
     try {
-      // Choose which effect to use (NET or GLOBE)
-      const effect = "NET"; // Change to "GLOBE" to try the other effect
+      // Create background effect for the main site - this will be visible after the modal closes
+      let vantaEffect = VANTA.NET({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0xD4B455, // Brighter gold color
+        backgroundColor: 0x0C0C0C, // Deeper black background for contrast
+        points: 12,
+        maxDistance: 25.00,
+        spacing: 18.00,
+        showDots: true
+      });
 
-      if (effect === "NET") {
-        VANTA.NET({
-          el: "#vanta-bg",
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0xD4B455, // Brighter gold color
-          backgroundColor: 0x0C0C0C, // Deeper black background for contrast
-          points: 12,
-          maxDistance: 25.00,
-          spacing: 18.00,
-          showDots: true
-        });
-      } else if (effect === "GLOBE") {
-        VANTA.GLOBE({
-          el: "#vanta-bg",
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0xC4A455, // Vegas gold color from your palette
-          color2: 0x876323, // Darker gold for variation
-          backgroundColor: 0x171717, // Very dark background
-          size: 1.50,
-          speed: 0.5
+      // Create a separate modal background container for the HALO effect
+      const modalBgContainer = document.createElement('div');
+      modalBgContainer.id = 'modal-bg';
+      modalBgContainer.style.position = 'fixed';
+      modalBgContainer.style.top = '0';
+      modalBgContainer.style.left = '0';
+      modalBgContainer.style.width = '100%';
+      modalBgContainer.style.height = '100%';
+      modalBgContainer.style.zIndex = '9999'; // Just below the modal's z-index
+      // Start with the modal background visible since the choice modal opens on load
+      modalBgContainer.style.opacity = '1';
+      modalBgContainer.style.transform = 'scale(1)';
+      modalBgContainer.style.transformOrigin = 'center center';
+      modalBgContainer.style.transition = 'opacity 1.5s cubic-bezier(0.19, 1, 0.22, 1), transform 2s cubic-bezier(0.165, 0.84, 0.44, 1)';
+      modalBgContainer.style.pointerEvents = 'none';
+      document.body.appendChild(modalBgContainer);
+
+      // Initialize BIRDS effect for the modal background
+      let modalEffect = VANTA.BIRDS({
+        el: "#modal-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        backgroundColor: 0x121212, // Very dark background
+        color1: 0xBD9A4D, // Rich gold, slightly darker than vegas-gold
+        color2: 0x967A39, // Deeper, more amber gold for contrast
+        colorMode: "variance",
+        birdSize: 1.20, // Slightly smaller for elegance
+        wingSpan: 22.00, // Adjusted wingspan
+        speedLimit: 3.00, // Slower for more elegance
+        separation: 35.00, // More space between birds
+        alignment: 40.00, // More ordered movement
+        cohesion: 35.00, // Better grouping behavior
+        quantity: 5.00 // More birds for better visual impact
+      });
+
+      // Get references to modal elements
+      const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
+
+      // Add event listeners to update the background when the modal state changes
+      if (choiceModalContainer) {
+        // Add a listener to the close button to hide the HALO effect
+        const closeChoiceBtn = document.querySelector("[data-choice-modal-close-btn]");
+        if (closeChoiceBtn) {
+          closeChoiceBtn.addEventListener('click', function() {
+            // First slightly dim the birds as they begin their transformation
+            modalBgContainer.style.opacity = '0.9';
+            // Start a subtle expansion
+            modalBgContainer.style.transform = 'scale(1.05)';
+
+            // Then after a short delay, begin the main transition
+            setTimeout(() => {
+              // Fade out completely while expanding
+              modalBgContainer.style.opacity = '0';
+              modalBgContainer.style.transform = 'scale(1.6)';
+            }, 150);
+          });
+        }
+
+        // Add a listener to the CV button to hide the HALO effect
+        const showCVButton = document.getElementById('showCV');
+        if (showCVButton) {
+          showCVButton.addEventListener('click', function() {
+            // First slightly dim the birds as they begin their transformation
+            modalBgContainer.style.opacity = '0.9';
+            // Start a subtle expansion
+            modalBgContainer.style.transform = 'scale(1.05)';
+
+            // Then after a short delay, begin the main transition
+            setTimeout(() => {
+              // Fade out completely while expanding
+              modalBgContainer.style.opacity = '0';
+              modalBgContainer.style.transform = 'scale(1.6)';
+            }, 150);
+          });
+        }
+
+        // Add a listener to the modal overlay to hide the HALO effect
+        const choiceModalOverlay = document.querySelector("[data-choice-modal-overlay]");
+        if (choiceModalOverlay) {
+          choiceModalOverlay.addEventListener('click', function() {
+            // First slightly dim the birds as they begin their transformation
+            modalBgContainer.style.opacity = '0.9';
+            // Start a subtle expansion
+            modalBgContainer.style.transform = 'scale(1.05)';
+
+            // Then after a short delay, begin the main transition
+            setTimeout(() => {
+              // Fade out completely while expanding
+              modalBgContainer.style.opacity = '0';
+              modalBgContainer.style.transform = 'scale(1.6)';
+            }, 150);
+          });
+        }
+
+        // Handle escape key press
+        document.addEventListener('keydown', function(event) {
+          if (event.key === "Escape" || event.keyCode === 27) {
+            // First slightly dim the birds as they begin their transformation
+            modalBgContainer.style.opacity = '0.9';
+            // Start a subtle expansion
+            modalBgContainer.style.transform = 'scale(1.05)';
+
+            // Then after a short delay, begin the main transition
+            setTimeout(() => {
+              // Fade out completely while expanding
+              modalBgContainer.style.opacity = '0';
+              modalBgContainer.style.transform = 'scale(1.6)';
+            }, 150);
+          }
         });
       }
 
-      console.log(`Vanta.js ${effect} effect initialized`);
+      // Store the effects for later reference or cleanup
+      window.vantaEffects = {
+        main: vantaEffect,
+        modal: modalEffect
+      };
+
+      console.log("Vanta.js effects initialized");
     } catch (error) {
       console.error("Failed to initialize Vanta.js:", error);
     }
