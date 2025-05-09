@@ -1,94 +1,193 @@
 /**
- * Portfolio Image Loader
- * Simple loader for portfolio GIFs with minimal operations
+ * Ultra-Optimized Portfolio Image Loader
+ * Adds minimalistic loading animations to GIFs with maximum performance
  */
 
-console.log("Portfolio loader script loaded");
+// Use a self-executing function for encapsulation
+(function() {
+  // Remove logging in production for performance
+  const DEBUG = false;
+  const log = DEBUG ? console.log : function(){};
 
-// Add loaders to portfolio images when needed
-document.addEventListener('DOMContentLoaded', function() {
-  console.log("DOM loaded, setting up portfolio image loaders");
+  // Cache DOM queries for performance
+  let portfolioPage;
+  let portfolioLinks;
 
-  // Add click handler to the portfolio tab
-  const portfolioLinks = Array.from(document.querySelectorAll('[data-nav-link]'))
-    .filter(link => link.textContent.trim().toLowerCase() === 'portfolio');
-    
-  if (portfolioLinks.length > 0) {
-    portfolioLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        console.log("Portfolio link clicked");
-        // Wait for page transition
-        setTimeout(addLoadersToImages, 200);
+  // Track which images already have loaders to prevent duplication
+  const processedImages = new Set();
+
+  // Store any active timeouts to be able to clear them
+  const timeouts = [];
+
+  // Initialize the loader once DOM is ready - use passive listener for better performance
+  document.addEventListener('DOMContentLoaded', initialize, { passive: true });
+
+  // Setup event listeners and initial state
+  function initialize() {
+    log('Portfolio loader initialized');
+
+    // Cache DOM elements
+    portfolioPage = document.querySelector('.portfolio');
+    portfolioLinks = Array.from(document.querySelectorAll('[data-nav-link]'))
+      .filter(link => link.textContent.trim().toLowerCase() === 'portfolio');
+
+    // Set up portfolio tab click handler with passive listeners
+    if (portfolioLinks.length) {
+      portfolioLinks.forEach(link => {
+        link.addEventListener('click', handlePortfolioClick, { passive: true });
       });
-    });
-  }
-  
-  // If portfolio is active on load
-  if (document.querySelector('.portfolio.active')) {
-    console.log("Portfolio is active on page load");
-    setTimeout(addLoadersToImages, 200);
-  }
-});
+    }
 
-// Add loaders to images
-function addLoadersToImages() {
-  console.log("Adding loaders to portfolio images");
-  
-  try {
-    // Get all portfolio images
-    const images = document.querySelectorAll('.project-img img');
-    console.log(`Found ${images.length} images`);
-    
-    // Process each image
-    images.forEach((img, index) => {
-      // Skip if image is already loaded
-      if (img.complete) {
-        console.log(`Image ${index} already loaded`);
-        return;
-      }
-      
-      // Get the parent container
-      const imgContainer = img.closest('.project-img');
-      if (!imgContainer) return;
-      
-      // Check if a loader already exists
-      if (imgContainer.querySelector('.shimmer-container')) return;
-        
-      // Create a simple loader
-      const loader = document.createElement('div');
-      loader.className = 'shimmer-container';
-      loader.innerHTML = `
-        <div class="shimmer"></div>
-        <div class="shimmer-center"></div>
-      `;
-      
-      // Add the loader
-      imgContainer.appendChild(loader);
-      console.log(`Added loader to image ${index}`);
-      
-      // Handle image loaded event
-      const handleLoad = () => {
-        loader.classList.add('hidden');
-        setTimeout(() => {
-          if (loader.parentNode) loader.remove();
-        }, 500);
-        img.removeEventListener('load', handleLoad);
-      };
-      
-      // Add event listeners
-      img.addEventListener('load', handleLoad);
-      
-      // Fallback - remove loader after 8 seconds
-      setTimeout(() => {
-        if (loader.parentNode) {
-          loader.classList.add('hidden');
-          setTimeout(() => {
-            if (loader.parentNode) loader.remove();
-          }, 500);
-        }
-      }, 8000);
-    });
-  } catch (error) {
-    console.error("Error adding loaders:", error);
+    // Check if portfolio is active immediately
+    if (portfolioPage && portfolioPage.classList.contains('active')) {
+      // Delay slightly to ensure all resources have been fetched
+      setTimeout(processImages, 100);
+    }
   }
-}
+
+  // Handler for portfolio tab clicks
+  function handlePortfolioClick() {
+    log('Portfolio tab clicked');
+    // Clear any existing timeouts
+    timeouts.forEach(clearTimeout);
+    timeouts.length = 0;
+
+    // Process images after a short delay to allow for page transition
+    const timeout = setTimeout(processImages, 150);
+    timeouts.push(timeout);
+  }
+
+  // Process all images in the portfolio section
+  function processImages() {
+    if (!portfolioPage || !portfolioPage.classList.contains('active')) return;
+
+    // Get all project image containers
+    const imgContainers = Array.from(portfolioPage.querySelectorAll('.project-img'));
+    log(`Found ${imgContainers.length} image containers`);
+
+    // Skip if no images found
+    if (!imgContainers.length) return;
+
+    // Use IntersectionObserver to prioritize visible images if supported
+    if ('IntersectionObserver' in window) {
+      log('Using IntersectionObserver for prioritization');
+
+      // Track which images have been processed
+      const processedContainers = new Set();
+
+      // Process visible images first, then others
+      const observer = new IntersectionObserver((entries) => {
+        // Process visible images immediately
+        const visibleEntries = entries.filter(entry => entry.isIntersecting);
+
+        visibleEntries.forEach(entry => {
+          const container = entry.target;
+          if (!processedContainers.has(container)) {
+            processedContainers.add(container);
+            processImageContainer(container);
+            observer.unobserve(container);
+          }
+        });
+
+        // If all are processed, disconnect observer
+        if (processedContainers.size === imgContainers.length) {
+          observer.disconnect();
+        }
+      }, {
+        rootMargin: '200px' // Start loading slightly before they come into view
+      });
+
+      // Observe all image containers
+      imgContainers.forEach(container => observer.observe(container));
+
+      // Process remaining images in a low-priority way after a delay
+      setTimeout(() => {
+        imgContainers.forEach(container => {
+          if (!processedContainers.has(container)) {
+            processedContainers.add(container);
+            processImageContainer(container);
+            observer.unobserve(container);
+          }
+        });
+        observer.disconnect();
+      }, 1000);
+    } else {
+      // Fallback for browsers without IntersectionObserver
+      // Use requestAnimationFrame for smoother performance
+      requestAnimationFrame(() => {
+        // Process in batches of 3 at a time for better performance
+        let processed = 0;
+
+        function processBatch() {
+          for (let i = 0; i < 3 && processed < imgContainers.length; i++, processed++) {
+            const container = imgContainers[processed];
+            processImageContainer(container);
+          }
+
+          if (processed < imgContainers.length) {
+            // Process next batch in next animation frame
+            requestAnimationFrame(processBatch);
+          }
+        }
+
+        // Start processing
+        processBatch();
+      });
+    }
+  }
+
+  // Process a single image container
+  function processImageContainer(container) {
+    // Get the image inside this container
+    const img = container.querySelector('img');
+    if (!img) return;
+
+    // Skip already processed images
+    const imageId = img.src;
+    if (processedImages.has(imageId) || img.complete) return;
+
+    // Mark as processed
+    processedImages.add(imageId);
+
+    // Create loader with minimal DOM operations
+    const loader = document.createElement('div');
+    loader.className = 'shimmer-container';
+
+    // Use minimal HTML for better performance
+    const shimmer = document.createElement('div');
+    shimmer.className = 'shimmer';
+
+    const shimmerCenter = document.createElement('div');
+    shimmerCenter.className = 'shimmer-center';
+
+    // Append with minimal reflows
+    loader.appendChild(shimmer);
+    loader.appendChild(shimmerCenter);
+    container.appendChild(loader);
+
+    // Once image loads, remove loader
+    function removeLoader() {
+      if (!loader.parentNode) return;
+
+      // Use opacity transition for smooth removal
+      loader.classList.add('hidden');
+
+      // Remove from DOM after transition
+      const timeout = setTimeout(() => {
+        if (loader.parentNode) loader.remove();
+        // Remove from set when done
+        processedImages.delete(imageId);
+      }, 300);
+
+      timeouts.push(timeout);
+    }
+
+    // Handle image load events - using passive and once for optimal performance
+    img.addEventListener('load', removeLoader, { once: true, passive: true });
+    img.addEventListener('error', removeLoader, { once: true, passive: true });
+
+    // Fallback timeout - shorter for better performance
+    const timeout = setTimeout(removeLoader, 5000);
+    timeouts.push(timeout);
+  }
+})();

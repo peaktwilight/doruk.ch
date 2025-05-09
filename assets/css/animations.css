@@ -44,80 +44,90 @@
 
 /* ====== LOADING ANIMATIONS ====== */
 
-/* Shimmer loading effect for images */
+/*
+ * High-performance shimmer loading effect
+ * - Uses opacity instead of visibility for better performance
+ * - Hardware-accelerated animations with transform and opacity only
+ * - Minimal gradient pattern for better rendering performance
+ * - Simplified keyframe animations for smoother playback
+ */
 .shimmer-container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--eerie-black-1);
+  background-color: var(--eerie-black-1);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5; /* Above hover overlay */
+  z-index: 5;
   overflow: hidden;
   border-radius: 10px;
-  transition: opacity 0.5s ease;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  /* Hardware acceleration */
+  will-change: opacity;
+  /* Prevent glitchy rendering during transition */
+  backface-visibility: hidden;
 }
 
-/* The shimmer animation elements */
+/* Optimized shimmer with smaller gradient size */
 .shimmer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  /* Simpler gradient with fewer color stops for better performance */
   background: linear-gradient(
     90deg,
-    var(--eerie-black-1) 0%,
-    rgba(var(--vegas-gold-rgb), 0.15) 50%,
-    var(--eerie-black-1) 100%
+    var(--eerie-black-1) 10%,
+    rgba(var(--vegas-gold-rgb), 0.12) 30%,
+    var(--eerie-black-1) 50%
   );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
+  background-size: 150% 100%;
+  /* Hardware acceleration */
+  will-change: transform;
+  transform: translateZ(0);
+  animation: shimmer 2s infinite;
 }
 
-/* Gold dot pulse animation in center */
+/* Simplified center dot with hardware acceleration */
 .shimmer-center {
-  width: 15px;
-  height: 15px;
-  background: var(--vegas-gold);
+  width: 10px; /* Smaller size */
+  height: 10px;
+  background-color: var(--vegas-gold);
   border-radius: 50%;
-  animation: shimmerPulse 1.2s infinite ease-in-out;
+  /* Hardware acceleration */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  animation: shimmerPulse 1.5s infinite;
   z-index: 2;
 }
 
-/* Shimmer animation */
+/* Optimized keyframes using only transform for hardware acceleration */
 @keyframes shimmer {
-  0% {
-    background-position: -100% 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
+  0%, 100% { transform: translateX(-30%); }
+  50% { transform: translateX(30%); }
 }
 
-/* Shimmer center pulse animation */
+/* Optimized keyframes using only transform and opacity */
 @keyframes shimmerPulse {
-  0% {
-    transform: scale(0.8);
+  0%, 100% {
+    transform: scale(0.7) translateZ(0);
     opacity: 0.7;
   }
   50% {
-    transform: scale(1);
+    transform: scale(1) translateZ(0);
     opacity: 1;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0.7;
   }
 }
 
-/* Hidden class for js control */
+/* Simplified hidden class that only uses opacity */
 .hidden {
   opacity: 0;
-  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Respect user preference for reduced motion */
