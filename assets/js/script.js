@@ -181,6 +181,11 @@ const openChoiceModal = () => {
 window.addEventListener('load', function() {
   // Small delay to ensure background is initialized first
   setTimeout(openChoiceModal, 300);
+
+  // Initialize image loaders for portfolio page if it's visible
+  if (document.querySelector('.portfolio.active')) {
+    /* image loading handled by portfolio-loader.js */
+  }
 });
 
 // Close modal via Escape key
@@ -249,6 +254,8 @@ overlay.addEventListener("click", testimonialsModalFunc);
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
+// REMOVED - this functionality is now in image-loader.js
+
 // Add event to all nav links
 for (let i = 0; i < navigationLinks.length; i++) {
   navigationLinks[i].addEventListener("click", function () {
@@ -257,6 +264,8 @@ for (let i = 0; i < navigationLinks.length; i++) {
         pages[i].classList.add("active");
         navigationLinks[i].classList.add("active");
         window.scrollTo(0, 0);
+
+        // REMOVED - this functionality is now in image-loader.js
       } else {
         pages[i].classList.remove("active");
         navigationLinks[i].classList.remove("active");
@@ -264,6 +273,8 @@ for (let i = 0; i < navigationLinks.length; i++) {
     }
   });
 }
+
+// REMOVED - Function moved to image-loader.js
 
 // Project Details Modal Functionality
 const projectModalContainer = document.querySelector("[data-project-modal-container]");
@@ -360,3 +371,34 @@ projectItems.forEach(item => {
 // Add click listener to overlay and close button
 projectModalOverlay.addEventListener("click", closeProjectModal);
 projectModalCloseBtn.addEventListener("click", closeProjectModal);
+
+// Set up observer to watch for new images being added
+function setupImageLoadObserver() {
+  // Create a new observer
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      // If nodes were added
+      if (mutation.addedNodes.length) {
+        mutation.addedNodes.forEach((node) => {
+          // Check if the portfolio is active
+          if (document.querySelector('.portfolio.active')) {
+            // Initialize loaders for any new project images
+            /* image loading handled by portfolio-loader.js */
+          }
+        });
+      }
+    });
+  });
+
+  // Start observing the portfolio container for changes
+  const portfolioContainer = document.querySelector('.portfolio');
+  if (portfolioContainer) {
+    observer.observe(portfolioContainer, {
+      childList: true,
+      subtree: true
+    });
+  }
+}
+
+// Call the setup function when the page loads
+window.addEventListener('load', setupImageLoadObserver);
