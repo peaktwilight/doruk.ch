@@ -16,18 +16,35 @@
   background-clip: text;
   color: transparent;
   font-weight: 600;
-  margin-bottom: 0.5em;
   letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 15px;
 }
 
-/* Match the underscore line style from other titles */
-.choice-modal-title .underscore {
-  display: block;
+/* Override any article-title styles that might add another separator */
+.choice-modal-title.article-title::after,
+.modal-title.article-title::after {
+  display: none; /* Prevent duplicate separators */
+}
+
+/* Add a single separator line after the title */
+.choice-modal-title h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
   width: 40px;
   height: 5px;
-  margin: 16px 0;
   background: var(--text-gradient-yellow);
   border-radius: 5px;
+  transform: translateX(-50%); /* Center the separator */
+}
+
+/* Add proper spacing between title and content */
+.choice-modal-content h3 {
+  margin-top: 1.2em;
+  margin-bottom: 1em;
+  color: var(--light-gray);
 }
 
 /* Ensure buttons stand out against the birds */

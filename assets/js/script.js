@@ -62,7 +62,7 @@ window.addEventListener('load', function() {
         separation: 35.00, // More space between birds
         alignment: 40.00, // More ordered movement
         cohesion: 35.00, // Better grouping behavior
-        quantity: 5.00 // More birds for better visual impact
+        quantity: 4.00 // More birds for better visual impact
       });
 
       // Get references to modal elements

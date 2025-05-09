@@ -259,15 +259,7 @@
   color: var(--light-gray); /* Set default text color */
 }
 
-.choice-modal-title::after {
-  content: "";
-  display: block; 
-  width: 40px;
-  height: 5px;
-  background: var(--text-gradient-yellow);
-  border-radius: 5px;
-  margin: 20px auto 20px; 
-}
+/* Removed duplicate separator - now handled in choice-modal.css */
 
 /* Restore container styling for choice modal buttons */
 .choice-modal .button-container {
