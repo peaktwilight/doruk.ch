@@ -1,0 +1,57 @@
+/*-----------------------------------*\
+  #ANIMATIONS - MINIMAL VERSION
+\*-----------------------------------*/
+
+/*
+ * Lightweight animation styles to complement Vanta.js background
+ * Focus on minimal, performant hover effects only
+ */
+
+/* ====== HOVER EFFECTS ====== */
+
+/* Interactive element hover animations */
+.navbar-link:hover,
+.social-link:hover,
+.form-btn:hover {
+  filter: brightness(1.2);
+}
+
+/* Project item hover enhancement - simple opacity change */
+.project-item {
+  transition: opacity 0.3s ease;
+}
+
+.project-item:hover {
+  opacity: 0.9;
+}
+
+/* ====== PULSING ANIMATIONS ====== */
+
+/* Enhance the status dot pulse animation */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(104, 214, 104, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(104, 214, 104, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(104, 214, 104, 0);
+  }
+}
+
+.status-live .status-dot {
+  animation: pulse 2s infinite;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

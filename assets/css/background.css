@@ -2,23 +2,17 @@
   #ANIMATED BACKGROUND
 \*-----------------------------------*/
 
-/* Particles Background Container */
-#tsparticles {
+/* Vanta.js Background Container */
+#vanta-bg {
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   z-index: -1;
-  opacity: 0;
-  transition: opacity 1.5s ease;
 }
 
-#tsparticles.loaded {
-  opacity: 1;
-}
-
-/* Add subtle radial gradient overlay for depth */
+/* Add subtle radial gradient overlay for depth and to ensure content readability */
 body::before {
   content: "";
   position: fixed;
@@ -28,13 +22,13 @@ body::before {
   height: 100%;
   background: radial-gradient(circle at center,
                               hsla(0, 0%, 7%, 0.3) 0%,
-                              hsla(0, 0%, 7%, 0.6) 70%,
+                              hsla(0, 0%, 7%, 0.5) 70%,
                               hsl(0, 0%, 7%) 100%);
   z-index: -1;
   pointer-events: none;
 }
 
-/* Make sure particles appear behind main content */
+/* Make sure content appears above background */
 .sidebar,
 .main-content {
   position: relative;

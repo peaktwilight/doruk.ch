@@ -1,125 +1,58 @@
 'use strict';
 
-// element toggle function
+// Element toggle function
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
 
-// Initialize tsParticles with a professional animated background
-window.addEventListener('load', async function() {
-  if (typeof tsParticles !== 'undefined') {
+// Initialize Vanta.js waves effect
+window.addEventListener('load', function() {
+  if (typeof VANTA !== 'undefined' && typeof THREE !== 'undefined') {
     try {
-      const container = document.getElementById("tsparticles");
-      await tsParticles.load("tsparticles", {
-        fullScreen: {
-          enable: true,
-          zIndex: -1
-        },
-        fpsLimit: 60,
-        particles: {
-          number: {
-            value: 100,
-            density: {
-              enable: true,
-              value_area: 800
-            }
-          },
-          color: {
-            value: "#C4A455" // Using the vegas-gold color from your palette
-          },
-          shape: {
-            type: "circle"
-          },
-          opacity: {
-            value: 0.7,
-            random: true,
-            anim: {
-              enable: true,
-              speed: 0.5,
-              opacity_min: 0.3,
-              sync: false
-            }
-          },
-          size: {
-            value: 3,
-            random: true,
-            anim: {
-              enable: true,
-              speed: 1,
-              size_min: 0.1,
-              sync: false
-            }
-          },
-          line_linked: {
-            enable: true,
-            distance: 150,
-            color: "#C4A455", // Using the vegas-gold color for connections
-            opacity: 0.4,
-            width: 1
-          },
-          move: {
-            enable: true,
-            speed: 1.5,
-            direction: "none",
-            random: true,
-            straight: false,
-            out_mode: "out",
-            bounce: false,
-            attract: {
-              enable: true,
-              rotateX: 600,
-              rotateY: 1200
-            }
-          }
-        },
-        interactivity: {
-          detect_on: "canvas",
-          events: {
-            onhover: {
-              enable: true,
-              mode: "grab"
-            },
-            onclick: {
-              enable: true,
-              mode: "push"
-            },
-            resize: true
-          },
-          modes: {
-            grab: {
-              distance: 150,
-              line_linked: {
-                opacity: 0.8
-              }
-            },
-            push: {
-              particles_nb: 5
-            }
-          }
-        },
-        retina_detect: true,
-        background: {
-          color: "transparent",
-          image: "",
-          position: "50% 50%",
-          repeat: "no-repeat",
-          size: "cover"
-        }
-      });
+      // Choose which effect to use (NET or GLOBE)
+      const effect = "NET"; // Change to "GLOBE" to try the other effect
 
-      // Add loaded class for fade-in effect
-      setTimeout(() => {
-        if (container) {
-          container.classList.add("loaded");
-          console.log("Particles loaded and animated");
-        }
-      }, 500);
+      if (effect === "NET") {
+        VANTA.NET({
+          el: "#vanta-bg",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0xD4B455, // Brighter gold color
+          backgroundColor: 0x0C0C0C, // Deeper black background for contrast
+          points: 12,
+          maxDistance: 25.00,
+          spacing: 18.00,
+          showDots: true
+        });
+      } else if (effect === "GLOBE") {
+        VANTA.GLOBE({
+          el: "#vanta-bg",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0xC4A455, // Vegas gold color from your palette
+          color2: 0x876323, // Darker gold for variation
+          backgroundColor: 0x171717, // Very dark background
+          size: 1.50,
+          speed: 0.5
+        });
+      }
+
+      console.log(`Vanta.js ${effect} effect initialized`);
     } catch (error) {
-      console.error("Failed to initialize particles:", error);
+      console.error("Failed to initialize Vanta.js:", error);
     }
   } else {
-    console.warn("tsParticles library not loaded");
+    console.warn("Vanta.js or Three.js library not loaded");
   }
 });
-
 
 // Initial Choice Modal Functionality
 const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
@@ -141,10 +74,10 @@ const openChoiceModal = () => {
   }
 }
 
-// Open modal on page load - ensure this runs after particles
+// Open modal on page load - ensure this runs after Vanta
 window.addEventListener('load', function() {
-  // Small delay to ensure particles are initialized first
-  setTimeout(openChoiceModal, 100);
+  // Small delay to ensure background is initialized first
+  setTimeout(openChoiceModal, 300);
 });
 
 // Close modal via Escape key
@@ -169,63 +102,53 @@ if (choiceModalCloseBtn) {
   choiceModalCloseBtn.addEventListener('click', closeChoiceModal);
 }
 
-
-// sidebar variables
+// Sidebar variables
 const sidebar = document.querySelector("[data-sidebar]");
 const sidebarBtn = document.querySelector("[data-sidebar-btn]");
 
-// sidebar toggle functionality for mobile
+// Sidebar toggle functionality for mobile
 sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
 
-
-
-// testimonials variables
+// Testimonials variables
 const testimonialsItem = document.querySelectorAll("[data-testimonials-item]");
 const modalContainer = document.querySelector("[data-modal-container]");
 const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
 
-// modal variable
+// Modal variables
 const modalImg = document.querySelector("[data-modal-img]");
 const modalTitle = document.querySelector("[data-modal-title]");
 const modalText = document.querySelector("[data-modal-text]");
 
-// modal toggle function
+// Modal toggle function
 const testimonialsModalFunc = function () {
   modalContainer.classList.toggle("active");
   overlay.classList.toggle("active");
 }
 
-// add click event to all modal items
+// Add click event to all modal items
 for (let i = 0; i < testimonialsItem.length; i++) {
-
   testimonialsItem[i].addEventListener("click", function () {
-
     modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
     modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
     modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
     modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
 
     testimonialsModalFunc();
-
   });
-
 }
 
-// add click event to modal close button
+// Add click event to modal close button
 modalCloseBtn.addEventListener("click", testimonialsModalFunc);
 overlay.addEventListener("click", testimonialsModalFunc);
 
-
-
-// page navigation variables
+// Page navigation variables
 const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
-// add event to all nav link
+// Add event to all nav links
 for (let i = 0; i < navigationLinks.length; i++) {
   navigationLinks[i].addEventListener("click", function () {
-
     for (let i = 0; i < pages.length; i++) {
       if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
         pages[i].classList.add("active");
@@ -236,10 +159,8 @@ for (let i = 0; i < navigationLinks.length; i++) {
         navigationLinks[i].classList.remove("active");
       }
     }
-
   });
 }
-
 
 // Project Details Modal Functionality
 const projectModalContainer = document.querySelector("[data-project-modal-container]");
@@ -336,41 +257,3 @@ projectItems.forEach(item => {
 // Add click listener to overlay and close button
 projectModalOverlay.addEventListener("click", closeProjectModal);
 projectModalCloseBtn.addEventListener("click", closeProjectModal);
-
-
-// Remove duplicate initialization for choice modal
-// The choice modal is already handled by the dedicated functions above
-
-
-// Language Skills Animation on Scroll - REMOVED
-/*
-document.addEventListener('DOMContentLoaded', () => {
-  const languageSkillsSection = document.querySelector('.language-skills');
-  const languageItems = document.querySelectorAll('.language-item');
-
-  if (!languageSkillsSection || languageItems.length === 0) return;
-
-  const observerOptions = {
-    root: null, // relative to document viewport 
-    rootMargin: '0px',
-    threshold: 0.1 // trigger when 10% of the section is visible
-  };
-
-  const observerCallback = (entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        languageItems.forEach((item, index) => {
-          // Add a delay based on the item's index
-          item.style.transitionDelay = `${index * 0.1}s`; 
-          item.classList.add('animate');
-        });
-        observer.unobserve(entry.target); // Stop observing once animated
-      }
-    });
-  };
-
-  const observer = new IntersectionObserver(observerCallback, observerOptions);
-  observer.observe(languageSkillsSection); 
-});
-*/
-
