@@ -488,7 +488,7 @@
               <div class="content-card" data-testimonials-item>
 
                 <figure class="testimonials-avatar-box">
-                  <img src="./assets/images/FSJM.png" alt="FSJM" width="60" data-testimonials-avatar loading="lazy">
+                  <img src="./assets/images/FSJM.jpg" alt="FSJM" width="60" data-testimonials-avatar loading="lazy">
                 </figure>
 
                 <h4 class="h4 testimonials-item-title" data-testimonials-title> Math Olympiad Semi-Finalist</h4>
@@ -510,7 +510,7 @@
               <div class="content-card" data-testimonials-item>
 
                 <figure class="testimonials-avatar-box">
-                  <img src="./assets/images/COV.jpeg" alt="COV" width="60" data-testimonials-avatar loading="lazy">
+                  <img src="./assets/images/COV.png" alt="COV" width="60" data-testimonials-avatar loading="lazy">
                 </figure>
 
                 <h4 class="h4 testimonials-item-title" data-testimonials-title>"Mention Excellence"</h4>
@@ -549,38 +549,28 @@
 
 
         <!--
-          - testimonials modal
+          - testimonials modal (using same structure as project modal)
         -->
 
         <div class="modal-container" data-modal-container>
-
-          <div class="overlay" data-overlay></div>
-
-          <section class="testimonials-modal">
-
-            <button class="modal-close-btn" data-modal-close-btn>
+          <div class="project-modal-overlay" data-overlay></div>
+          <section class="modal project-modal testimonials-modal">
+            <button class="modal-close-btn project-modal-close-btn" data-modal-close-btn>
               <ion-icon name="close-outline"></ion-icon>
             </button>
-
-            <div class="modal-img-wrapper">
-              <figure class="modal-avatar-box">
-                <img src="./assets/images/FSJM.png" alt="Achievement Image" width="80" data-modal-img loading="lazy">
+            <div class="modal-content project-modal-content">
+              <figure class="project-modal-img-wrapper">
+                <img src="./assets/images/FSJM.jpg" alt="Achievement Image" data-modal-img loading="lazy">
               </figure>
-
-              <img src="./assets/images/icon-quote.svg" alt="quote icon" loading="lazy">
-            </div>
-
-            <!-- Add missing modal content elements -->
-            <div class="modal-content">
-              <h4 class="h4 modal-title" data-modal-title>Achievement Title</h4>
-              <time datetime="2022">Year</time>
-              <div class="modal-text" data-modal-text>
-                <p>Achievement details will appear here.</p>
+              <div class="project-modal-info">
+                <h3 class="h3 project-modal-title" data-modal-title>Achievement Title</h3>
+                <time datetime="2022" class="achievement-time">Year</time>
+                <div class="project-modal-category" data-modal-text>
+                  <p>Achievement details will appear here.</p>
+                </div>
               </div>
             </div>
-
           </section>
-
         </div>
 
       </article>

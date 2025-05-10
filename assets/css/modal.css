@@ -109,10 +109,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: hsla(0, 0%, 5%, 0.65); /* Reduced opacity for the birds to show through */
+  background: hsla(0, 0%, 5%, 0.85); /* Higher opacity for regular modals */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+}
+
+/* Special styles for choice modal overlay */
+.choice-modal-overlay {
+  background: hsla(0, 0%, 5%, 0.65); /* Reduced opacity for birds to show through */
 }
 
 .modal-container.active .project-modal-overlay {
@@ -122,9 +127,7 @@
 
 /* --- Base Modal Box --- */
 .modal {
-  /* background: var(--eerie-black-1); REMOVE opaque background */
-  background: rgba(var(--eerie-black-2-rgb), 0.75); /* More transparent to see birds */
-  backdrop-filter: blur(3px); /* Reduced blur to see birds better */
+  background: var(--eerie-black-1); /* Solid background for project/testimonial modals */
   position: relative;
   max-width: 1000px; /* Limit width */
   margin: auto 15px; /* Center horizontally with margin */
@@ -136,6 +139,12 @@
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease; /* Keep existing transitions */
   z-index: 10; /* Ensure modal is above overlay */
+}
+
+/* Special styling for the choice modal only */
+.choice-modal {
+  background: rgba(var(--eerie-black-2-rgb), 0.75); /* More transparent to see birds */
+  backdrop-filter: blur(3px); /* Blur effect only for choice modal */
 }
 
 .modal-container.active .modal {
@@ -173,9 +182,11 @@
 }
 
 /* --- Project Modal Specifics --- */
-.project-modal { 
+.project-modal {
   /* Keep project-specific overrides if needed, e.g. padding=0 */
   padding: 0; /* Override base padding for project modal */
+  background: var(--eerie-black-1); /* Solid background for project modals */
+  backdrop-filter: none; /* Ensure no blur effect */
 }
 
 .project-modal-content {
@@ -331,8 +342,9 @@
 }
 
 /* Specific modal types (adjust if needed) */
-.testimonials-modal,
-.project-modal {
-   /* Inherits .modal styles, ensure no conflicting background */
-   /* background: transparent; Could be added if needed, but rgba should work */
+.testimonials-modal {
+   /* Match styles with project modal for consistency */
+   background: var(--eerie-black-1);
+   backdrop-filter: none;
+   padding: 20px;
 }

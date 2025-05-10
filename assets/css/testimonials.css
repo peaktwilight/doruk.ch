@@ -69,136 +69,14 @@
  * #testimonials-modal
  */
 
-.testimonials-modal {
-  background: var(--eerie-black-2);
-  position: relative;
-  padding: 25px;
-  margin: 15px 12px;
-  border: 1px solid var(--jet);
-  border-radius: 14px;
-  box-shadow: var(--shadow-5);
-  transform: scale(1.1);
-  opacity: 0;
-  transition: var(--transition-1);
-  z-index: 2;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 25px;
-  max-width: 700px;
-}
- 
-.modal-container.active .testimonials-modal {
-  transform: scale(1);
-  opacity: 1;
-}
- 
-.modal-close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: var(--onyx);
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--white-2);
-  font-size: 18px;
-  opacity: 0.7;
-  z-index: 3;
-}
- 
-.modal-close-btn:hover,
-.modal-close-btn:focus { opacity: 1; }
- 
-.modal-close-btn ion-icon { --ionicon-stroke-width: 50px; }
- 
-.testimonials-modal .modal-img-wrapper {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
- 
-.modal-avatar-box {
-  background: var(--bg-gradient-onyx);
-  width: max-content;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: var(--shadow-2);
-}
- 
-.testimonials-modal .modal-img-wrapper > img {
-  display: block;
-  width: 40px;
-  height: auto;
-  opacity: 0.7;
-}
- 
-.testimonials-modal .modal-content {
-  flex-grow: 1;
-}
- 
-.modal-title {
-  margin-bottom: 15px;
+/* Most styles moved to modal.css for unified styling */
+
+/* Testimonials-specific custom styles */
+.achievement-time {
   color: var(--vegas-gold);
-  font-weight: var(--fw-500);
-  position: relative;
-  padding-bottom: 12px;
-}
- 
-.modal-title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-  height: 2px;
-  background-color: var(--vegas-gold);
-}
- 
-.modal-content time {
+  font-size: var(--fs-6);
+  font-weight: var(--fw-300);
   display: block;
-  font-size: var(--fs-6);
-  color: var(--light-gray-70);
-  font-weight: var(--fw-300);
-  margin-bottom: 15px;
-}
- 
-.modal-text p {
-  color: var(--light-gray);
-  font-size: var(--fs-6);
-  font-weight: var(--fw-300);
-  line-height: 1.6;
-  margin-bottom: 12px;
-}
- 
-/* Responsive adjustments */
-@media (max-width: 580px) {
-  .testimonials-modal {
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    gap: 20px;
-  }
-  
-  .testimonials-modal .modal-img-wrapper {
-    margin-bottom: 0;
-  }
-  
-  .modal-title {
-    text-align: center;
-  }
-  
-  .modal-title::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .modal-content time {
-    text-align: center;
-  }
+  margin: 5px 0 15px 0;
+  text-align: center;
 }

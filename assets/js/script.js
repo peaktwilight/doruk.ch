@@ -224,24 +224,35 @@ const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
 
 // Modal variables - using proper selectors with more specificity
-const modalImg = document.querySelector(".testimonials-modal [data-modal-img]");
-const modalTitle = document.querySelector(".testimonials-modal [data-modal-title]");
-const modalText = document.querySelector(".testimonials-modal [data-modal-text]");
+const modalImg = document.querySelector("[data-modal-img]");
+const modalTitle = document.querySelector("[data-modal-title]");
+const modalText = document.querySelector("[data-modal-text]");
 
 // Modal toggle function
 const testimonialsModalFunc = function () {
   modalContainer.classList.toggle("active");
-  overlay.classList.toggle("active");
 }
 
 // Add click event to all modal items
 for (let i = 0; i < testimonialsItem.length; i++) {
   testimonialsItem[i].addEventListener("click", function () {
+    // Get data from testimonial item
     modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
     modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
     modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
+
+    // Update time element if it exists in the modal
+    const timeElement = modalContainer.querySelector("time");
+    const clickedTime = this.querySelector("time");
+    if (timeElement && clickedTime) {
+      timeElement.textContent = clickedTime.textContent;
+      timeElement.setAttribute("datetime", clickedTime.getAttribute("datetime"));
+    }
+
+    // Update text content
     modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
 
+    // Show modal
     testimonialsModalFunc();
   });
 }
