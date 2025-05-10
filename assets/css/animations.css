@@ -84,11 +84,25 @@
   justify-content: center;
   z-index: 5;
   overflow: hidden;
-  border-radius: 14px; /* Match project-img border-radius */
   opacity: 1;
   transition: opacity 0.3s ease;
   will-change: opacity;
   backface-visibility: hidden;
+}
+
+/* Different border radius based on context */
+.project-img .shimmer-container {
+  border-radius: 14px; /* Match project-img border-radius */
+}
+
+.skill-icon-box .shimmer-container,
+.testimonials-avatar-box .shimmer-container,
+.modal-avatar-box .shimmer-container {
+  border-radius: 50%; /* Circular for avatar-type images */
+}
+
+.avatar-box .shimmer-container {
+  border-radius: 30px; /* Match profile image */
 }
 
 /* Optimized shimmer with smaller gradient size */

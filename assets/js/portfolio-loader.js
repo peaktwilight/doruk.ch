@@ -1,6 +1,6 @@
 /**
- * Ultra-Optimized Portfolio Image Loader
- * Adds minimalistic loading animations to GIFs with maximum performance
+ * Optimized Image Loader
+ * Adds minimalistic loading animations to all images with maximum performance
  */
 
 // Use a self-executing function for encapsulation
@@ -24,9 +24,12 @@
 
   // Setup event listeners and initial state
   function initialize() {
-    log('Portfolio loader initialized');
+    log('Image loader initialized');
 
-    // Cache DOM elements
+    // Process all images with lazy loading
+    processAllLazyImages();
+
+    // Cache DOM elements for portfolio-specific functionality
     portfolioPage = document.querySelector('.portfolio');
     portfolioLinks = Array.from(document.querySelectorAll('[data-nav-link]'))
       .filter(link => link.textContent.trim().toLowerCase() === 'portfolio');
@@ -43,6 +46,86 @@
       // Delay slightly to ensure all resources have been fetched
       setTimeout(processImages, 100);
     }
+  }
+
+  // Process all lazy-loaded images on the page
+  function processAllLazyImages() {
+    const allImages = document.querySelectorAll('img[loading="lazy"]:not(.project-img img)');
+    log(`Found ${allImages.length} lazy-loaded images outside the portfolio`);
+
+    allImages.forEach(img => {
+      // Skip if already processed or in the portfolio section
+      const imageId = img.src;
+      if (processedImages.has(imageId) || img.closest('.project-img')) return;
+
+      // Add loading animation if the image isn't in portfolio section
+      if (!img.closest('.portfolio')) {
+        const container = img.parentElement;
+        if (container) {
+          addLoaderToImage(img, container);
+        }
+      }
+    });
+  }
+  // Add loading effect to any image
+  function addLoaderToImage(img, container) {
+    // Mark as processed
+    const imageId = img.src;
+    processedImages.add(imageId);
+
+    // Skip if image is already loaded
+    if (img.complete) return;
+
+    // Add relative positioning to container if needed
+    const currentPosition = window.getComputedStyle(container).position;
+    if (currentPosition === 'static') {
+      container.style.position = 'relative';
+    }
+
+    // Create loader with minimal DOM operations
+    const loader = document.createElement('div');
+    loader.className = 'shimmer-container';
+
+    // Create shimmer effect
+    const shimmer = document.createElement('div');
+    shimmer.className = 'shimmer';
+
+    const shimmerCenter = document.createElement('div');
+    shimmerCenter.className = 'shimmer-center';
+
+    // Add loader to DOM
+    loader.appendChild(shimmer);
+    loader.appendChild(shimmerCenter);
+    container.appendChild(loader);
+
+    // Handle image load/error events
+    function removeLoader() {
+      if (!loader.parentNode) return;
+
+      // Fade out loader
+      loader.classList.add('hidden');
+
+      // Remove from DOM after transition
+      const timeout = setTimeout(() => {
+        if (loader.parentNode) loader.remove();
+        processedImages.delete(imageId);
+
+        // Reset container position if we changed it
+        if (currentPosition === 'static') {
+          container.style.position = '';
+        }
+      }, 300);
+
+      timeouts.push(timeout);
+    }
+
+    // Use passive and once for optimal performance
+    img.addEventListener('load', removeLoader, { once: true, passive: true });
+    img.addEventListener('error', removeLoader, { once: true, passive: true });
+
+    // Fallback timeout for safety
+    const timeout = setTimeout(removeLoader, 5000);
+    timeouts.push(timeout);
   }
 
   // Handler for portfolio tab clicks
@@ -208,48 +291,7 @@
       }
     }, { once: true, passive: true });
 
-    // Mark as processed
-    processedImages.add(imageId);
-
-    // Create loader with minimal DOM operations
-    const loader = document.createElement('div');
-    loader.className = 'shimmer-container';
-
-    // Use minimal HTML for better performance
-    const shimmer = document.createElement('div');
-    shimmer.className = 'shimmer';
-
-    const shimmerCenter = document.createElement('div');
-    shimmerCenter.className = 'shimmer-center';
-
-    // Append with minimal reflows
-    loader.appendChild(shimmer);
-    loader.appendChild(shimmerCenter);
-    container.appendChild(loader);
-
-    // Once image loads, remove loader
-    function removeLoader() {
-      if (!loader.parentNode) return;
-
-      // Use opacity transition for smooth removal
-      loader.classList.add('hidden');
-
-      // Remove from DOM after transition
-      const timeout = setTimeout(() => {
-        if (loader.parentNode) loader.remove();
-        // Remove from set when done
-        processedImages.delete(imageId);
-      }, 300);
-
-      timeouts.push(timeout);
-    }
-
-    // Handle image load events - using passive and once for optimal performance
-    img.addEventListener('load', removeLoader, { once: true, passive: true });
-    img.addEventListener('error', removeLoader, { once: true, passive: true });
-
-    // Fallback timeout - shorter for better performance
-    const timeout = setTimeout(removeLoader, 5000);
-    timeouts.push(timeout);
+    // Use the reusable loader function to add shimmer effect
+    addLoaderToImage(img, container);
   }
 })();
