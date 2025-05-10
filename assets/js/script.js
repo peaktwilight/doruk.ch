@@ -223,10 +223,10 @@ const modalContainer = document.querySelector("[data-modal-container]");
 const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
 const overlay = document.querySelector("[data-overlay]");
 
-// Modal variables
-const modalImg = document.querySelector("[data-modal-img]");
-const modalTitle = document.querySelector("[data-modal-title]");
-const modalText = document.querySelector("[data-modal-text]");
+// Modal variables - using proper selectors with more specificity
+const modalImg = document.querySelector(".testimonials-modal [data-modal-img]");
+const modalTitle = document.querySelector(".testimonials-modal [data-modal-title]");
+const modalText = document.querySelector(".testimonials-modal [data-modal-text]");
 
 // Modal toggle function
 const testimonialsModalFunc = function () {
