@@ -403,9 +403,13 @@
 
   .filter-item button.active { color: var(--orange-yellow-crayola); }
 
-  /* portfolio and blog grid */
+  /* portfolio masonry layout and blog grid */
 
-  .project-list, .blog-posts-list { grid-template-columns: 1fr 1fr; }
+  .project-list {
+    column-count: 2;
+    column-gap: 25px; /* Adjusted gap for 2-column layout */
+  }
+  .blog-posts-list { grid-template-columns: 1fr 1fr; }
 
 
 
@@ -523,7 +527,7 @@
    * PORTFOLIO
    */
 
-  .project-list { grid-template-columns: repeat(3, 1fr); }
+  .project-list { column-count: 3; }
 
 
 
@@ -541,6 +545,11 @@
  */
 
 @media (min-width: 1250px) {
+
+  /**
+   * PORTFOLIO
+   */
+  .project-list { column-count: 3; } /* Use 3 columns for very large screens */
 
   /**
    * RESET

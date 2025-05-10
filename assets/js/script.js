@@ -256,21 +256,49 @@ const pages = document.querySelectorAll("[data-page]");
 
 // REMOVED - this functionality is now in image-loader.js
 
-// Add event to all nav links
+// Add event to all nav links with performance optimizations
 for (let i = 0; i < navigationLinks.length; i++) {
   navigationLinks[i].addEventListener("click", function () {
-    for (let i = 0; i < pages.length; i++) {
-      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
-        pages[i].classList.add("active");
-        navigationLinks[i].classList.add("active");
-        window.scrollTo(0, 0);
+    const targetPage = this.innerHTML.toLowerCase();
 
-        // REMOVED - this functionality is now in image-loader.js
-      } else {
-        pages[i].classList.remove("active");
-        navigationLinks[i].classList.remove("active");
+    // Check if we're going to the portfolio section
+    const isPortfolioClick = targetPage === 'portfolio';
+
+    // If we're going to portfolio, prepare the DOM for smoother transitions
+    if (isPortfolioClick) {
+      // Find portfolio section
+      const portfolioSection = document.querySelector('.portfolio');
+      if (portfolioSection) {
+        // Pre-calculate height to avoid layout thrashing
+        portfolioSection.style.minHeight = window.innerHeight + 'px';
+
+        // Remove any existing active animations to start clean
+        const projectItems = portfolioSection.querySelectorAll('.project-item');
+        projectItems.forEach(item => {
+          item.style.willChange = 'opacity';
+
+          // Reset animations for smoother entrance
+          item.style.animation = 'none';
+          // Force reflow
+          void item.offsetWidth;
+          item.style.animation = '';
+        });
       }
     }
+
+    // Apply page changes with requestAnimationFrame for smoother transitions
+    requestAnimationFrame(() => {
+      for (let j = 0; j < pages.length; j++) {
+        if (targetPage === pages[j].dataset.page) {
+          pages[j].classList.add("active");
+          navigationLinks[j].classList.add("active");
+          window.scrollTo(0, 0);
+        } else {
+          pages[j].classList.remove("active");
+          navigationLinks[j].classList.remove("active");
+        }
+      }
+    });
   });
 }
 

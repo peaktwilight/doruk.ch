@@ -11,14 +11,46 @@
   filter: brightness(1.2);
 }
 
-/* Project item hover enhancement - simple opacity change */
+/* Project item masonry animations */
 .project-item {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.4s ease, box-shadow 0.3s ease;
 }
 
 .project-item:hover {
-  opacity: 0.9;
+  opacity: 0.95;
 }
+
+/* Simplified animation for project items - using only opacity for better performance */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.project-item.active {
+  animation: fadeIn 0.5s ease forwards;
+  /* Use hardware acceleration for smoother animations */
+  will-change: opacity;
+  transform: translateZ(0);
+  /* Ensure each item starts completely invisible */
+  opacity: 0;
+}
+
+/*
+ * Optimized staggered animation for 3-column layout
+ * Items animate in a wave pattern from top to bottom
+ */
+.project-item.active:nth-child(3n+1) { animation-delay: 0.05s; }  /* First column */
+.project-item.active:nth-child(3n+2) { animation-delay: 0.15s; }  /* Second column */
+.project-item.active:nth-child(3n+3) { animation-delay: 0.25s; }  /* Third column */
+
+/* Add a bit more delay for items further down */
+.project-item.active:nth-child(n+4) { animation-delay: 0.35s; }
+.project-item.active:nth-child(n+7) { animation-delay: 0.45s; }
+.project-item.active:nth-child(n+10) { animation-delay: 0.55s; }
 
 /* ====== PULSING ANIMATIONS ====== */
 
@@ -128,6 +160,22 @@
 .hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Performance optimization class for smoother masonry layout */
+.optimizing-layout .project-item {
+  /* Temporarily disable all animations during layout calculations */
+  animation: none !important;
+  opacity: 0 !important;
+  transition: none !important;
+}
+
+/* Masonry performance optimization - reduce painting thrashing */
+.project-list {
+  /* Hardware acceleration for the container */
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Respect user preference for reduced motion */

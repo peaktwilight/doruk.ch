@@ -52,8 +52,19 @@
     timeouts.forEach(clearTimeout);
     timeouts.length = 0;
 
-    // Process images after a short delay to allow for page transition
-    const timeout = setTimeout(processImages, 150);
+    // Reset layout state immediately for smoother transition
+    const projectItems = document.querySelectorAll('.project-item.active');
+    projectItems.forEach(item => {
+      // Force a clean animation state
+      item.style.animation = 'none';
+      item.style.opacity = '0';
+    });
+
+    // Process images after a delay to allow for clean page transition
+    const timeout = setTimeout(() => {
+      // Ensure DOM is updated before processing
+      requestAnimationFrame(processImages);
+    }, 100);
     timeouts.push(timeout);
   }
 
@@ -61,12 +72,38 @@
   function processImages() {
     if (!portfolioPage || !portfolioPage.classList.contains('active')) return;
 
+    // Optimize layout performance by disabling animations during loading
+    // This significantly reduces layout thrashing
+    portfolioPage.classList.add('optimizing-layout');
+
     // Get all project image containers
     const imgContainers = Array.from(portfolioPage.querySelectorAll('.project-img'));
     log(`Found ${imgContainers.length} image containers`);
 
     // Skip if no images found
-    if (!imgContainers.length) return;
+    if (!imgContainers.length) {
+      portfolioPage.classList.remove('optimizing-layout');
+      return;
+    }
+
+    // Reset all project items to a consistent starting state
+    const projectItems = portfolioPage.querySelectorAll('.project-item');
+    projectItems.forEach(item => {
+      // Reset animation completely
+      item.style.animation = 'none';
+      item.style.opacity = '0';
+    });
+
+    // Force reflow
+    portfolioPage.offsetHeight;
+
+    // Re-enable animations with a consistent state
+    setTimeout(() => {
+      projectItems.forEach(item => {
+        item.style.animation = '';
+      });
+      portfolioPage.classList.remove('optimizing-layout');
+    }, 80);
 
     // Use IntersectionObserver to prioritize visible images if supported
     if ('IntersectionObserver' in window) {
@@ -145,6 +182,25 @@
     // Skip already processed images
     const imageId = img.src;
     if (processedImages.has(imageId) || img.complete) return;
+
+    // Optimize masonry layout with minimal reflows
+    img.addEventListener('load', function() {
+      // Mark image as loaded (for CSS targeting if needed)
+      img.classList.add('loaded');
+
+      // Store loaded images count for optimization
+      if (!window.loadedPortfolioImages) window.loadedPortfolioImages = 0;
+      window.loadedPortfolioImages++;
+
+      // Only trigger reflow after multiple images have loaded (batch processing)
+      if (window.loadedPortfolioImages % 3 === 0) {
+        const projectList = container.closest('.project-list');
+        if (projectList) {
+          // Minimal reflow by just touching offsetHeight property
+          projectList.offsetHeight;
+        }
+      }
+    }, { once: true, passive: true });
 
     // Mark as processed
     processedImages.add(imageId);
