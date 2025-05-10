@@ -58,13 +58,14 @@
       // Force a clean animation state
       item.style.animation = 'none';
       item.style.opacity = '0';
+      item.style.transform = 'translateY(30px) translateZ(0)'; // More pronounced initial upward position
     });
 
     // Process images after a delay to allow for clean page transition
     const timeout = setTimeout(() => {
       // Ensure DOM is updated before processing
       requestAnimationFrame(processImages);
-    }, 100);
+    }, 150);
     timeouts.push(timeout);
   }
 
@@ -88,22 +89,43 @@
 
     // Reset all project items to a consistent starting state
     const projectItems = portfolioPage.querySelectorAll('.project-item');
+
+    // Force items to start from their "from" animation state
     projectItems.forEach(item => {
       // Reset animation completely
       item.style.animation = 'none';
       item.style.opacity = '0';
+      item.style.transform = 'translateY(30px) translateZ(0)'; // More pronounced upward animation start position
     });
 
     // Force reflow
     portfolioPage.offsetHeight;
 
-    // Re-enable animations with a consistent state
-    setTimeout(() => {
-      projectItems.forEach(item => {
-        item.style.animation = '';
-      });
+    // Re-enable animations in a single batch to avoid stuttering
+    requestAnimationFrame(() => {
+      // Apply all animation changes in a single frame
       portfolioPage.classList.remove('optimizing-layout');
-    }, 80);
+
+      // Reset animations with staggered timing to match CSS cascade
+      setTimeout(() => {
+        // Clear all items at once to ensure clean starting position
+        projectItems.forEach(item => {
+          item.style.animation = 'none';
+          item.style.transform = 'translateY(30px) translateZ(0)';
+        });
+
+        // Force reflow for clean animation
+        portfolioPage.offsetHeight;
+
+        // Now enable animations after a tiny delay
+        setTimeout(() => {
+          projectItems.forEach(item => {
+            item.style.animation = '';
+            item.style.transform = '';
+          });
+        }, 20);
+      }, 30);
+    });
 
     // Use IntersectionObserver to prioritize visible images if supported
     if ('IntersectionObserver' in window) {
