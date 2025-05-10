@@ -52,20 +52,16 @@
     timeouts.forEach(clearTimeout);
     timeouts.length = 0;
 
-    // Reset layout state immediately for smoother transition
-    const projectItems = document.querySelectorAll('.project-item.active');
-    projectItems.forEach(item => {
-      // Force a clean animation state
+    // Reset animation state immediately for smoother transition
+    document.querySelectorAll('.project-item.active').forEach(item => {
       item.style.animation = 'none';
       item.style.opacity = '0';
-      item.style.transform = 'translateY(30px) translateZ(0)'; // More pronounced initial upward position
     });
 
-    // Process images after a delay to allow for clean page transition
+    // Process images on next animation frame
     const timeout = setTimeout(() => {
-      // Ensure DOM is updated before processing
       requestAnimationFrame(processImages);
-    }, 150);
+    }, 100);
     timeouts.push(timeout);
   }
 
@@ -87,44 +83,32 @@
       return;
     }
 
-    // Reset all project items to a consistent starting state
+    // Set up animation for all project items
     const projectItems = portfolioPage.querySelectorAll('.project-item');
 
-    // Force items to start from their "from" animation state
-    projectItems.forEach(item => {
-      // Reset animation completely
-      item.style.animation = 'none';
-      item.style.opacity = '0';
-      item.style.transform = 'translateY(30px) translateZ(0)'; // More pronounced upward animation start position
-    });
-
-    // Force reflow
-    portfolioPage.offsetHeight;
-
-    // Re-enable animations in a single batch to avoid stuttering
+    // Prepare all items for animation in a single batch
     requestAnimationFrame(() => {
-      // Apply all animation changes in a single frame
+      // First reset all animations to a consistent starting state
+      projectItems.forEach(item => {
+        item.style.animation = 'none';
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px) translateZ(0)';
+      });
+
+      // Force reflow to ensure reset is applied
+      portfolioPage.offsetHeight;
+
+      // Remove the optimization class
       portfolioPage.classList.remove('optimizing-layout');
 
-      // Reset animations with staggered timing to match CSS cascade
+      // Enable animations after a minimal delay
       setTimeout(() => {
-        // Clear all items at once to ensure clean starting position
         projectItems.forEach(item => {
-          item.style.animation = 'none';
-          item.style.transform = 'translateY(30px) translateZ(0)';
+          // Reset inline styles to let CSS animations take over
+          item.style.animation = '';
+          item.style.transform = '';
         });
-
-        // Force reflow for clean animation
-        portfolioPage.offsetHeight;
-
-        // Now enable animations after a tiny delay
-        setTimeout(() => {
-          projectItems.forEach(item => {
-            item.style.animation = '';
-            item.style.transform = '';
-          });
-        }, 20);
-      }, 30);
+      }, 20);
     });
 
     // Use IntersectionObserver to prioritize visible images if supported

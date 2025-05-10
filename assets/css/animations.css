@@ -11,14 +11,7 @@
   filter: brightness(1.2);
 }
 
-/* Project item masonry animations */
-.project-item {
-  transition: opacity 0.3s ease, transform 0.4s ease, box-shadow 0.3s ease;
-}
-
-.project-item:hover {
-  opacity: 0.95;
-}
+/* Remove duplicate transition, already defined in portfolio.css */
 
 /* Simple, clean upward animation without intermediate steps */
 @keyframes fadeInUp {
@@ -32,64 +25,52 @@
   }
 }
 
+/* Base animation with hardware acceleration */
 .project-item.active {
-  animation: fadeInUp 0.5s ease-out forwards;
-  /* Use hardware acceleration for smoother animations */
+  animation: fadeInUp 0.35s ease-out forwards;
   will-change: opacity, transform;
-  /* Ensure each item starts completely invisible */
   opacity: 0;
 }
 
-/*
- * Clear, more pronounced cascading effect by row
- * First row appears first, then second, etc.
- */
-
-/* Progressively increasing delays for more noticeable cascade */
-.project-item.active:nth-child(1) { animation-delay: 0s; }      /* First item */
-.project-item.active:nth-child(2) { animation-delay: 0.07s; }   /* First row, second item */
-.project-item.active:nth-child(3) { animation-delay: 0.14s; }   /* First row, third item */
-.project-item.active:nth-child(4) { animation-delay: 0.21s; }   /* Second row, first item */
-.project-item.active:nth-child(5) { animation-delay: 0.28s; }   /* Second row, second item */
-.project-item.active:nth-child(6) { animation-delay: 0.35s; }   /* Second row, third item */
-.project-item.active:nth-child(7) { animation-delay: 0.42s; }   /* Third row, first item */
-.project-item.active:nth-child(8) { animation-delay: 0.49s; }   /* Third row, second item */
-.project-item.active:nth-child(9) { animation-delay: 0.56s; }   /* Third row, third item */
-.project-item.active:nth-child(n+10) { animation-delay: 0.63s; } /* Fourth row and below */
-
-/* Fast animation duration for snappy feel */
-.project-item.active { animation-duration: 0.35s; }
+/* Cascading animation delays - top to bottom */
+.project-item.active:nth-child(1) { animation-delay: 0s; }
+.project-item.active:nth-child(2) { animation-delay: 0.07s; }
+.project-item.active:nth-child(3) { animation-delay: 0.14s; }
+.project-item.active:nth-child(4) { animation-delay: 0.21s; }
+.project-item.active:nth-child(5) { animation-delay: 0.28s; }
+.project-item.active:nth-child(6) { animation-delay: 0.35s; }
+.project-item.active:nth-child(7) { animation-delay: 0.42s; }
+.project-item.active:nth-child(8) { animation-delay: 0.49s; }
+.project-item.active:nth-child(9) { animation-delay: 0.56s; }
+.project-item.active:nth-child(n+10) { animation-delay: 0.63s; }
 
 /* ====== PULSING ANIMATIONS ====== */
 
-/* Enhance the status dot pulse animation */
+/* Enhanced and consolidated pulse animation for status dots */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(104, 214, 104, 0.7);
     transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(104, 214, 104, 0.7);
+    opacity: 1;
   }
-  70% {
-    box-shadow: 0 0 0 6px rgba(104, 214, 104, 0);
-    transform: scale(1.1);
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 4px rgba(104, 214, 104, 0);
+    opacity: 0.8;
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(104, 214, 104, 0);
     transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(104, 214, 104, 0);
+    opacity: 1;
   }
-}
-
-.status-live .status-dot {
-  animation: pulse 2s infinite;
 }
 
 /* ====== LOADING ANIMATIONS ====== */
 
 /*
- * High-performance shimmer loading effect
- * - Uses opacity instead of visibility for better performance
- * - Hardware-accelerated animations with transform and opacity only
- * - Minimal gradient pattern for better rendering performance
- * - Simplified keyframe animations for smoother playback
+ * High-performance shimmer loading effect for images
+ * - Optimized for hardware acceleration
+ * - Minimal DOM impact
  */
 .shimmer-container {
   position: absolute;
@@ -103,12 +84,10 @@
   justify-content: center;
   z-index: 5;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 14px; /* Match project-img border-radius */
   opacity: 1;
   transition: opacity 0.3s ease;
-  /* Hardware acceleration */
   will-change: opacity;
-  /* Prevent glitchy rendering during transition */
   backface-visibility: hidden;
 }
 
@@ -170,18 +149,16 @@
   pointer-events: none;
 }
 
-/* Performance optimization class for smoother masonry layout */
+/* Performance optimization class - hidden during layout calculations */
 .optimizing-layout .project-item {
-  /* Temporarily disable all animations during layout calculations */
   animation: none !important;
   opacity: 0 !important;
   transition: none !important;
 }
 
-/* Masonry performance optimization - reduce painting thrashing */
+/* Hardware acceleration for masonry container */
 .project-list {
-  /* Hardware acceleration for the container */
-  will-change: opacity;
+  will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
