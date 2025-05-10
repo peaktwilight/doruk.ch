@@ -73,8 +73,11 @@
     const imageId = img.src;
     processedImages.add(imageId);
 
-    // Skip if image is already loaded
-    if (img.complete) return;
+    // If image is already loaded, make it visible but don't add loader
+    if (img.complete) {
+      img.classList.add('loaded');
+      return;
+    }
 
     // Add relative positioning to container if needed
     const currentPosition = window.getComputedStyle(container).position;
@@ -120,11 +123,25 @@
     }
 
     // Use passive and once for optimal performance
-    img.addEventListener('load', removeLoader, { once: true, passive: true });
-    img.addEventListener('error', removeLoader, { once: true, passive: true });
+    img.addEventListener('load', () => {
+      removeLoader();
+      img.classList.add('loaded');
+    }, { once: true, passive: true });
 
-    // Fallback timeout for safety
-    const timeout = setTimeout(removeLoader, 5000);
+    img.addEventListener('error', () => {
+      removeLoader();
+      // Try to recover by forcing src reload
+      if (img.src) {
+        const originalSrc = img.src;
+        img.src = '';
+        setTimeout(() => {
+          img.src = originalSrc;
+        }, 500);
+      }
+    }, { once: true, passive: true });
+
+    // Fallback timeout for safety (increased to 10 seconds)
+    const timeout = setTimeout(removeLoader, 10000);
     timeouts.push(timeout);
   }
 
@@ -268,9 +285,21 @@
     const img = container.querySelector('img');
     if (!img) return;
 
-    // Skip already processed images
+    // Skip already processed images, but ensure cached images are properly shown
     const imageId = img.src;
-    if (processedImages.has(imageId) || img.complete) return;
+    if (processedImages.has(imageId)) return;
+
+    // Check if image is already loaded (cached)
+    if (img.complete) {
+      img.classList.add('loaded');
+
+      // Force layout recalculation for masonry
+      const projectList = container.closest('.project-list');
+      if (projectList) {
+        setTimeout(() => projectList.offsetHeight, 100);
+      }
+      return;
+    }
 
     // Optimize masonry layout with minimal reflows
     img.addEventListener('load', function() {
@@ -288,6 +317,18 @@
           // Minimal reflow by just touching offsetHeight property
           projectList.offsetHeight;
         }
+      }
+    }, { once: true, passive: true });
+
+    // Handle image load errors more robustly
+    img.addEventListener('error', function() {
+      log('Image failed to load:', img.src);
+      // Try to reload the image
+      if (img.src) {
+        const originalSrc = img.src;
+        setTimeout(() => {
+          img.src = originalSrc + '?reload=' + new Date().getTime();
+        }, 1000);
       }
     }, { once: true, passive: true });
 

@@ -188,15 +188,22 @@
 
 .project-modal-img-wrapper {
   width: 100%;
-  border-radius: 10px; 
+  border-radius: 10px;
+  /* Using aspect ratio instead of fixed height for better responsiveness */
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--eerie-black-1);
+  overflow: hidden;
+  max-height: 70vh;
 }
 
 .project-modal-img-wrapper img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 70vh; 
-  object-fit: contain; 
+  height: 100%;
+  object-fit: cover; /* Use cover instead of contain to fill the space */
   border-radius: inherit;
 }
 
@@ -217,7 +224,7 @@
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
   line-height: 1.6;
-  margin: 10px 0 20px 0; 
+  margin: 10px 20px 20px 20px; 
 }
 
 .project-modal-buttons {
