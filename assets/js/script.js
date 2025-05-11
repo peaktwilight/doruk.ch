@@ -315,6 +315,60 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
 // REMOVED - Function moved to image-loader.js
 
+// Portfolio filtering functionality
+const filterButtons = document.querySelectorAll('.filter-list button');
+const portfolioItems = document.querySelectorAll('.project-item');
+
+// Initialize filter functionality
+function initializeFilters() {
+  // Add click event to filter buttons
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active class from all buttons
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+
+      // Add active class to clicked button
+      this.classList.add('active');
+
+      // Get filter value
+      const filterValue = this.getAttribute('data-filter');
+
+      // Filter items
+      filterPortfolioItems(filterValue);
+    });
+  });
+
+  // Add open-source category to items with GitHub links
+  portfolioItems.forEach(item => {
+    const sourceUrl = item.getAttribute('data-modal-source-url');
+    if (sourceUrl && sourceUrl.includes('github.com')) {
+      const currentCategories = item.getAttribute('data-category');
+      item.setAttribute('data-category', currentCategories + ' open-source');
+    }
+  });
+}
+
+// Filter portfolio items
+function filterPortfolioItems(filter) {
+  portfolioItems.forEach(item => {
+    // First, make all items inactive
+    item.classList.remove('active');
+
+    // Then show items based on filter
+    const categories = item.getAttribute('data-category').split(' ');
+
+    if (filter === 'all' || categories.includes(filter)) {
+      // For visible items, add with a slight delay for animation
+      setTimeout(() => {
+        item.classList.add('active');
+      }, Math.random() * 200); // Random delay for staggered appearance
+    }
+  });
+}
+
+// Initialize filters on page load
+window.addEventListener('load', initializeFilters);
+
 // Project Details Modal Functionality
 const projectModalContainer = document.querySelector("[data-project-modal-container]");
 const projectModalCloseBtn = document.querySelector("[data-project-modal-close-btn]");
@@ -328,6 +382,7 @@ const projectModalLiveBtn = document.querySelector("[data-project-modal-live-btn
 const projectModalSourceBtn = document.querySelector("[data-project-modal-source-btn]");
 const projectModalStatus = document.querySelector("[data-project-modal-status]");
 const projectModalAppStoreBtn = document.querySelector("[data-project-modal-appstore-btn]");
+const projectModalPlayStoreBtn = document.querySelector("[data-project-modal-playstore-btn]");
 
 // Select all project items with the trigger attribute
 const projectItems = document.querySelectorAll("[data-modal-trigger]");
@@ -348,6 +403,7 @@ const openProjectModal = function (item) {
   const liveStatus = item.dataset.liveStatus;
   const statusReason = item.dataset.statusReason;
   const appStoreUrl = item.dataset.appstoreUrl;
+  const playStoreUrl = item.dataset.playstoreUrl;
 
   // Populate modal content
   projectModalImg.src = imgSrc;
@@ -381,6 +437,14 @@ const openProjectModal = function (item) {
     projectModalAppStoreBtn.style.display = 'flex';
   } else {
     projectModalAppStoreBtn.style.display = 'none';
+  }
+
+  // Show/hide Play Store button based on URL
+  if (playStoreUrl && playStoreUrl !== "") {
+    projectModalPlayStoreBtn.href = playStoreUrl;
+    projectModalPlayStoreBtn.style.display = 'flex';
+  } else {
+    projectModalPlayStoreBtn.style.display = 'none';
   }
 
   // Show the modal

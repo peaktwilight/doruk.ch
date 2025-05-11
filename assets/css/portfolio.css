@@ -11,32 +11,35 @@
 
 .project-item {
   display: none;
-  opacity: 0;
   background: var(--eerie-black-1);
   padding: 15px;
   border-radius: 16px;
   border: 1px solid var(--jet);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color var(--transition-1), transform var(--transition-1), box-shadow var(--transition-1);
   /* Break inside to prevent weird layout issues */
   break-inside: avoid;
   margin-bottom: 30px; /* Increased space between items for 3-column layout */
   /* Add subtle depth */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  /* Consistent transform value for all states */
-  transform: translateZ(0);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .project-item:hover {
   border-color: var(--vegas-gold);
-  transform: translateY(-3px) translateZ(0);
+  transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .project-item.active {
   display: block;
-  /* opacity is controlled by the animation */
+}
+
+.project-item.fade-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .project-item > a { width: 100%; }
@@ -207,6 +210,56 @@
   display: block; /* Prevents extra space below icon */
 }
 
+/* --- Enhanced badges --- */
+/* Unified badge styling */
+.project-badge, .open-source-badge, .app-store-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 30px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-8);
+  color: #fff;
+  z-index: 5;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+/* App store badges are now direct links */
+
+.project-badge:hover, .open-source-badge:hover, .app-store-badge:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.project-badge ion-icon, .open-source-badge ion-icon, .app-store-badge ion-icon {
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Multiple badges positioning */
+.project-img .ios-badge {
+  top: 10px;
+}
+
+.project-img .android-badge {
+  top: 50px;
+}
+
+.project-img:has(.open-source-badge) .app-store-badge,
+.project-img:has(.app-store-badge) .open-source-badge {
+  top: 50px;
+}
+
 /* --- Achievement Badges --- */
 .achievement-badge {
   display: inline-flex;
@@ -243,6 +296,12 @@
   background: linear-gradient(135deg, rgba(255, 69, 58, 0.15) 0%, rgba(255, 69, 58, 0.05) 100%);
   border-color: rgba(255, 69, 58, 0.3);
   color: rgb(255, 69, 58);
+}
+
+.achievement-badge.open-source {
+  background: linear-gradient(135deg, rgba(84, 127, 255, 0.15) 0%, rgba(84, 127, 255, 0.05) 100%);
+  border-color: rgba(84, 127, 255, 0.3);
+  color: rgb(84, 127, 255);
 }
 
 .achievement-badges-container {
@@ -313,4 +372,53 @@
 .media-date {
   font-size: var(--fs-8);
   color: var(--light-gray-70);
+}
+
+/* --- Filter controls --- */
+.filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  gap: 10px;
+  padding: 0 5px;
+}
+
+.filter-item button {
+  background: var(--eerie-black-2);
+  color: var(--light-gray);
+  font-size: var(--fs-7);
+  font-weight: var(--fw-500);
+  padding: 6px 15px;
+  border-radius: 30px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.filter-item button:hover {
+  color: var(--vegas-gold);
+  background: var(--jet);
+}
+
+.filter-item button.active {
+  color: var(--orange-yellow-crayola);
+  border-color: var(--vegas-gold);
+  background: var(--eerie-black-1);
+}
+
+@media (max-width: 767px) {
+  .filter-list {
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .filter-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .filter-item button {
+    white-space: nowrap;
+  }
 }

@@ -161,7 +161,7 @@
       <!-- PROFILE SECTION -->
       <div class="sidebar-info">
         <figure class="avatar-box">
-          <img src="assets/images/Doruk_BnW.jpeg"
+          <img src="assets/images/doruk_color_portrait.png"
                alt="Doruk Tan Öztürk"
                width="90"
                loading="lazy">
@@ -831,6 +831,25 @@
           <h2 class="h2 article-title">Portfolio</h2>
         </header>
 
+        <!-- FILTER CONTROLS -->
+        <ul class="filter-list">
+          <li class="filter-item">
+            <button class="active" data-filter="all">All</button>
+          </li>
+          <li class="filter-item">
+            <button data-filter="webapp">Web Development</button>
+          </li>
+          <li class="filter-item">
+            <button data-filter="music-and-labels">Music & Labels</button>
+          </li>
+          <li class="filter-item">
+            <button data-filter="open-source">Open Source</button>
+          </li>
+          <li class="filter-item">
+            <button data-filter="tools">Tools & Utilities</button>
+          </li>
+        </ul>
+
         <!-- PROJECTS SECTION -->
         <section class="projects">
 
@@ -842,7 +861,7 @@
             <!-- BUNZLI METER -->
             <li class="project-item active"
                 data-filter-item
-                data-category="web development"
+                data-category="webapp tools"
                 data-modal-trigger
                 data-modal-url="https://bunzlimeter.ch"
                 data-modal-source-url=""
@@ -899,58 +918,83 @@
             </li>
 
             <!-- TTSTATS -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web development"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp tools"
                 data-modal-trigger
                 data-modal-url="https://ttstats.ch"
-                data-modal-source-url="" 
-                data-live-status="live" 
-                data-status-reason="Live (Web + Mobile App)"
-                data-appstore-url="https://apps.apple.com/ch/app/ttstats/id6744279609">
+                data-modal-source-url=""
+                data-live-status="live"
+                data-status-reason="Live (Web + Mobile Apps)"
+                data-appstore-url="https://apps.apple.com/ch/app/ttstats/id6744279609"
+                data-playstore-url="https://play.google.com/store/apps/details?id=ch.ttstats.app">
               <figure class="project-img">
                 <div class="project-item-icon-box">
                   <ion-icon name="eye-outline"></ion-icon>
                 </div>
-                <img src="./assets/images/TTStats.gif" 
-                    alt="TTStats" 
+                <a href="https://apps.apple.com/ch/app/ttstats/id6744279609" target="_blank" class="project-badge app-store-badge ios-badge">
+                  <ion-icon name="logo-apple"></ion-icon>
+                  <span>iOS App</span>
+                </a>
+                <img src="./assets/images/TTStats.gif"
+                    alt="TTStats"
                     loading="lazy">
               </figure>
               <h3 class="project-title">TTStats 🏓</h3>
-              <!-- Meta Row -->
-              <div class="project-meta-row">
-                  <!-- App Store Link (Moved first) -->
-                   <a href="https://apps.apple.com/ch/app/ttstats/id6744279609" target="_blank" class="appstore-link github-link" aria-label="View on App Store"><ion-icon name="logo-apple-appstore"></ion-icon></a>
-                  <!-- Status Indicator -->
-                  <div class="project-status status-live">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Live (Web + Mobile App)</span>
-                  </div>
+
+              <!-- Achievement Badges -->
+              <div class="achievement-badges-container">
+                <span class="achievement-badge">
+                  <ion-icon name="laptop-outline"></ion-icon>
+                  Web App
+                </span>
+                <span class="achievement-badge">
+                  <ion-icon name="phone-portrait-outline"></ion-icon>
+                  Mobile App
+                </span>
               </div>
-              <!-- Note: No GitHub link added here as source URL is empty -->
+
+              <!-- Status Indicator -->
+              <div class="project-status status-live">
+                <span class="status-dot"></span>
+                <span class="status-text">Live (Web + iOS App)</span>
+              </div>
+
               <p class="project-category">
-                Swiss Table Tennis Statistics built with vanilla HTML/CSS/JS, Tailwind CSS, and a Python backend for scraping the clicktt website.
+                Swiss Table Tennis Statistics with web app (HTML/CSS/JS, Tailwind) and native iOS app (React Native), with Python backend for data scraping.
               </p>
             </li>
 
             <!-- FHNW DASHBOARD -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="applications"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp open-source tools"
                 data-modal-trigger
                 data-modal-url="https://fhnw.doruk.ch"
-                data-modal-source-url="https://github.com/peaktwilight/fhnw-dashboard" 
-                data-live-status="live" 
+                data-modal-source-url="https://github.com/peaktwilight/fhnw-dashboard"
+                data-live-status="live"
                 data-status-reason="Live & Open Source">
               <figure class="project-img">
                 <div class="project-item-icon-box">
                   <ion-icon name="eye-outline"></ion-icon>
                 </div>
-                <img src="./assets/images/FHNW_Dashboard.gif" 
-                    alt="FHNW Dashboard" 
+                <div class="open-source-badge">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>Open Source</span>
+                </div>
+                <img src="./assets/images/FHNW_Dashboard.gif"
+                    alt="FHNW Dashboard"
                     loading="lazy">
               </figure>
               <h3 class="project-title">FHNW Dashboard 📚</h3>
+              <!-- Achievement Badges -->
+              <div class="achievement-badges-container">
+                <span class="achievement-badge open-source">
+                  <ion-icon name="logo-github"></ion-icon>
+                  Open Source
+                </span>
+              </div>
+
               <div class="project-meta-row">
                 <a href="https://github.com/peaktwilight/fhnw-dashboard" target="_blank" class="github-link" aria-label="View Source on GitHub"><ion-icon name="logo-github"></ion-icon></a>
                 <div class="project-status status-live">
@@ -964,13 +1008,13 @@
             </li>
 
             <!-- WITELLI20 -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web development"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp"
                 data-modal-trigger
                 data-modal-url="https://witelli20.ch"
-                data-modal-source-url="" 
-                data-live-status="live" 
+                data-modal-source-url=""
+                data-live-status="live"
                 data-status-reason="Currently live">
               <figure class="project-img">
                 <div class="project-item-icon-box">
@@ -994,13 +1038,13 @@
             
 
             <!-- GALAXUS PRICE TRACKER -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web development"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp tools"
                 data-modal-trigger
                 data-modal-url="https://price.doruk.ch"
-                data-modal-source-url="" 
-                data-live-status="live" 
+                data-modal-source-url=""
+                data-live-status="live"
                 data-status-reason="Live (scraper needs update)">
               <figure class="project-img">
                 <div class="project-item-icon-box">
@@ -1023,23 +1067,35 @@
             </li>
 
             <!-- CSV PASSWORD CLEANER -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web development"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp tools open-source"
                 data-modal-trigger
                 data-modal-url="https://passwords.doruk.ch"
                 data-modal-source-url="https://github.com/peaktwilight/csv-password-cleaner"
-                data-live-status="live" 
+                data-live-status="live"
                 data-status-reason="Live & Open Source">
               <figure class="project-img">
                 <div class="project-item-icon-box">
                   <ion-icon name="eye-outline"></ion-icon>
                 </div>
-                <img src="./assets/images/Passwords_Manager_Doruk.gif" 
-                    alt="CSV Password Cleaner" 
+                <div class="open-source-badge">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>Open Source</span>
+                </div>
+                <img src="./assets/images/Passwords_Manager_Doruk.gif"
+                    alt="CSV Password Cleaner"
                     loading="lazy">
               </figure>
               <h3 class="project-title">CSV Password Cleaner</h3>
+              <!-- Achievement Badges -->
+              <div class="achievement-badges-container">
+                <span class="achievement-badge open-source">
+                  <ion-icon name="logo-github"></ion-icon>
+                  Open Source
+                </span>
+              </div>
+
               <div class="project-meta-row">
                 <a href="https://github.com/peaktwilight/csv-password-cleaner" target="_blank" class="github-link" aria-label="View Source on GitHub"><ion-icon name="logo-github"></ion-icon></a>
                 <div class="project-status status-live">
@@ -1055,13 +1111,13 @@
             <!-- WORDPRESS PROJECTS -->
 
             <!-- DREAMHOP MUSIC -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web development"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp music-and-labels"
                 data-modal-trigger
                 data-modal-url="https://dreamhopmusic.com"
-                data-modal-source-url="" 
-                data-live-status="live" 
+                data-modal-source-url=""
+                data-live-status="live"
                 data-status-reason="Live (redesigned since)">
               <figure class="project-img">
                 <div class="project-item-icon-box">
@@ -1084,13 +1140,13 @@
             </li>
 
             <!-- STUDIO DREAMHOP -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web development"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp music-and-labels"
                 data-modal-trigger
                 data-modal-url="https://studiodreamhop.com"
-                data-modal-source-url="" 
-                data-live-status="offline" 
+                data-modal-source-url=""
+                data-live-status="offline"
                 data-status-reason="Offline (Redesigned/Renamed)">
               <figure class="project-img">
                 <div class="project-item-icon-box">
@@ -1115,7 +1171,7 @@
             <!-- SOOTHE RECORDS -->
             <li class="project-item active"
                 data-filter-item
-                data-category="web design"
+                data-category="webapp music-and-labels"
                 data-modal-trigger
                 data-modal-url="https://sootherecords.com"
                 data-modal-source-url=""
@@ -1157,7 +1213,7 @@
             <!-- SOOTHE STUDIOS -->
             <li class="project-item active"
                 data-filter-item
-                data-category="applications"
+                data-category="webapp music-and-labels"
                 data-modal-trigger
                 data-modal-url="https://soothestudios.ch"
                 data-modal-source-url=""
@@ -1197,13 +1253,13 @@
             </li>
 
             <!-- PEAK TWILIGHT HOMEPAGE -->
-            <li class="project-item active" 
-                data-filter-item 
-                data-category="web design"
+            <li class="project-item active"
+                data-filter-item
+                data-category="webapp music-and-labels"
                 data-modal-trigger
                 data-modal-url="https://peaktwilight.com"
-                data-modal-source-url="" 
-                data-live-status="live" 
+                data-modal-source-url=""
+                data-live-status="live"
                 data-status-reason="Currently live">
               <figure class="project-img">
                 <div class="project-item-icon-box">
@@ -1229,7 +1285,7 @@
             <!-- PEAK TWILIGHT SPOTIFY -->
             <li class="project-item active"
                 data-filter-item
-                data-category="music production"
+                data-category="music-and-labels"
                 data-modal-trigger
                 data-modal-url="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx?si=QLMUy6OCTRu0dZ8xdXbRxg"
                 data-modal-source-url=""
@@ -1315,10 +1371,14 @@
                     <ion-icon name="logo-github"></ion-icon>
                     <span>View Source</span>
                   </a>
-                  <!-- App Store Button Placeholder -->
+                  <!-- App Store Buttons -->
                   <a href="#" target="_blank" class="form-btn project-modal-appstore-btn" data-project-modal-appstore-btn style="display: none;">
-                    <ion-icon name="logo-apple-appstore"></ion-icon>
-                    <span>View on App Store</span>
+                    <ion-icon name="logo-apple"></ion-icon>
+                    <span>iOS App Store</span>
+                  </a>
+                  <a href="#" target="_blank" class="form-btn project-modal-playstore-btn" data-project-modal-playstore-btn style="display: none;">
+                    <ion-icon name="logo-google-playstore"></ion-icon>
+                    <span>Google Play</span>
                   </a>
                 </div>
               </div>
@@ -1376,6 +1436,7 @@
   <!-- LOCAL SCRIPTS - MAIN APPLICATION LOGIC -->
   <script src="./assets/js/script.js"></script>
   <script src="./assets/js/portfolio-loader.js"></script>
+  <script src="./assets/js/portfolio-filter.js"></script>
 
   <!-- IONICONS - ICON LIBRARY -->
   <script type="module"
