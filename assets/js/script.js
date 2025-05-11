@@ -4,7 +4,72 @@
 const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
 
 // Initialize Vanta.js background effects
+// Check for low performance mode preference in localStorage
+const prefersLowPerformance = localStorage.getItem('lowPerformanceMode') === 'true';
+
+// Initialize the background effects based on performance preference
 window.addEventListener('load', function() {
+  // Set up the toggle based on saved preference
+  const performanceToggle = document.getElementById('performance-toggle');
+  if (performanceToggle) {
+    performanceToggle.checked = prefersLowPerformance;
+
+    // Add event listener for toggle changes
+    performanceToggle.addEventListener('change', function() {
+      // Save preference to localStorage
+      localStorage.setItem('lowPerformanceMode', this.checked);
+
+      // Reload page to apply changes
+      if (window.vantaEffects) {
+        // Destroy existing effects if they exist
+        if (window.vantaEffects.main) window.vantaEffects.main.destroy();
+        if (window.vantaEffects.modal) window.vantaEffects.modal.destroy();
+
+        // Re-initialize or skip based on new preference
+        initializeBackgrounds(this.checked);
+      }
+    });
+  }
+
+  // Initialize backgrounds based on current preference
+  initializeBackgrounds(prefersLowPerformance);
+});
+
+function initializeBackgrounds(lowPerformanceMode) {
+  // Skip background effects in low performance mode
+  if (lowPerformanceMode) {
+    console.log("Low performance mode enabled - skipping background effects");
+    // Add simple static background colors instead
+    document.body.style.backgroundColor = '#0C0C0C';
+
+    // Add static background to modal container if it exists
+    const modalBg = document.getElementById('modal-bg');
+    if (modalBg) {
+      modalBg.style.backgroundColor = '#121212';
+    } else {
+      // Create a simple static background for the modal
+      const modalBgContainer = document.createElement('div');
+      modalBgContainer.id = 'modal-bg';
+      modalBgContainer.style.position = 'fixed';
+      modalBgContainer.style.top = '0';
+      modalBgContainer.style.left = '0';
+      modalBgContainer.style.width = '100%';
+      modalBgContainer.style.height = '100%';
+      modalBgContainer.style.zIndex = '9999';
+      modalBgContainer.style.backgroundColor = '#121212';
+      modalBgContainer.style.opacity = '1';
+      modalBgContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      modalBgContainer.style.pointerEvents = 'none';
+      document.body.appendChild(modalBgContainer);
+    }
+
+    // Set up modal transition handlers for low performance mode
+    setupLowPerfModalTransitions();
+
+    return;
+  }
+
+  // Only initialize if VANTA and THREE are available
   if (typeof VANTA !== 'undefined' && typeof THREE !== 'undefined') {
     try {
       // Create background effect for the main site - this will be visible after the modal closes
@@ -25,8 +90,8 @@ window.addEventListener('load', function() {
         showDots: true
       });
 
-      // Create a separate modal background container for the HALO effect
-      const modalBgContainer = document.createElement('div');
+      // Create a separate modal background container for the BIRDS effect
+      const modalBgContainer = document.getElementById('modal-bg') || document.createElement('div');
       modalBgContainer.id = 'modal-bg';
       modalBgContainer.style.position = 'fixed';
       modalBgContainer.style.top = '0';
@@ -40,7 +105,10 @@ window.addEventListener('load', function() {
       modalBgContainer.style.transformOrigin = 'center center';
       modalBgContainer.style.transition = 'opacity 1.5s cubic-bezier(0.19, 1, 0.22, 1), transform 2s cubic-bezier(0.165, 0.84, 0.44, 1)';
       modalBgContainer.style.pointerEvents = 'none';
-      document.body.appendChild(modalBgContainer);
+
+      if (!document.getElementById('modal-bg')) {
+        document.body.appendChild(modalBgContainer);
+      }
 
       // Initialize BIRDS effect for the modal background
       let modalEffect = VANTA.BIRDS({
@@ -65,83 +133,6 @@ window.addEventListener('load', function() {
         quantity: 4.00 // More birds for better visual impact
       });
 
-      // Get references to modal elements
-      const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
-
-      // Add event listeners to update the background when the modal state changes
-      if (choiceModalContainer) {
-        // Add a listener to the close button to hide the HALO effect
-        const closeChoiceBtn = document.querySelector("[data-choice-modal-close-btn]");
-        if (closeChoiceBtn) {
-          closeChoiceBtn.addEventListener('click', function() {
-            // First slightly dim the birds as they begin their transformation
-            modalBgContainer.style.opacity = '0.9';
-            // Start a subtle expansion
-            modalBgContainer.style.transform = 'scale(1.05)';
-
-            // Then after a short delay, begin the main transition
-            setTimeout(() => {
-              // Fade out completely while expanding
-              modalBgContainer.style.opacity = '0';
-              modalBgContainer.style.transform = 'scale(1.6)';
-            }, 150);
-          });
-        }
-
-        // Add a listener to the CV button to hide the HALO effect
-        const showCVButton = document.getElementById('showCV');
-        if (showCVButton) {
-          showCVButton.addEventListener('click', function() {
-            // First slightly dim the birds as they begin their transformation
-            modalBgContainer.style.opacity = '0.9';
-            // Start a subtle expansion
-            modalBgContainer.style.transform = 'scale(1.05)';
-
-            // Then after a short delay, begin the main transition
-            setTimeout(() => {
-              // Fade out completely while expanding
-              modalBgContainer.style.opacity = '0';
-              modalBgContainer.style.transform = 'scale(1.6)';
-            }, 150);
-          });
-        }
-
-        // Add a listener to the modal overlay to hide the HALO effect
-        const choiceModalOverlay = document.querySelector("[data-choice-modal-overlay]");
-        if (choiceModalOverlay) {
-          choiceModalOverlay.addEventListener('click', function() {
-            // First slightly dim the birds as they begin their transformation
-            modalBgContainer.style.opacity = '0.9';
-            // Start a subtle expansion
-            modalBgContainer.style.transform = 'scale(1.05)';
-
-            // Then after a short delay, begin the main transition
-            setTimeout(() => {
-              // Fade out completely while expanding
-              modalBgContainer.style.opacity = '0';
-              modalBgContainer.style.transform = 'scale(1.6)';
-            }, 150);
-          });
-        }
-
-        // Handle escape key press
-        document.addEventListener('keydown', function(event) {
-          if (event.key === "Escape" || event.keyCode === 27) {
-            // First slightly dim the birds as they begin their transformation
-            modalBgContainer.style.opacity = '0.9';
-            // Start a subtle expansion
-            modalBgContainer.style.transform = 'scale(1.05)';
-
-            // Then after a short delay, begin the main transition
-            setTimeout(() => {
-              // Fade out completely while expanding
-              modalBgContainer.style.opacity = '0';
-              modalBgContainer.style.transform = 'scale(1.6)';
-            }, 150);
-          }
-        });
-      }
-
       // Store the effects for later reference or cleanup
       window.vantaEffects = {
         main: vantaEffect,
@@ -149,13 +140,108 @@ window.addEventListener('load', function() {
       };
 
       console.log("Vanta.js effects initialized");
+
+      // Set up modal transition event handlers
+      setupModalTransitions();
+
     } catch (error) {
       console.error("Failed to initialize Vanta.js:", error);
     }
   } else {
     console.warn("Vanta.js or Three.js library not loaded");
   }
-});
+}
+
+// Set up event handlers for modal transitions
+function setupModalTransitions() {
+  // Get references to modal elements
+  const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
+  const modalBgContainer = document.getElementById('modal-bg');
+
+  if (!choiceModalContainer || !modalBgContainer) return;
+
+  // Function to handle modal closing transition
+  const handleModalClose = function() {
+    // First slightly dim the birds as they begin their transformation
+    modalBgContainer.style.opacity = '0.9';
+    // Start a subtle expansion
+    modalBgContainer.style.transform = 'scale(1.05)';
+
+    // Then after a short delay, begin the main transition
+    setTimeout(() => {
+      // Fade out completely while expanding
+      modalBgContainer.style.opacity = '0';
+      modalBgContainer.style.transform = 'scale(1.6)';
+    }, 150);
+  };
+
+  // Add listeners for all ways to close the modal
+  const closeChoiceBtn = document.querySelector("[data-choice-modal-close-btn]");
+  if (closeChoiceBtn) {
+    closeChoiceBtn.addEventListener('click', handleModalClose);
+  }
+
+  const showCVButton = document.getElementById('showCV');
+  if (showCVButton) {
+    showCVButton.addEventListener('click', handleModalClose);
+  }
+
+  const choiceModalOverlay = document.querySelector("[data-choice-modal-overlay]");
+  if (choiceModalOverlay) {
+    choiceModalOverlay.addEventListener('click', handleModalClose);
+  }
+
+  // Handle escape key press
+  document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape" || event.keyCode === 27) {
+      handleModalClose();
+    }
+  });
+}
+
+// Set up event handlers for modal transitions in low performance mode
+function setupLowPerfModalTransitions() {
+  // Get references to modal elements
+  const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
+  const modalBgContainer = document.getElementById('modal-bg');
+
+  if (!choiceModalContainer || !modalBgContainer) return;
+
+  // Function to handle modal closing transition without animations
+  const handleModalClose = function() {
+    // Simple fade out for performance mode
+    modalBgContainer.style.opacity = '0';
+
+    // Make sure the background is fully hidden and doesn't block content
+    setTimeout(() => {
+      modalBgContainer.style.display = 'none';
+      modalBgContainer.style.zIndex = '-1'; // Move it behind content
+    }, 500);
+  };
+
+  // Add listeners for all ways to close the modal
+  const closeChoiceBtn = document.querySelector("[data-choice-modal-close-btn]");
+  if (closeChoiceBtn) {
+    closeChoiceBtn.addEventListener('click', handleModalClose);
+  }
+
+  const showCVButton = document.getElementById('showCV');
+  if (showCVButton) {
+    showCVButton.addEventListener('click', handleModalClose);
+  }
+
+  const choiceModalOverlay = document.querySelector("[data-choice-modal-overlay]");
+  if (choiceModalOverlay) {
+    choiceModalOverlay.addEventListener('click', handleModalClose);
+  }
+
+  // Handle escape key press
+  document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape" || event.keyCode === 27) {
+      handleModalClose();
+    }
+  });
+}
 
 // Initial Choice Modal Functionality
 const choiceModalContainer = document.querySelector("[data-choice-modal-container]");
