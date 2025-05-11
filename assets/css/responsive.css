@@ -292,6 +292,29 @@
 
   .project-img, .blog-banner-box { border-radius: 16px; }
 
+  /* Achievement badges responsive adjustments */
+  .achievement-badges-container {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .achievement-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .achievement-badge ion-icon {
+    font-size: 12px;
+  }
+
+  .media-coverage {
+    margin-top: 10px;
+  }
+
+  .media-coverage-title {
+    font-size: var(--fs-7);
+  }
+
   .blog-posts-list { gap: 30px; }
 
   .blog-content { padding: 25px; }
