@@ -19,14 +19,31 @@ window.addEventListener('load', function() {
       // Save preference to localStorage
       localStorage.setItem('lowPerformanceMode', this.checked);
 
-      // Reload page to apply changes
+      // Get the modal background element
+      const modalBg = document.getElementById('modal-bg');
+
+      // Clean up existing effects if they exist
       if (window.vantaEffects) {
-        // Destroy existing effects if they exist
         if (window.vantaEffects.main) window.vantaEffects.main.destroy();
         if (window.vantaEffects.modal) window.vantaEffects.modal.destroy();
+        window.vantaEffects = null;
+      }
 
-        // Re-initialize or skip based on new preference
-        initializeBackgrounds(this.checked);
+      // If the modal background exists, remove it so we can create a new one
+      if (modalBg) {
+        modalBg.remove();
+      }
+
+      // Re-initialize backgrounds with the new setting
+      initializeBackgrounds(this.checked);
+
+      // If turning off low performance mode, make sure we set up the proper event handlers
+      if (!this.checked) {
+        // Re-setup modal transitions for high performance mode
+        setupModalTransitions();
+      } else {
+        // Setup transitions for low performance mode
+        setupLowPerfModalTransitions();
       }
     });
   }
