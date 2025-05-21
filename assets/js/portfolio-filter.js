@@ -1,14 +1,18 @@
 /**
- * Ultra Simple Portfolio Filter
- * No animations, just simple instant show/hide
+ * Simplified Portfolio Filter
+ * Optimized grid-based filtering without animations
  */
 
 document.addEventListener('DOMContentLoaded', function() {
   // Get all filter buttons and portfolio items
   const filterButtons = document.querySelectorAll('.filter-list button');
   const portfolioItems = document.querySelectorAll('.project-item');
+  const projectList = document.querySelector('.project-list');
   
-  // Make all items visible immediately on page load
+  // Flag to track if we're currently filtering
+  let isFiltering = false;
+  
+  // Ensure all items are initially visible
   portfolioItems.forEach(item => {
     item.classList.add('active');
     item.style.display = 'block';
@@ -40,21 +44,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Filter function - simple direct show/hide with no animations
+  // Masonry-optimized filtering function with height preservation
   function filterItems(filter) {
+    // Skip if already filtering
+    if (isFiltering) return;
+    isFiltering = true;
+    
+    // First determine which items to show/hide
+    const toShow = [];
+    const toHide = [];
+    
     portfolioItems.forEach(item => {
-      // Get the categories for this item
       const categories = item.getAttribute('data-category').split(' ');
-      const shouldShow = filter === 'all' || categories.includes(filter);
-      
-      // Apply display property directly - no animations
-      if (shouldShow) {
-        item.style.display = 'block';
-        item.classList.add('active');
+      if (filter === 'all' || categories.includes(filter)) {
+        toShow.push(item);
       } else {
-        item.style.display = 'none';
-        item.classList.remove('active');
+        toHide.push(item);
       }
+    });
+    
+    // Store original styles to restore later
+    const projectListStyle = window.getComputedStyle(projectList);
+    const originalHeight = projectListStyle.height;
+    
+    // Temporarily freeze the container height to prevent jumping
+    projectList.style.height = originalHeight;
+    
+    // Batch DOM operations for better performance
+    requestAnimationFrame(() => {
+      // First hide all items that need to be hidden
+      toHide.forEach(item => {
+        item.classList.remove('active');
+        item.style.display = 'none';
+      });
+      
+      // Force reflow to apply changes
+      void projectList.offsetHeight;
+      
+      // Then show all items that need to be visible
+      toShow.forEach(item => {
+        item.classList.add('active');
+        item.style.display = 'block';
+      });
+      
+      // Wait a bit for masonry layout to recalculate
+      setTimeout(() => {
+        // Release the fixed height to allow natural flow
+        projectList.style.height = '';
+        
+        // Reset filtering flag
+        isFiltering = false;
+      }, 150); // Give a bit more time for masonry layout
     });
   }
   

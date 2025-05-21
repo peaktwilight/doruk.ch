@@ -7,6 +7,8 @@
   column-count: 1;
   column-gap: 30px; /* Increased gap for better spacing in 3-column layout */
   margin-bottom: 20px;
+  /* Faster transition to prevent visual jumps */
+  transition: height 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .project-item {
@@ -18,7 +20,7 @@
   cursor: pointer;
   /* Break inside to prevent weird layout issues */
   break-inside: avoid;
-  margin-bottom: 30px; /* Increased space between items for 3-column layout */
+  margin-bottom: 30px; /* Space between items in masonry layout */
   /* Add subtle depth */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   
@@ -32,7 +34,7 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Simple visibility control */
+/* Simple visibility control - display is managed by JavaScript */
 .project-item.active {
   display: block !important;
 }
@@ -40,6 +42,8 @@
 /* Default display state */
 .project-item {
   display: block;
+  /* No animations, just instant show/hide for better stability */
+  will-change: auto; /* Don't use will-change optimization */
 }
 
 /* Hidden items - directly controlled by JS */
@@ -425,5 +429,26 @@
   
   .filter-item button {
     white-space: nowrap;
+  }
+}
+
+/* Responsive masonry column adjustments with more granular breakpoints */
+@media (min-width: 580px) and (max-width: 819px) {
+  .project-list {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1199px) {
+  .project-list {
+    column-count: 2;
+    column-gap: 25px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .project-list {
+    column-count: 3;
+    column-gap: 30px;
   }
 }

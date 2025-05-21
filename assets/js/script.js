@@ -418,30 +418,11 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
 // REMOVED - Function moved to image-loader.js
 
-// Portfolio filtering functionality
-const filterButtons = document.querySelectorAll('.filter-list button');
-const portfolioItems = document.querySelectorAll('.project-item');
-
-// Initialize filter functionality
-function initializeFilters() {
-  // Add click event to filter buttons
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      // Remove active class from all buttons
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-
-      // Add active class to clicked button
-      this.classList.add('active');
-
-      // Get filter value
-      const filterValue = this.getAttribute('data-filter');
-
-      // Filter items
-      filterPortfolioItems(filterValue);
-    });
-  });
-
+// Portfolio filtering has been moved to portfolio-filter.js
+// Only handle adding open-source category to items with GitHub links
+window.addEventListener('load', function() {
   // Add open-source category to items with GitHub links
+  const portfolioItems = document.querySelectorAll('.project-item');
   portfolioItems.forEach(item => {
     const sourceUrl = item.getAttribute('data-modal-source-url');
     if (sourceUrl && sourceUrl.includes('github.com')) {
@@ -449,28 +430,7 @@ function initializeFilters() {
       item.setAttribute('data-category', currentCategories + ' open-source');
     }
   });
-}
-
-// Filter portfolio items
-function filterPortfolioItems(filter) {
-  portfolioItems.forEach(item => {
-    // First, make all items inactive
-    item.classList.remove('active');
-
-    // Then show items based on filter
-    const categories = item.getAttribute('data-category').split(' ');
-
-    if (filter === 'all' || categories.includes(filter)) {
-      // For visible items, add with a slight delay for animation
-      setTimeout(() => {
-        item.classList.add('active');
-      }, Math.random() * 200); // Random delay for staggered appearance
-    }
-  });
-}
-
-// Initialize filters on page load
-window.addEventListener('load', initializeFilters);
+});
 
 // Project Details Modal Functionality
 const projectModalContainer = document.querySelector("[data-project-modal-container]");
@@ -516,21 +476,24 @@ const openProjectModal = function (item) {
       imgWrapper.style.display = 'flex';
     }
     
-    // Simple direct approach - set the image source 
-    projectModalImg.style.opacity = '0';
+    // Simplest possible approach - set the image visible immediately
     projectModalImg.style.display = 'block';
+    
+    // First set opacity to 0 to avoid flicker
+    projectModalImg.style.opacity = '0';
     
     // Set src directly using the original source path
     projectModalImg.src = imgSrc;
     
-    // When image is loaded, show it
-    projectModalImg.onload = function() {
+    // Show immediately without waiting for load event
+    // This works better with cached images and avoids stuck modals
+    setTimeout(() => {
       projectModalImg.style.opacity = '1';
-    };
+    }, 10);
     
     projectModalImg.onerror = function() {
       console.error('Failed to load image:', imgSrc);
-      // Show anyway
+      // Make sure it's visible even on error
       projectModalImg.style.opacity = '1';
     };
   } else {
