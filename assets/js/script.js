@@ -498,7 +498,7 @@ const openProjectModal = function (item) {
   const categoryElement = item.querySelector('.project-category');
 
   // Extract data from elements and item's dataset for URLs and status
-  const imgSrc = imgElement ? imgElement.src : '';
+  const imgSrc = imgElement ? imgElement.getAttribute('data-original-src') || '' : '';
   const title = titleElement ? titleElement.textContent : 'Project Title';
   const category = categoryElement ? categoryElement.textContent : '';
   const liveUrl = item.dataset.modalUrl;
@@ -510,27 +510,29 @@ const openProjectModal = function (item) {
 
   // Populate modal content - ensure the image source is valid
   if (imgSrc && imgSrc !== '') {
-    // Get the image wrapper to ensure it's displayed
+    // Get the image wrapper and make sure it's visible
     const imgWrapper = projectModalImg.closest('.project-modal-img-wrapper');
     if (imgWrapper) {
       imgWrapper.style.display = 'flex';
     }
     
-    // Force the image to be reloaded by temporarily setting to empty and then the actual source
-    projectModalImg.src = '';
+    // Simple direct approach - set the image source 
     projectModalImg.style.opacity = '0';
+    projectModalImg.style.display = 'block';
     
-    setTimeout(() => {
-      console.log('Setting modal image src to:', imgSrc);
-      projectModalImg.src = imgSrc;
-      projectModalImg.style.display = 'block'; // Ensure it's visible
-      
-      // When the image is loaded, fade it in
-      projectModalImg.onload = function() {
-        projectModalImg.style.opacity = '1';
-        console.log('Modal image loaded');
-      };
-    }, 10);
+    // Set src directly using the original source path
+    projectModalImg.src = imgSrc;
+    
+    // When image is loaded, show it
+    projectModalImg.onload = function() {
+      projectModalImg.style.opacity = '1';
+    };
+    
+    projectModalImg.onerror = function() {
+      console.error('Failed to load image:', imgSrc);
+      // Show anyway
+      projectModalImg.style.opacity = '1';
+    };
   } else {
     // If no image, hide the image container
     const imgWrapper = projectModalImg.closest('.project-modal-img-wrapper');
@@ -539,6 +541,7 @@ const openProjectModal = function (item) {
     }
     projectModalImg.style.display = 'none';
   }
+  
   projectModalImg.alt = title;
   projectModalTitle.textContent = title;
   projectModalCategory.textContent = category;

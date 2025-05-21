@@ -22,14 +22,13 @@
   /* Add subtle depth */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   
-  /* Animation properties */
-  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
-              opacity 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
+  /* Simple, clean animation properties */
+  transition: transform 0.3s ease,
+              opacity 0.3s ease,
               box-shadow 0.3s ease,
-              border-color 0.3s ease,
-              filter 0.3s ease;
+              border-color 0.3s ease;
   
-  /* Initial state */
+  /* Default visible state - JS will control this */
   opacity: 1;
   transform: translateY(0);
 }
@@ -40,20 +39,27 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Always show active items */
+/* Item visibility states */
 .project-item.active {
   display: block !important;
 }
 
-/* Make visible items fully opaque */
-.project-item.visible {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
+/* Active items should be fully visible */
+.project-item.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Handle display through JS only, removing the initial display:none */
+/* Default display state */
 .project-item {
   display: block;
+}
+
+/* When hiding items (not active) */
+.project-item:not(.active) {
+  opacity: 0;
+  transform: translateY(20px);
+  /* Will be set to display:none after transition in JS */
 }
 
 .project-item > a { width: 100%; }

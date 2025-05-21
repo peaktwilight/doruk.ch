@@ -177,9 +177,8 @@
             // Set the image src to the object URL
             img.src = url;
             
-            // Clean up the object URL when the image loads
+            // Clean up the object URL when the image loads but store it for modal reuse
             img.onload = function() {
-              URL.revokeObjectURL(url);
               removeLoader();
               img.classList.add('loaded');
             };
@@ -349,6 +348,10 @@
         item.style.animation = 'none';
         item.style.opacity = '0';
         item.style.transform = 'translateY(30px) translateZ(0)';
+        
+        // Make sure items are visible and have active class
+        item.classList.add('active');
+        item.style.display = 'block';
       });
 
       // Force reflow to ensure reset is applied
@@ -359,12 +362,16 @@
 
       // Enable animations after a minimal delay
       setTimeout(() => {
-        projectItems.forEach(item => {
-          // Reset inline styles to let CSS animations take over
-          item.style.animation = '';
-          item.style.transform = '';
+        projectItems.forEach((item, index) => {
+          // Apply staggered animation with proper visibility
+          setTimeout(() => {
+            // Reset transform and set opacity to 1 for fade in
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0) translateZ(0)';
+            item.classList.add('visible');
+          }, index * 50); // Stagger items by 50ms each
         });
-      }, 20);
+      }, 100);
     });
 
     // Process all images immediately in parallel for fastest loading

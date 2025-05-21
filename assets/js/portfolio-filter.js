@@ -1,6 +1,6 @@
 /**
- * Ultra Basic Portfolio Filter
- * Simplified to just show and hide items
+ * Simple Portfolio Filter
+ * Smooth and minimal animation for portfolio items
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -8,14 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const filterButtons = document.querySelectorAll('.filter-list button');
   const portfolioItems = document.querySelectorAll('.project-item');
   
-  // Force all items to be visible immediately
+  // Make all items visible immediately on page load
   portfolioItems.forEach(item => {
     item.classList.add('active');
-    item.classList.add('visible');
-    // Reset inline styles that might be causing invisibility issues
+    item.style.display = 'block';
     item.style.opacity = '1';
     item.style.transform = 'translateY(0)';
-    item.style.display = 'block';
   });
   
   // Add badge click handlers
@@ -44,69 +42,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Animation timing variables
-  const ANIMATION_DURATION = 300; // ms
-  
-  // Filter function with simplified transitions
+  // Filter function - simple show/hide approach
   function filterItems(filter) {
-    console.log("Filtering items with filter:", filter);
-    
-    // First reset all items to ensure proper starting state
+    // Apply changes to each portfolio item
     portfolioItems.forEach(item => {
-      // Reset transition to ensure smooth animations
-      item.style.transition = `opacity ${ANIMATION_DURATION}ms ease, transform ${ANIMATION_DURATION}ms ease`;
-    });
-    
-    // First fade out all items that will be hidden
-    portfolioItems.forEach(item => {
+      // Get the categories for this item
       const categories = item.getAttribute('data-category').split(' ');
       const shouldShow = filter === 'all' || categories.includes(filter);
       
-      // Items to hide: fade out first
-      if (!shouldShow) {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(10px)';
-      } else {
-        // Items to show: ensure they're visible but wait for the right time to reveal
+      // Apply appropriate display and animation properties
+      if (shouldShow) {
+        // Show this item
         item.style.display = 'block';
+        // Use a timeout to ensure display takes effect first
+        setTimeout(() => {
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+          item.classList.add('active');
+        }, 10);
+      } else {
+        // Hide this item
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.classList.remove('active');
+        // Wait for transition to complete before removing from layout
+        setTimeout(() => {
+          item.style.display = 'none';
+        }, 300); // Match this to your CSS transition time
       }
     });
-    
-    // Wait for fadeout to complete
-    setTimeout(() => {
-      portfolioItems.forEach(item => {
-        const categories = item.getAttribute('data-category').split(' ');
-        const shouldShow = filter === 'all' || categories.includes(filter);
-        
-        if (shouldShow) {
-          // Show this item - ensure it's displayed first
-          item.style.display = 'block';
-          
-          // Set up for fade in
-          setTimeout(() => {
-            item.style.opacity = '1';
-            item.style.transform = 'translateY(0)';
-            console.log("Showing item:", item.querySelector('.project-title')?.textContent);
-          }, 20);
-        } else {
-          // Hide this item
-          setTimeout(() => {
-            item.style.display = 'none';
-            console.log("Hiding item:", item.querySelector('.project-title')?.textContent);
-          }, ANIMATION_DURATION);
-        }
-      });
-    }, ANIMATION_DURATION + 20);
   }
   
   // Add click event listeners to filter buttons
   filterButtons.forEach(button => {
     button.addEventListener('click', function() {
+      // Skip if this button is already active
+      if (this.classList.contains('active')) return;
+      
       // Update button active state
       filterButtons.forEach(btn => btn.classList.remove('active'));
       this.classList.add('active');
       
-      // Get filter value and apply
+      // Apply filter
       const filterValue = this.getAttribute('data-filter');
       filterItems(filterValue);
     });
