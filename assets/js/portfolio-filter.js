@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Masonry-optimized filtering function with height preservation
+  // Improved masonry filtering with overflow prevention
   function filterItems(filter) {
     // Skip if already filtering
     if (isFiltering) return;
@@ -66,36 +66,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Store original styles to restore later
     const projectListStyle = window.getComputedStyle(projectList);
     const originalHeight = projectListStyle.height;
+    const originalWidth = projectListStyle.width;
     
-    // Temporarily freeze the container height to prevent jumping
+    // Add filtering class to prevent layout shifts
+    projectList.classList.add('filtering');
+    
+    // Set explicit width and height to prevent layout shifts
+    projectList.style.width = originalWidth;
     projectList.style.height = originalHeight;
+    projectList.style.overflow = 'hidden'; // Prevent items from showing outside container
     
-    // Batch DOM operations for better performance
-    requestAnimationFrame(() => {
-      // First hide all items that need to be hidden
-      toHide.forEach(item => {
-        item.classList.remove('active');
-        item.style.display = 'none';
-      });
-      
-      // Force reflow to apply changes
-      void projectList.offsetHeight;
-      
-      // Then show all items that need to be visible
-      toShow.forEach(item => {
-        item.classList.add('active');
-        item.style.display = 'block';
-      });
-      
-      // Wait a bit for masonry layout to recalculate
-      setTimeout(() => {
-        // Release the fixed height to allow natural flow
-        projectList.style.height = '';
-        
-        // Reset filtering flag
-        isFiltering = false;
-      }, 150); // Give a bit more time for masonry layout
+    // Hide all items that need to be hidden first
+    toHide.forEach(item => {
+      item.classList.remove('active');
+      item.style.display = 'none';
     });
+    
+    // Force a reflow before showing items
+    void projectList.offsetHeight;
+    
+    // Then show all items that should be visible
+    toShow.forEach(item => {
+      item.classList.add('active');
+      item.style.display = 'block';
+    });
+    
+    // Use a short timeout to let the browser recalculate the layout
+    setTimeout(() => {
+      // Release the constraints in sequence for smoother transition
+      projectList.style.overflow = '';
+      projectList.style.width = '';
+      projectList.style.height = '';
+      projectList.classList.remove('filtering');
+      
+      // Reset filtering flag
+      isFiltering = false;
+    }, 100); // Shorter timeout for better responsiveness
   }
   
   // Add click event listeners to filter buttons

@@ -10,10 +10,12 @@
   /* Prevent items from overflowing horizontally */
   overflow-x: hidden;
   /* Faster transition to prevent visual jumps */
-  transition: height 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: height 0.1s cubic-bezier(0.4, 0, 0.2, 1), width 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   /* Ensure width is constrained */
-  width: 100%;
+  max-width: 100%;
   position: relative;
+  /* Contain reflow to this element */
+  contain: layout;
 }
 
 .project-item {
@@ -54,6 +56,12 @@
 /* Hidden items - directly controlled by JS */
 .project-item:not(.active) {
   display: none !important;
+}
+
+/* Special handling during filtering - prevent layout shifts */
+.project-list.filtering {
+  overflow: hidden !important;
+  will-change: contents;
 }
 
 .project-item > a { width: 100%; }
