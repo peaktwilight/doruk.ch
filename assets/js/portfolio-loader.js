@@ -95,40 +95,151 @@
 
     const shimmerCenter = document.createElement('div');
     shimmerCenter.className = 'shimmer-center';
+    
+    // Create percentage display
+    const percentageDisplay = document.createElement('div');
+    percentageDisplay.className = 'loader-percentage';
+    percentageDisplay.textContent = '0%';
+    shimmerCenter.appendChild(percentageDisplay);
 
     // Add loader to DOM
     loader.appendChild(shimmer);
     loader.appendChild(shimmerCenter);
     container.appendChild(loader);
 
+    // Set up progress tracking for the image
+    let loadStartTime = Date.now();
+    let lastPercentage = 0;
+    
+    // Try to use fetch with a HEAD request to get the total size
+    try {
+      // Only track progress for GIFs or large images (likely to be slow)
+      if (img.src.toLowerCase().endsWith('.gif') || img.naturalWidth > 500) {
+        // Create a new XMLHttpRequest to track progress
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', img.src, true);
+        xhr.responseType = 'blob';
+        
+        // When data is received, update the percentage
+        xhr.onprogress = function(event) {
+          if (event.lengthComputable && event.total > 0) {
+            const percent = Math.min(Math.round((event.loaded / event.total) * 100), 100);
+            
+            // Only update if percentage has changed significantly (avoid too many DOM updates)
+            if (percent >= lastPercentage + 5 || percent === 100) {
+              lastPercentage = percent;
+              percentageDisplay.textContent = percent + '%';
+            }
+          } else {
+            // If length is not computable, use time-based estimation
+            const elapsed = Date.now() - loadStartTime;
+            // Simple time-based percentage (max 20s, matching our timeout)
+            const percent = Math.min(Math.round((elapsed / 20000) * 100), 95);
+            if (percent >= lastPercentage + 5) {
+              lastPercentage = percent;
+              percentageDisplay.textContent = percent + '%';
+            }
+          }
+        };
+        
+        // When download completes
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            percentageDisplay.textContent = '100%';
+            
+            // Create an object URL from the downloaded blob
+            const url = URL.createObjectURL(xhr.response);
+            
+            // Set the image src to the object URL
+            img.src = url;
+            
+            // Clean up the object URL when the image loads
+            img.onload = function() {
+              URL.revokeObjectURL(url);
+              removeLoader();
+              img.classList.add('loaded');
+            };
+          } else {
+            // Fallback to original src if XHR fails
+            removeLoader();
+          }
+        };
+        
+        // Handle errors
+        xhr.onerror = function() {
+          console.error('XHR error loading image:', img.src);
+          // Fall back to the original image loading
+        };
+        
+        xhr.send();
+      } else {
+        // For smaller non-GIF images, use a simplified timer-based approach
+        const updatePercentage = () => {
+          if (!loader.parentNode) return; // Stop if loader was removed
+          
+          const elapsed = Date.now() - loadStartTime;
+          // Simple time-based percentage (max 5s for small images)
+          const percent = Math.min(Math.round((elapsed / 5000) * 100), 95);
+          
+          if (percent >= lastPercentage + 10) {
+            lastPercentage = percent;
+            percentageDisplay.textContent = percent + '%';
+          }
+          
+          if (percent < 95) {
+            const timerId = setTimeout(updatePercentage, 500);
+            timeouts.push(timerId);
+          }
+        };
+        
+        updatePercentage();
+      }
+    } catch (e) {
+      log('Error setting up progress tracking:', e);
+      // If there's an error, just hide the percentage display
+      percentageDisplay.style.display = 'none';
+    }
+
     // Handle image load/error events
     function removeLoader() {
       if (!loader.parentNode) return;
 
-      // Fade out loader
-      loader.classList.add('hidden');
+      // Show 100% before removing
+      if (percentageDisplay) {
+        percentageDisplay.textContent = '100%';
+      }
 
-      // Remove from DOM after transition
-      const timeout = setTimeout(() => {
-        if (loader.parentNode) loader.remove();
-        processedImages.delete(imageId);
+      // Fade out loader after a brief delay to show 100%
+      setTimeout(() => {
+        loader.classList.add('hidden');
 
-        // Reset container position if we changed it
-        if (currentPosition === 'static') {
-          container.style.position = '';
-        }
-      }, 300);
+        // Remove from DOM after transition
+        const timeout = setTimeout(() => {
+          if (loader.parentNode) loader.remove();
+          processedImages.delete(imageId);
 
-      timeouts.push(timeout);
+          // Reset container position if we changed it
+          if (currentPosition === 'static') {
+            container.style.position = '';
+          }
+        }, 300);
+
+        timeouts.push(timeout);
+      }, 200);
     }
 
     // Use passive and once for optimal performance
     img.addEventListener('load', () => {
-      removeLoader();
-      img.classList.add('loaded');
+      // Show 100% on load
+      percentageDisplay.textContent = '100%';
+      setTimeout(() => {
+        removeLoader();
+        img.classList.add('loaded');
+      }, 200);
     }, { once: true, passive: true });
 
     img.addEventListener('error', () => {
+      percentageDisplay.textContent = 'Error';
       removeLoader();
       // Try to recover by forcing src reload
       if (img.src) {
@@ -141,7 +252,10 @@
     }, { once: true, passive: true });
 
     // Fallback timeout for safety (increased to 20 seconds)
-    const timeout = setTimeout(removeLoader, 20000);
+    const timeout = setTimeout(() => {
+      percentageDisplay.textContent = '100%';
+      removeLoader();
+    }, 20000);
     timeouts.push(timeout);
   }
 

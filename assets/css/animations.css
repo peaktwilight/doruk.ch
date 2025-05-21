@@ -137,6 +137,30 @@
   transform: translateZ(0);
   animation: shimmerPulse 1.5s infinite;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Percentage text display */
+.loader-percentage {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: var(--vegas-gold);
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px;
+  min-width: 40px;
+  text-align: center;
+  z-index: 3;
 }
 
 /* Optimized keyframes using only transform for hardware acceleration */
