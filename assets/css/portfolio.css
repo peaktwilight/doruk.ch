@@ -10,7 +10,6 @@
 }
 
 .project-item {
-  display: block; /* Change from none to block */
   background: var(--eerie-black-1);
   padding: 15px;
   border-radius: 16px;
@@ -22,9 +21,17 @@
   margin-bottom: 30px; /* Increased space between items for 3-column layout */
   /* Add subtle depth */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  opacity: 0; /* Start invisible but displayed */
-  transform: translateY(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  
+  /* Animation properties */
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
+              opacity 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease,
+              filter 0.3s ease;
+  
+  /* Initial state */
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .project-item:hover {

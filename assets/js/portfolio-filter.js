@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
   portfolioItems.forEach(item => {
     item.classList.add('active');
     item.classList.add('visible');
+    // Reset inline styles that might be causing invisibility issues
+    item.style.opacity = '1';
+    item.style.transform = 'translateY(0)';
+    item.style.display = 'block';
   });
   
   // Add badge click handlers
@@ -40,17 +44,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Basic filter function - just show/hide
+  // Animation timing variables
+  const ANIMATION_DURATION = 300; // ms
+  
+  // Filter function with simplified transitions
   function filterItems(filter) {
+    console.log("Filtering items with filter:", filter);
+    
+    // First reset all items to ensure proper starting state
+    portfolioItems.forEach(item => {
+      // Reset transition to ensure smooth animations
+      item.style.transition = `opacity ${ANIMATION_DURATION}ms ease, transform ${ANIMATION_DURATION}ms ease`;
+    });
+    
+    // First fade out all items that will be hidden
     portfolioItems.forEach(item => {
       const categories = item.getAttribute('data-category').split(' ');
+      const shouldShow = filter === 'all' || categories.includes(filter);
       
-      if (filter === 'all' || categories.includes(filter)) {
-        item.style.display = 'block';
+      // Items to hide: fade out first
+      if (!shouldShow) {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(10px)';
       } else {
-        item.style.display = 'none';
+        // Items to show: ensure they're visible but wait for the right time to reveal
+        item.style.display = 'block';
       }
     });
+    
+    // Wait for fadeout to complete
+    setTimeout(() => {
+      portfolioItems.forEach(item => {
+        const categories = item.getAttribute('data-category').split(' ');
+        const shouldShow = filter === 'all' || categories.includes(filter);
+        
+        if (shouldShow) {
+          // Show this item - ensure it's displayed first
+          item.style.display = 'block';
+          
+          // Set up for fade in
+          setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+            console.log("Showing item:", item.querySelector('.project-title')?.textContent);
+          }, 20);
+        } else {
+          // Hide this item
+          setTimeout(() => {
+            item.style.display = 'none';
+            console.log("Hiding item:", item.querySelector('.project-title')?.textContent);
+          }, ANIMATION_DURATION);
+        }
+      });
+    }, ANIMATION_DURATION + 20);
   }
   
   // Add click event listeners to filter buttons

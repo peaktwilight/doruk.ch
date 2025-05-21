@@ -208,14 +208,18 @@
   background-color: var(--eerie-black-1);
   overflow: hidden;
   max-height: 70vh;
+  position: relative; /* Added for absolute positioning of img */
 }
 
 .project-modal-img-wrapper img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Use cover instead of contain to fill the space */
+  object-fit: contain; /* Changed to contain to show whole image */
   border-radius: inherit;
+  transition: opacity 0.3s ease-in-out; /* Smooth transition */
+  background-color: var(--eerie-black-1); /* Match background */
+  opacity: 0; /* Start with opacity 0 */
 }
 
 .project-modal-info {

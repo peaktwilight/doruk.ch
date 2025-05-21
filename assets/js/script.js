@@ -508,8 +508,37 @@ const openProjectModal = function (item) {
   const appStoreUrl = item.dataset.appstoreUrl;
   const playStoreUrl = item.dataset.playstoreUrl;
 
-  // Populate modal content
-  projectModalImg.src = imgSrc;
+  // Populate modal content - ensure the image source is valid
+  if (imgSrc && imgSrc !== '') {
+    // Get the image wrapper to ensure it's displayed
+    const imgWrapper = projectModalImg.closest('.project-modal-img-wrapper');
+    if (imgWrapper) {
+      imgWrapper.style.display = 'flex';
+    }
+    
+    // Force the image to be reloaded by temporarily setting to empty and then the actual source
+    projectModalImg.src = '';
+    projectModalImg.style.opacity = '0';
+    
+    setTimeout(() => {
+      console.log('Setting modal image src to:', imgSrc);
+      projectModalImg.src = imgSrc;
+      projectModalImg.style.display = 'block'; // Ensure it's visible
+      
+      // When the image is loaded, fade it in
+      projectModalImg.onload = function() {
+        projectModalImg.style.opacity = '1';
+        console.log('Modal image loaded');
+      };
+    }, 10);
+  } else {
+    // If no image, hide the image container
+    const imgWrapper = projectModalImg.closest('.project-modal-img-wrapper');
+    if (imgWrapper) {
+      imgWrapper.style.display = 'none';
+    }
+    projectModalImg.style.display = 'none';
+  }
   projectModalImg.alt = title;
   projectModalTitle.textContent = title;
   projectModalCategory.textContent = category;
