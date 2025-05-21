@@ -247,11 +247,11 @@
 }
 
 /* Multiple badges positioning */
-.project-img .ios-badge {
+.project-img .android-badge {
   top: 10px;
 }
 
-.project-img .android-badge {
+.project-img .ios-badge {
   top: 50px;
 }
 
