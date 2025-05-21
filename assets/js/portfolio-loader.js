@@ -111,24 +111,37 @@
     let loadStartTime = Date.now();
     let lastPercentage = 0;
     
-    // Try to use fetch with a HEAD request to get the total size
+    // Improved progress tracking with better parallelization
     try {
-      // Only track progress for GIFs or large images (likely to be slow)
-      if (img.src.toLowerCase().endsWith('.gif') || img.naturalWidth > 500) {
+      // Only track progress for GIFs (which tend to be larger animations)
+      if (img.src.toLowerCase().endsWith('.gif')) {
         // Create a new XMLHttpRequest to track progress
         const xhr = new XMLHttpRequest();
         xhr.open('GET', img.src, true);
         xhr.responseType = 'blob';
         
+        // Higher priority for GIFs
+        if (typeof xhr.setRequestHeader === 'function') {
+          xhr.setRequestHeader('X-Priority', 'high');
+        }
+        
+        // Throttle UI updates for better performance when loading many images in parallel
+        let lastUpdateTime = Date.now();
+        
         // When data is received, update the percentage
         xhr.onprogress = function(event) {
+          // Limit UI updates to once per 100ms to reduce DOM overhead during parallel loading
+          const now = Date.now();
+          if (now - lastUpdateTime < 100 && lastPercentage > 0) return;
+          
           if (event.lengthComputable && event.total > 0) {
             const percent = Math.min(Math.round((event.loaded / event.total) * 100), 100);
             
-            // Only update if percentage has changed significantly (avoid too many DOM updates)
+            // Only update if percentage has changed significantly 
             if (percent >= lastPercentage + 5 || percent === 100) {
               lastPercentage = percent;
               percentageDisplay.textContent = percent + '%';
+              lastUpdateTime = now;
             }
           } else {
             // If length is not computable, use time-based estimation
@@ -138,6 +151,7 @@
             if (percent >= lastPercentage + 5) {
               lastPercentage = percent;
               percentageDisplay.textContent = percent + '%';
+              lastUpdateTime = now;
             }
           }
         };
@@ -161,14 +175,21 @@
             };
           } else {
             // Fallback to original src if XHR fails
-            removeLoader();
+            img.onload = function() {
+              removeLoader();
+              img.classList.add('loaded');
+            };
           }
         };
         
         // Handle errors
         xhr.onerror = function() {
-          console.error('XHR error loading image:', img.src);
-          // Fall back to the original image loading
+          log('XHR error loading image:', img.src);
+          // Let the native img loading handle it
+          img.onload = function() {
+            removeLoader();
+            img.classList.add('loaded');
+          };
         };
         
         xhr.send();
@@ -325,49 +346,42 @@
       }, 20);
     });
 
-    // Use IntersectionObserver to prioritize visible images if supported
+    // Process all images immediately in parallel for fastest loading
+    // But keep the visual animation sequence for better UX
+    log('Processing all images in parallel');
+    
+    // Start all image loads immediately
+    imgContainers.forEach(container => {
+      processImageContainer(container);
+    });
+    
+    // Use IntersectionObserver only for visual animations as user scrolls
     if ('IntersectionObserver' in window) {
-      log('Using IntersectionObserver for prioritization');
-
-      // Track which images have been processed
-      const processedContainers = new Set();
-
-      // Process visible images first, then others
-      const observer = new IntersectionObserver((entries) => {
-        // Process visible images immediately
-        const visibleEntries = entries.filter(entry => entry.isIntersecting);
-
-        visibleEntries.forEach(entry => {
-          const container = entry.target;
-          if (!processedContainers.has(container)) {
-            processedContainers.add(container);
-            processImageContainer(container);
-            observer.unobserve(container);
+      // This observer only handles the visual animation timing, not loading
+      const animationObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const container = entry.target;
+            const projectItem = container.closest('.project-item');
+            
+            if (projectItem) {
+              // Enhance animation when scrolling into view
+              projectItem.style.opacity = '1';
+              projectItem.style.transform = 'translateY(0) translateZ(0)';
+            }
+            
+            animationObserver.unobserve(container);
           }
         });
-
-        // If all are processed, disconnect observer
-        if (processedContainers.size === imgContainers.length) {
-          observer.disconnect();
-        }
       }, {
-        rootMargin: '200px' // Start loading slightly before they come into view
+        rootMargin: '100px',
+        threshold: 0.1
       });
-
-      // Observe all image containers
-      imgContainers.forEach(container => observer.observe(container));
-
-      // Process remaining images in a low-priority way after a longer delay
-      setTimeout(() => {
-        imgContainers.forEach(container => {
-          if (!processedContainers.has(container)) {
-            processedContainers.add(container);
-            processImageContainer(container);
-            observer.unobserve(container);
-          }
-        });
-        observer.disconnect();
-      }, 3000);
+      
+      // Observe for animation purposes only
+      imgContainers.forEach(container => {
+        animationObserver.observe(container);
+      });
     } else {
       // Fallback for browsers without IntersectionObserver
       // Use requestAnimationFrame for smoother performance

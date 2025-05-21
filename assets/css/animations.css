@@ -169,14 +169,14 @@
   50% { transform: translateX(30%); }
 }
 
-/* Optimized keyframes using only transform and opacity - more noticeable pulse */
+/* Optimized keyframes using only transform and opacity - more subtle pulse */
 @keyframes shimmerPulse {
   0%, 100% {
-    transform: scale(0.7) translateZ(0);
-    opacity: 0.7;
+    transform: scale(0.9) translateZ(0);
+    opacity: 0.8;
   }
   50% {
-    transform: scale(1.2) translateZ(0);
+    transform: scale(1.1) translateZ(0);
     opacity: 1;
   }
 }
