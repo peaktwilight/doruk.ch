@@ -1,6 +1,6 @@
 /**
- * Simple Portfolio Filter
- * Smooth and minimal animation for portfolio items
+ * Ultra Simple Portfolio Filter
+ * No animations, just simple instant show/hide
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
   portfolioItems.forEach(item => {
     item.classList.add('active');
     item.style.display = 'block';
-    item.style.opacity = '1';
-    item.style.transform = 'translateY(0)';
   });
   
   // Add badge click handlers
@@ -42,33 +40,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Filter function - simple show/hide approach
+  // Filter function - simple direct show/hide with no animations
   function filterItems(filter) {
-    // Apply changes to each portfolio item
     portfolioItems.forEach(item => {
       // Get the categories for this item
       const categories = item.getAttribute('data-category').split(' ');
       const shouldShow = filter === 'all' || categories.includes(filter);
       
-      // Apply appropriate display and animation properties
+      // Apply display property directly - no animations
       if (shouldShow) {
-        // Show this item
         item.style.display = 'block';
-        // Use a timeout to ensure display takes effect first
-        setTimeout(() => {
-          item.style.opacity = '1';
-          item.style.transform = 'translateY(0)';
-          item.classList.add('active');
-        }, 10);
+        item.classList.add('active');
       } else {
-        // Hide this item
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(20px)';
+        item.style.display = 'none';
         item.classList.remove('active');
-        // Wait for transition to complete before removing from layout
-        setTimeout(() => {
-          item.style.display = 'none';
-        }, 300); // Match this to your CSS transition time
       }
     });
   }

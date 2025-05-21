@@ -22,15 +22,8 @@
   /* Add subtle depth */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   
-  /* Simple, clean animation properties */
-  transition: transform 0.3s ease,
-              opacity 0.3s ease,
-              box-shadow 0.3s ease,
-              border-color 0.3s ease;
-  
-  /* Default visible state - JS will control this */
-  opacity: 1;
-  transform: translateY(0);
+  /* Only hover transitions - no filtering animations */
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 .project-item:hover {
@@ -39,15 +32,9 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* Item visibility states */
+/* Simple visibility control */
 .project-item.active {
   display: block !important;
-}
-
-/* Active items should be fully visible */
-.project-item.active {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* Default display state */
@@ -55,11 +42,9 @@
   display: block;
 }
 
-/* When hiding items (not active) */
+/* Hidden items - directly controlled by JS */
 .project-item:not(.active) {
-  opacity: 0;
-  transform: translateY(20px);
-  /* Will be set to display:none after transition in JS */
+  display: none !important;
 }
 
 .project-item > a { width: 100%; }
