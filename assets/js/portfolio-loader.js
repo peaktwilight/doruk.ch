@@ -140,8 +140,8 @@
       }
     }, { once: true, passive: true });
 
-    // Fallback timeout for safety (increased to 10 seconds)
-    const timeout = setTimeout(removeLoader, 10000);
+    // Fallback timeout for safety (increased to 20 seconds)
+    const timeout = setTimeout(removeLoader, 20000);
     timeouts.push(timeout);
   }
 
@@ -243,7 +243,7 @@
       // Observe all image containers
       imgContainers.forEach(container => observer.observe(container));
 
-      // Process remaining images in a low-priority way after a delay
+      // Process remaining images in a low-priority way after a longer delay
       setTimeout(() => {
         imgContainers.forEach(container => {
           if (!processedContainers.has(container)) {
@@ -253,7 +253,7 @@
           }
         });
         observer.disconnect();
-      }, 1000);
+      }, 3000);
     } else {
       // Fallback for browsers without IntersectionObserver
       // Use requestAnimationFrame for smoother performance

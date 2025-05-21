@@ -128,8 +128,8 @@
 
 /* Simplified center dot with hardware acceleration */
 .shimmer-center {
-  width: 10px; /* Smaller size */
-  height: 10px;
+  width: 15px; /* Larger size for better visibility */
+  height: 15px;
   background-color: var(--vegas-gold);
   border-radius: 50%;
   /* Hardware acceleration */
@@ -145,14 +145,14 @@
   50% { transform: translateX(30%); }
 }
 
-/* Optimized keyframes using only transform and opacity */
+/* Optimized keyframes using only transform and opacity - more noticeable pulse */
 @keyframes shimmerPulse {
   0%, 100% {
     transform: scale(0.7) translateZ(0);
     opacity: 0.7;
   }
   50% {
-    transform: scale(1) translateZ(0);
+    transform: scale(1.2) translateZ(0);
     opacity: 1;
   }
 }
