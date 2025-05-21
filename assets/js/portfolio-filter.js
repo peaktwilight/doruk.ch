@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentFilter = 'all';
   let isAnimating = false;
   
-  // Simple filter function
+  // Improved filter function with consistent animations
   function filterItems(filter) {
     // Skip if already using this filter or animation in progress
     if (filter === currentFilter || isAnimating) return;
@@ -66,35 +66,76 @@ document.addEventListener('DOMContentLoaded', function() {
     currentFilter = filter;
     isAnimating = true;
     
-    // First, remove fade-in class from items that will be hidden
+    // Determine which items will be shown and which will be hidden
+    const itemsToShow = [];
+    const itemsToHide = [];
+    
     portfolioItems.forEach(item => {
       const categories = item.getAttribute('data-category').split(' ');
-      if (!(filter === 'all' || categories.includes(filter))) {
-        item.classList.remove('fade-in');
+      if (filter === 'all' || categories.includes(filter)) {
+        itemsToShow.push(item);
+      } else {
+        itemsToHide.push(item);
       }
     });
     
-    // Short delay to allow fade-out to start
+    // Step 1: Hide items that need to be hidden
+    itemsToHide.forEach(item => {
+      // First remove the animation class
+      item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      item.style.opacity = '0';
+      item.style.transform = 'translateY(20px)';
+      item.classList.remove('fade-in');
+    });
+    
+    // Step 2: Wait for hide animation to complete, then update DOM classes
     setTimeout(() => {
-      // Then update active class based on filter
-      portfolioItems.forEach(item => {
-        const categories = item.getAttribute('data-category').split(' ');
+      // Update active class based on filter
+      itemsToHide.forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      itemsToShow.forEach(item => {
+        // Make sure it's marked as active
+        item.classList.add('active');
         
-        if (filter === 'all' || categories.includes(filter)) {
-          item.classList.add('active');
-          // Short delay before fade in
-          setTimeout(() => {
-            item.classList.add('fade-in');
-          }, 50);
-        } else {
-          item.classList.remove('active');
+        // Reset styles to prepare for animation
+        if (!item.classList.contains('fade-in')) {
+          item.style.opacity = '0';
+          item.style.transform = 'translateY(20px)';
         }
       });
       
-      // Reset animation flag
+      // Force layout reflow to ensure animations work properly
+      document.body.offsetHeight;
+      
+      // Step 3: Show all visible items with animation
       setTimeout(() => {
-        isAnimating = false;
-      }, 500);
+        itemsToShow.forEach((item, index) => {
+          // Stagger animations slightly for a nicer effect
+          setTimeout(() => {
+            item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+            item.classList.add('fade-in');
+          }, index * 30); // Stagger by 30ms per item
+        });
+        
+        // Reset animation flag after all animations complete
+        const totalDelay = itemsToShow.length * 30 + 400; // Last item delay + animation duration
+        setTimeout(() => {
+          isAnimating = false;
+          
+          // Clean up inline styles after animations complete
+          portfolioItems.forEach(item => {
+            if (item.classList.contains('active')) {
+              item.style.opacity = '';
+              item.style.transform = '';
+              item.style.transition = '';
+            }
+          });
+        }, totalDelay);
+      }, 50);
     }, 300);
   }
   

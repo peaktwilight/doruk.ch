@@ -35,11 +35,13 @@
 
 .project-item.active {
   display: block;
+  will-change: opacity, transform;
 }
 
 .project-item.fade-in {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: opacity 0.4s ease, transform 0.4s ease !important;
 }
 
 .project-item > a { width: 100%; }
