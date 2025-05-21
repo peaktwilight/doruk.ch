@@ -7,8 +7,13 @@
   column-count: 1;
   column-gap: 30px; /* Increased gap for better spacing in 3-column layout */
   margin-bottom: 20px;
+  /* Prevent items from overflowing horizontally */
+  overflow-x: hidden;
   /* Faster transition to prevent visual jumps */
   transition: height 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Ensure width is constrained */
+  width: 100%;
+  position: relative;
 }
 
 .project-item {
