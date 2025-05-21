@@ -126,21 +126,34 @@
   animation: shimmer 2s infinite;
 }
 
-/* Simplified center dot with hardware acceleration */
+/* Modern progress indicator */
 .shimmer-center {
-  width: 15px; /* Larger size for better visibility */
-  height: 15px;
-  background-color: var(--vegas-gold);
-  border-radius: 50%;
+  width: 60px; /* Wider for progress bar style */
+  height: 6px; /* Thinner height for sleeker look */
+  background-color: rgba(30, 30, 30, 0.6); /* Darker background */
+  border-radius: 3px; /* Rounded corners */
   /* Hardware acceleration */
-  will-change: transform, opacity;
+  will-change: transform;
   transform: translateZ(0);
-  animation: shimmerPulse 1.5s infinite;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
+  overflow: hidden; /* For progress bar effect */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Progress indicator inner bar */
+.progress-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%; /* Initial width */
+  background: linear-gradient(to right, 
+                var(--vegas-gold), 
+                hsl(45, 74%, 68%));
+  border-radius: 2px;
+  transition: width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); /* Material-style easing */
+  box-shadow: 0 0 4px rgba(212, 175, 55, 0.4);
 }
 
 /* Percentage text display */
@@ -149,16 +162,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  top: -30px;
+  top: -25px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.7);
   color: var(--vegas-gold);
-  font-size: 12px;
-  font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 10px;
-  min-width: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.5px;
   text-align: center;
   z-index: 3;
 }
@@ -169,15 +180,27 @@
   50% { transform: translateX(30%); }
 }
 
-/* Optimized keyframes using only transform and opacity - more subtle pulse */
-@keyframes shimmerPulse {
-  0%, 100% {
-    transform: scale(0.9) translateZ(0);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.1) translateZ(0);
-    opacity: 1;
+/* Add custom progress data attribute for browsers that don't support CSS variables well */
+.shimmer-center[data-progress] {
+  position: relative;
+}
+
+.shimmer-center[data-progress]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: attr(data-progress number);
+  background: linear-gradient(to right, var(--vegas-gold), hsl(45, 74%, 68%));
+  border-radius: 3px;
+  transition: width 0.3s ease-out;
+}
+
+/* For browsers that do support proper CSS variables */
+@supports (--css: variables) {
+  .shimmer-center::after {
+    width: var(--progress-width, 0%);
   }
 }
 

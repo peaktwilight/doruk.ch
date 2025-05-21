@@ -100,6 +100,13 @@
     const percentageDisplay = document.createElement('div');
     percentageDisplay.className = 'loader-percentage';
     percentageDisplay.textContent = '0%';
+    
+    // Create progress indicator bar
+    const progressIndicator = document.createElement('div');
+    progressIndicator.className = 'progress-indicator';
+    
+    // Add both elements to the shimmer center
+    shimmerCenter.appendChild(progressIndicator);
     shimmerCenter.appendChild(percentageDisplay);
 
     // Add loader to DOM
@@ -141,6 +148,7 @@
             if (percent >= lastPercentage + 5 || percent === 100) {
               lastPercentage = percent;
               percentageDisplay.textContent = percent + '%';
+              progressIndicator.style.width = percent + '%';
               lastUpdateTime = now;
             }
           } else {
@@ -151,6 +159,7 @@
             if (percent >= lastPercentage + 5) {
               lastPercentage = percent;
               percentageDisplay.textContent = percent + '%';
+              progressIndicator.style.width = percent + '%';
               lastUpdateTime = now;
             }
           }
@@ -160,6 +169,7 @@
         xhr.onload = function() {
           if (xhr.status === 200) {
             percentageDisplay.textContent = '100%';
+            progressIndicator.style.width = '100%';
             
             // Create an object URL from the downloaded blob
             const url = URL.createObjectURL(xhr.response);
@@ -205,6 +215,7 @@
           if (percent >= lastPercentage + 10) {
             lastPercentage = percent;
             percentageDisplay.textContent = percent + '%';
+            progressIndicator.style.width = percent + '%';
           }
           
           if (percent < 95) {
@@ -228,6 +239,9 @@
       // Show 100% before removing
       if (percentageDisplay) {
         percentageDisplay.textContent = '100%';
+        if (progressIndicator) {
+          progressIndicator.style.width = '100%';
+        }
       }
 
       // Fade out loader after a brief delay to show 100%
@@ -253,6 +267,7 @@
     img.addEventListener('load', () => {
       // Show 100% on load
       percentageDisplay.textContent = '100%';
+      progressIndicator.style.width = '100%';
       setTimeout(() => {
         removeLoader();
         img.classList.add('loaded');
@@ -261,6 +276,9 @@
 
     img.addEventListener('error', () => {
       percentageDisplay.textContent = 'Error';
+      // Show error state in progress bar
+      progressIndicator.style.width = '100%';
+      progressIndicator.style.backgroundColor = 'rgba(220, 53, 69, 0.8)';
       removeLoader();
       // Try to recover by forcing src reload
       if (img.src) {
@@ -275,6 +293,9 @@
     // Fallback timeout for safety (increased to 20 seconds)
     const timeout = setTimeout(() => {
       percentageDisplay.textContent = '100%';
+      if (progressIndicator) {
+        progressIndicator.style.width = '100%';
+      }
       removeLoader();
     }, 20000);
     timeouts.push(timeout);
