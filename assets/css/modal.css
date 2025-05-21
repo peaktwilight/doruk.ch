@@ -209,7 +209,7 @@
   background-color: var(--eerie-black-1);
   overflow: hidden;
   max-height: 70vh;
-  position: relative; /* Added for absolute positioning of img */
+  position: relative; /* Added for absolute positioning of img and loader */
 }
 
 .project-modal-img-wrapper img {

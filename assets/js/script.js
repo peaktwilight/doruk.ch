@@ -476,26 +476,204 @@ const openProjectModal = function (item) {
       imgWrapper.style.display = 'flex';
     }
     
-    // Simplest possible approach - set the image visible immediately
-    projectModalImg.style.display = 'block';
+    // Clear any existing loaders
+    const existingLoaders = imgWrapper.querySelectorAll('.shimmer-container');
+    existingLoaders.forEach(loader => loader.remove());
     
-    // First set opacity to 0 to avoid flicker
+    // Create loader with minimal DOM operations
+    const loader = document.createElement('div');
+    loader.className = 'shimmer-container';
+
+    // Create shimmer effect
+    const shimmer = document.createElement('div');
+    shimmer.className = 'shimmer';
+
+    const shimmerCenter = document.createElement('div');
+    shimmerCenter.className = 'shimmer-center';
+    
+    // Create percentage display
+    const percentageDisplay = document.createElement('div');
+    percentageDisplay.className = 'loader-percentage';
+    percentageDisplay.textContent = '0%';
+    
+    // Create progress indicator bar
+    const progressIndicator = document.createElement('div');
+    progressIndicator.className = 'progress-indicator';
+    
+    // Add both elements to the shimmer center
+    shimmerCenter.appendChild(progressIndicator);
+    shimmerCenter.appendChild(percentageDisplay);
+
+    // Add loader to DOM
+    loader.appendChild(shimmer);
+    loader.appendChild(shimmerCenter);
+    imgWrapper.appendChild(loader);
+    
+    // Reset image to prepare for loading
+    projectModalImg.style.display = 'block';
     projectModalImg.style.opacity = '0';
+    projectModalImg.classList.remove('loaded');
+    
+    // Set up progress tracking for the image
+    let loadStartTime = Date.now();
+    let lastPercentage = 0;
+    
+    // Handle image load/error events
+    function removeLoader() {
+      if (!loader.parentNode) return;
+
+      // Show 100% before removing
+      percentageDisplay.textContent = '100%';
+      progressIndicator.style.width = '100%';
+
+      // Fade out loader after a brief delay to show 100%
+      setTimeout(() => {
+        loader.classList.add('hidden');
+
+        // Remove from DOM after transition
+        setTimeout(() => {
+          if (loader.parentNode) loader.remove();
+        }, 300);
+      }, 200);
+    }
     
     // Set src directly using the original source path
     projectModalImg.src = imgSrc;
     
-    // Show immediately without waiting for load event
-    // This works better with cached images and avoids stuck modals
-    setTimeout(() => {
-      projectModalImg.style.opacity = '1';
-    }, 10);
+    // Track progress
+    if (imgSrc.toLowerCase().endsWith('.gif')) {
+      // Create a new XMLHttpRequest to track progress for GIFs
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', imgSrc, true);
+      xhr.responseType = 'blob';
+      
+      // Throttle UI updates for better performance
+      let lastUpdateTime = Date.now();
+      
+      // When data is received, update the percentage
+      xhr.onprogress = function(event) {
+        // Limit UI updates to once per 100ms
+        const now = Date.now();
+        if (now - lastUpdateTime < 100 && lastPercentage > 0) return;
+        
+        if (event.lengthComputable && event.total > 0) {
+          const percent = Math.min(Math.round((event.loaded / event.total) * 100), 100);
+          
+          // Only update if percentage has changed significantly 
+          if (percent >= lastPercentage + 5 || percent === 100) {
+            lastPercentage = percent;
+            percentageDisplay.textContent = percent + '%';
+            progressIndicator.style.width = percent + '%';
+            lastUpdateTime = now;
+          }
+        } else {
+          // If length is not computable, use time-based estimation
+          const elapsed = Date.now() - loadStartTime;
+          const percent = Math.min(Math.round((elapsed / 10000) * 100), 95);
+          if (percent >= lastPercentage + 5) {
+            lastPercentage = percent;
+            percentageDisplay.textContent = percent + '%';
+            progressIndicator.style.width = percent + '%';
+            lastUpdateTime = now;
+          }
+        }
+      };
+      
+      // When download completes
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          percentageDisplay.textContent = '100%';
+          progressIndicator.style.width = '100%';
+          
+          // Create an object URL from the downloaded blob
+          const url = URL.createObjectURL(xhr.response);
+          
+          // Set the image src to the object URL
+          projectModalImg.src = url;
+          
+          // When the image loads
+          projectModalImg.onload = function() {
+            removeLoader();
+            projectModalImg.style.opacity = '1';
+            projectModalImg.classList.add('loaded');
+          };
+        } else {
+          // Fallback to original src if XHR fails
+          projectModalImg.onload = function() {
+            removeLoader();
+            projectModalImg.style.opacity = '1';
+            projectModalImg.classList.add('loaded');
+          };
+        }
+      };
+      
+      // Handle errors
+      xhr.onerror = function() {
+        console.error('XHR error loading image:', imgSrc);
+        projectModalImg.onload = function() {
+          removeLoader();
+          projectModalImg.style.opacity = '1';
+          projectModalImg.classList.add('loaded');
+        };
+      };
+      
+      xhr.send();
+    } else {
+      // For non-GIF images, use a simplified timer-based approach
+      const updatePercentage = () => {
+        if (!loader.parentNode) return; // Stop if loader was removed
+        
+        const elapsed = Date.now() - loadStartTime;
+        // Simple time-based percentage (max 3s for normal images)
+        const percent = Math.min(Math.round((elapsed / 3000) * 100), 95);
+        
+        if (percent >= lastPercentage + 10) {
+          lastPercentage = percent;
+          percentageDisplay.textContent = percent + '%';
+          progressIndicator.style.width = percent + '%';
+        }
+        
+        if (percent < 95) {
+          setTimeout(updatePercentage, 300);
+        }
+      };
+      
+      updatePercentage();
+      
+      // Handle normal image loading
+      projectModalImg.onload = function() {
+        // Show 100% on load
+        percentageDisplay.textContent = '100%';
+        progressIndicator.style.width = '100%';
+        setTimeout(() => {
+          removeLoader();
+          projectModalImg.style.opacity = '1';
+          projectModalImg.classList.add('loaded');
+        }, 200);
+      };
+    }
     
     projectModalImg.onerror = function() {
       console.error('Failed to load image:', imgSrc);
-      // Make sure it's visible even on error
-      projectModalImg.style.opacity = '1';
+      percentageDisplay.textContent = 'Error';
+      // Show error state in progress bar
+      progressIndicator.style.width = '100%';
+      progressIndicator.style.backgroundColor = 'rgba(220, 53, 69, 0.8)';
+      setTimeout(() => {
+        removeLoader();
+        projectModalImg.style.opacity = '1';
+      }, 500);
     };
+    
+    // Fallback timeout for safety (10 seconds)
+    setTimeout(() => {
+      if (loader.parentNode) {
+        percentageDisplay.textContent = '100%';
+        progressIndicator.style.width = '100%';
+        removeLoader();
+        projectModalImg.style.opacity = '1';
+      }
+    }, 10000);
   } else {
     // If no image, hide the image container
     const imgWrapper = projectModalImg.closest('.project-modal-img-wrapper');
