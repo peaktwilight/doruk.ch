@@ -454,11 +454,35 @@ const projectItems = document.querySelectorAll("[data-modal-trigger]");
 const openProjectModal = function (item) {
   // Find elements within the clicked item
   const imgElement = item.querySelector('.project-img img');
+  const videoElement = item.querySelector('.project-img video');
   const titleElement = item.querySelector('.project-title');
   const categoryElement = item.querySelector('.project-category');
 
-  // Extract data from elements and item's dataset for URLs and status
-  const imgSrc = imgElement ? imgElement.getAttribute('data-original-src') || '' : '';
+  // Extract image source - prefer img element, fallback to converting video URL to static image
+  let imgSrc = '';
+  if (imgElement) {
+    imgSrc = imgElement.getAttribute('data-original-src') || imgElement.src || '';
+  } else if (videoElement) {
+    // Convert video URL back to static image URL
+    const videoSrc = videoElement.src;
+    
+    // Extract filename from video URL and convert to static JPG
+    const videoFilename = videoSrc.split('/').pop();
+    
+    // Handle special cases for video-to-static mapping
+    let staticFilename;
+    if (videoFilename === 'grafana-doruk.mp4') {
+      staticFilename = 'grafana-ttstats-static.jpg';
+    } else if (videoFilename === 'playlist-rotator-video.mp4') {
+      staticFilename = 'soothe-playlist-autorotator-static.jpg';
+    } else {
+      // Regular conversion: "project-video.mp4" -> "project-static.jpg"
+      staticFilename = videoFilename.replace('-video.mp4', '-static.jpg');
+    }
+    
+    imgSrc = `./assets/images/${staticFilename}`;
+  }
+
   const title = titleElement ? titleElement.textContent : 'Project Title';
   const category = categoryElement ? categoryElement.textContent : '';
   const liveUrl = item.dataset.modalUrl;
@@ -476,13 +500,25 @@ const openProjectModal = function (item) {
       imgWrapper.style.display = 'flex';
     }
     
-    // Clear any existing loaders
+    // Clear any existing loaders and videos
     const existingLoaders = imgWrapper.querySelectorAll('.shimmer-container');
     existingLoaders.forEach(loader => loader.remove());
+    const existingVideos = imgWrapper.querySelectorAll('video');
+    existingVideos.forEach(video => video.remove());
     
-    // Create loader with minimal DOM operations
-    const loader = document.createElement('div');
-    loader.className = 'shimmer-container';
+    // Check if this is a portfolio project (has static image)
+    const isPortfolioProject = imgSrc.includes('-static.jpg');
+    
+    if (isPortfolioProject) {
+      // For portfolio projects, show video instead of static image
+      showVideoInModal(imgSrc, imgWrapper);
+      // Skip the regular image loading logic for portfolio projects
+    } else {
+      // Continue with regular image loading logic
+      
+      // Create loader with minimal DOM operations
+      const loader = document.createElement('div');
+      loader.className = 'shimmer-container';
 
     // Create shimmer effect
     const shimmer = document.createElement('div');
@@ -674,6 +710,7 @@ const openProjectModal = function (item) {
         projectModalImg.style.opacity = '1';
       }
     }, 10000);
+    }
   } else {
     // If no image, hide the image container
     const imgWrapper = projectModalImg.closest('.project-modal-img-wrapper');
@@ -686,6 +723,7 @@ const openProjectModal = function (item) {
   projectModalImg.alt = title;
   projectModalTitle.textContent = title;
   projectModalCategory.textContent = category;
+  
   projectModalLiveBtn.href = liveUrl;
 
   // Populate Status Indicator
@@ -781,3 +819,78 @@ function setupImageLoadObserver() {
 
 // Call the setup function when the page loads
 window.addEventListener('load', setupImageLoadObserver);
+
+// Function to show video in modal for portfolio projects
+function showVideoInModal(staticImageSrc, imgWrapper) {
+  // Make sure the image wrapper is visible
+  if (imgWrapper) {
+    imgWrapper.style.display = 'flex';
+  }
+  
+  // Hide the original image
+  const modalImg = imgWrapper.querySelector('[data-project-modal-img]');
+  if (modalImg) {
+    modalImg.style.display = 'none';
+  }
+  
+  // Get video URL using the same logic as portfolio-loader.js
+  function getVideoUrl(originalSrc) {
+    const filename = originalSrc.split('/').pop();
+    const baseUrl = 'https://github.com/peaktwilight/CV-Card/releases/download/v2.0.0-all-videos/';
+    
+    // Handle special naming cases
+    const specialMappings = {
+      'soothe-playlist-autorotator-static.jpg': 'playlist-rotator-video.mp4',
+      'grafana-ttstats-static.jpg': 'grafana-doruk.mp4'
+    };
+    
+    if (specialMappings[filename]) {
+      return baseUrl + specialMappings[filename];
+    }
+    
+    // Convert static JPG filename to video filename
+    const videoName = filename.replace(/\-static\.(jpg|png)$/i, '-video.mp4');
+    return baseUrl + videoName;
+  }
+  
+  // Create video element
+  const video = document.createElement('video');
+  video.controls = true;
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.style.width = '100%';
+  video.style.height = '100%';
+  video.style.objectFit = 'cover';
+  video.style.borderRadius = 'inherit';
+  
+  const videoUrl = getVideoUrl(staticImageSrc);
+  
+  // Load video
+  video.oncanplaythrough = function() {
+    // Video is ready to play
+    video.style.opacity = '1';
+  };
+  
+  video.onerror = function() {
+    // If video fails to load, fallback to static image
+    console.log('Video failed to load, showing static image instead');
+    if (modalImg) {
+      modalImg.style.display = 'block';
+      modalImg.src = staticImageSrc;
+      modalImg.style.opacity = '1';
+    }
+    video.remove();
+  };
+  
+  video.src = videoUrl;
+  video.style.opacity = '0';
+  video.style.transition = 'opacity 0.3s ease';
+  
+  // Add video to wrapper
+  imgWrapper.appendChild(video);
+  
+  // Start loading
+  video.load();
+}
