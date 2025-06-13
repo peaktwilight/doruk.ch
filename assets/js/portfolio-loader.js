@@ -129,6 +129,37 @@
       container.style.position = 'relative';
     }
 
+    // Progressive loading for GIFs - try static frame first
+    const isGif = img.src.toLowerCase().endsWith('.gif');
+    
+    if (isGif) {
+      // Try to load a pre-generated static frame first
+      const originalGifSrc = img.src;
+      
+      loadStaticFrame(originalGifSrc, 
+        function(staticUrl) {
+          // Static frame found - show it immediately without loader
+          img.src = staticUrl;
+          img.classList.add('static-frame');
+          img.classList.add('loaded'); // Mark as loaded since static frame loads quickly
+          
+          // Start loading the full animated GIF in the background
+          loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId);
+        },
+        function() {
+          // No static frame available - show loader and proceed with direct GIF loading
+          log('No static frame found for:', originalGifSrc);
+          showLoaderAndLoadImage(img, container, currentPosition, imageId, true, originalGifSrc);
+        }
+      );
+    } else {
+      // For non-GIF images, show loader immediately
+      showLoaderAndLoadImage(img, container, currentPosition, imageId, false, null);
+    }
+  }
+
+  // Show loader and load image (for cases where we need loading animation)
+  function showLoaderAndLoadImage(img, container, currentPosition, imageId, isGif, originalGifSrc) {
     // Create loader with minimal DOM operations
     const loader = document.createElement('div');
     loader.className = 'shimmer-container';
@@ -189,34 +220,14 @@
       }, 200);
     }
 
-    // Set up progress tracking for the image
-    let loadStartTime = Date.now();
-    let lastPercentage = 0;
-    
-    // Progressive loading for GIFs - show static frame first
-    const isGif = img.src.toLowerCase().endsWith('.gif');
-    
     if (isGif) {
-      // Try to load a pre-generated static frame first
-      const originalGifSrc = img.src;
-      
-      loadStaticFrame(originalGifSrc, 
-        function(staticUrl) {
-          // Static frame found - show it immediately
-          img.src = staticUrl;
-          img.classList.add('static-frame');
-          
-          // Start loading the full animated GIF in the background
-          loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader);
-        },
-        function() {
-          // No static frame available - proceed with direct GIF loading
-          log('No static frame found for:', originalGifSrc);
-          loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader);
-        }
-      );
+      // Load GIF with progress tracking
+      loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader);
     } else {
       // For non-GIF images, use simplified timer-based loading
+      let loadStartTime = Date.now();
+      let lastPercentage = 0;
+      
       const updatePercentage = () => {
         if (!loader.parentNode) return; // Stop if loader was removed
         
@@ -275,6 +286,33 @@
       removeLoader();
     }, 20000);
     timeouts.push(timeout);
+  }
+
+  // Load animated GIF in background while static frame is shown
+  function loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId) {
+    // Load the full GIF silently in the background
+    const backgroundImg = new Image();
+    
+    backgroundImg.onload = function() {
+      // Once loaded, smoothly transition to animated version
+      img.src = originalGifSrc;
+      img.classList.add('animated-loaded');
+      img.classList.remove('static-frame');
+      
+      // Clean up
+      processedImages.delete(imageId);
+      if (currentPosition === 'static') {
+        container.style.position = '';
+      }
+    };
+    
+    backgroundImg.onerror = function() {
+      log('Failed to load animated GIF in background:', originalGifSrc);
+      // Keep the static frame - it's better than nothing
+    };
+    
+    // Start loading
+    backgroundImg.src = originalGifSrc;
   }
 
   // Load animated GIF with progress tracking
