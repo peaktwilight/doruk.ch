@@ -67,6 +67,29 @@
       }
     });
   }
+  // Extract first frame from GIF and create static version
+  function extractFirstFrame(gifSrc, callback) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const tempImg = new Image();
+    
+    tempImg.crossOrigin = 'anonymous';
+    tempImg.onload = function() {
+      canvas.width = tempImg.width;
+      canvas.height = tempImg.height;
+      ctx.drawImage(tempImg, 0, 0);
+      
+      // Convert to blob for better performance
+      canvas.toBlob(callback, 'image/png', 0.8);
+    };
+    
+    tempImg.onerror = function() {
+      callback(null); // Fallback to original loading
+    };
+    
+    tempImg.src = gifSrc;
+  }
+
   // Add loading effect to any image
   function addLoaderToImage(img, container) {
     // Mark as processed
@@ -114,123 +137,6 @@
     loader.appendChild(shimmerCenter);
     container.appendChild(loader);
 
-    // Set up progress tracking for the image
-    let loadStartTime = Date.now();
-    let lastPercentage = 0;
-    
-    // Improved progress tracking with better parallelization
-    try {
-      // Only track progress for GIFs (which tend to be larger animations)
-      if (img.src.toLowerCase().endsWith('.gif')) {
-        // Create a new XMLHttpRequest to track progress
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', img.src, true);
-        xhr.responseType = 'blob';
-        
-        // Higher priority for GIFs
-        if (typeof xhr.setRequestHeader === 'function') {
-          xhr.setRequestHeader('X-Priority', 'high');
-        }
-        
-        // Throttle UI updates for better performance when loading many images in parallel
-        let lastUpdateTime = Date.now();
-        
-        // When data is received, update the percentage
-        xhr.onprogress = function(event) {
-          // Limit UI updates to once per 100ms to reduce DOM overhead during parallel loading
-          const now = Date.now();
-          if (now - lastUpdateTime < 100 && lastPercentage > 0) return;
-          
-          if (event.lengthComputable && event.total > 0) {
-            const percent = Math.min(Math.round((event.loaded / event.total) * 100), 100);
-            
-            // Only update if percentage has changed significantly 
-            if (percent >= lastPercentage + 5 || percent === 100) {
-              lastPercentage = percent;
-              percentageDisplay.textContent = percent + '%';
-              progressIndicator.style.width = percent + '%';
-              lastUpdateTime = now;
-            }
-          } else {
-            // If length is not computable, use time-based estimation
-            const elapsed = Date.now() - loadStartTime;
-            // Simple time-based percentage (max 20s, matching our timeout)
-            const percent = Math.min(Math.round((elapsed / 20000) * 100), 95);
-            if (percent >= lastPercentage + 5) {
-              lastPercentage = percent;
-              percentageDisplay.textContent = percent + '%';
-              progressIndicator.style.width = percent + '%';
-              lastUpdateTime = now;
-            }
-          }
-        };
-        
-        // When download completes
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            percentageDisplay.textContent = '100%';
-            progressIndicator.style.width = '100%';
-            
-            // Create an object URL from the downloaded blob
-            const url = URL.createObjectURL(xhr.response);
-            
-            // Set the image src to the object URL
-            img.src = url;
-            
-            // Clean up the object URL when the image loads but store it for modal reuse
-            img.onload = function() {
-              removeLoader();
-              img.classList.add('loaded');
-            };
-          } else {
-            // Fallback to original src if XHR fails
-            img.onload = function() {
-              removeLoader();
-              img.classList.add('loaded');
-            };
-          }
-        };
-        
-        // Handle errors
-        xhr.onerror = function() {
-          log('XHR error loading image:', img.src);
-          // Let the native img loading handle it
-          img.onload = function() {
-            removeLoader();
-            img.classList.add('loaded');
-          };
-        };
-        
-        xhr.send();
-      } else {
-        // For smaller non-GIF images, use a simplified timer-based approach
-        const updatePercentage = () => {
-          if (!loader.parentNode) return; // Stop if loader was removed
-          
-          const elapsed = Date.now() - loadStartTime;
-          // Simple time-based percentage (max 5s for small images)
-          const percent = Math.min(Math.round((elapsed / 5000) * 100), 95);
-          
-          if (percent >= lastPercentage + 10) {
-            lastPercentage = percent;
-            percentageDisplay.textContent = percent + '%';
-            progressIndicator.style.width = percent + '%';
-          }
-          
-          if (percent < 95) {
-            const timerId = setTimeout(updatePercentage, 500);
-            timeouts.push(timerId);
-          }
-        };
-        
-        updatePercentage();
-      }
-    } catch (e) {
-      log('Error setting up progress tracking:', e);
-      // If there's an error, just hide the percentage display
-      percentageDisplay.style.display = 'none';
-    }
-
     // Handle image load/error events
     function removeLoader() {
       if (!loader.parentNode) return;
@@ -260,6 +166,54 @@
 
         timeouts.push(timeout);
       }, 200);
+    }
+
+    // Set up progress tracking for the image
+    let loadStartTime = Date.now();
+    let lastPercentage = 0;
+    
+    // Progressive loading for GIFs - show static frame first
+    const isGif = img.src.toLowerCase().endsWith('.gif');
+    
+    if (isGif) {
+      // First, extract and show the first frame
+      extractFirstFrame(img.src, function(staticBlob) {
+        if (staticBlob) {
+          const staticUrl = URL.createObjectURL(staticBlob);
+          img.src = staticUrl;
+          img.classList.add('static-frame');
+          
+          // Clean up the static URL when we're done with it
+          img.addEventListener('load', function() {
+            URL.revokeObjectURL(staticUrl);
+          }, { once: true });
+        }
+        
+        // Now start loading the full animated GIF in the background
+        loadAnimatedGif(img, percentageDisplay, progressIndicator, removeLoader);
+      });
+    } else {
+      // For non-GIF images, use simplified timer-based loading
+      const updatePercentage = () => {
+        if (!loader.parentNode) return; // Stop if loader was removed
+        
+        const elapsed = Date.now() - loadStartTime;
+        // Simple time-based percentage (max 5s for small images)
+        const percent = Math.min(Math.round((elapsed / 5000) * 100), 95);
+        
+        if (percent >= lastPercentage + 10) {
+          lastPercentage = percent;
+          percentageDisplay.textContent = percent + '%';
+          progressIndicator.style.width = percent + '%';
+        }
+        
+        if (percent < 95) {
+          const timerId = setTimeout(updatePercentage, 500);
+          timeouts.push(timerId);
+        }
+      };
+      
+      updatePercentage();
     }
 
     // Use passive and once for optimal performance
@@ -298,6 +252,109 @@
       removeLoader();
     }, 20000);
     timeouts.push(timeout);
+  }
+
+  // Load animated GIF with progress tracking
+  function loadAnimatedGif(img, percentageDisplay, progressIndicator, removeLoader) {
+    const originalSrc = img.getAttribute('data-original-src') || img.dataset.originalSrc || img.src;
+    let lastPercentage = 0;
+    let loadStartTime = Date.now();
+    
+    try {
+      // Create a new XMLHttpRequest to track progress
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', originalSrc, true);
+      xhr.responseType = 'blob';
+        
+      // Higher priority for GIFs
+      if (typeof xhr.setRequestHeader === 'function') {
+        xhr.setRequestHeader('X-Priority', 'high');
+      }
+      
+      // Throttle UI updates for better performance when loading many images in parallel
+      let lastUpdateTime = Date.now();
+      
+      // When data is received, update the percentage
+      xhr.onprogress = function(event) {
+        // Limit UI updates to once per 100ms to reduce DOM overhead during parallel loading
+        const now = Date.now();
+        if (now - lastUpdateTime < 100 && lastPercentage > 0) return;
+        
+        if (event.lengthComputable && event.total > 0) {
+          const percent = Math.min(Math.round((event.loaded / event.total) * 100), 100);
+          
+          // Only update if percentage has changed significantly 
+          if (percent >= lastPercentage + 5 || percent === 100) {
+            lastPercentage = percent;
+            percentageDisplay.textContent = percent + '%';
+            progressIndicator.style.width = percent + '%';
+            lastUpdateTime = now;
+          }
+        } else {
+          // If length is not computable, use time-based estimation
+          const elapsed = Date.now() - loadStartTime;
+          // Simple time-based percentage (max 20s, matching our timeout)
+          const percent = Math.min(Math.round((elapsed / 20000) * 100), 95);
+          if (percent >= lastPercentage + 5) {
+            lastPercentage = percent;
+            percentageDisplay.textContent = percent + '%';
+            progressIndicator.style.width = percent + '%';
+            lastUpdateTime = now;
+          }
+        }
+      };
+      
+      // When download completes
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          percentageDisplay.textContent = '100%';
+          progressIndicator.style.width = '100%';
+          
+          // Create an object URL from the downloaded blob
+          const url = URL.createObjectURL(xhr.response);
+          
+          // Replace static frame with animated GIF
+          img.src = url;
+          img.classList.add('animated-loaded');
+          img.classList.remove('static-frame');
+          
+          // Clean up the object URL when the image loads
+          img.onload = function() {
+            removeLoader();
+            img.classList.add('loaded');
+            URL.revokeObjectURL(url);
+          };
+        } else {
+          // Fallback to original src if XHR fails
+          img.src = originalSrc;
+          img.onload = function() {
+            removeLoader();
+            img.classList.add('loaded');
+          };
+        }
+      };
+      
+      // Handle errors
+      xhr.onerror = function() {
+        log('XHR error loading animated GIF:', originalSrc);
+        // Fallback to original src
+        img.src = originalSrc;
+        img.onload = function() {
+          removeLoader();
+          img.classList.add('loaded');
+        };
+      };
+      
+      xhr.send();
+    } catch (e) {
+      log('Error loading animated GIF:', e);
+      // Fallback to original loading
+      img.src = originalSrc;
+      img.onload = function() {
+        removeLoader();
+        img.classList.add('loaded');
+      };
+    }
   }
 
   // Handler for portfolio tab clicks
