@@ -67,27 +67,48 @@
       }
     });
   }
-  // Extract first frame from GIF and create static version
-  function extractFirstFrame(gifSrc, callback) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const tempImg = new Image();
+  // Get static frame URL for a GIF (using naming convention)
+  function getStaticFrameUrl(gifSrc) {
+    // Convert GIF path to static frame path
+    // e.g., "image.gif" -> "image-static.jpg" or "image-static.png"
+    const basePath = gifSrc.replace(/\.gif$/i, '');
     
-    tempImg.crossOrigin = 'anonymous';
-    tempImg.onload = function() {
-      canvas.width = tempImg.width;
-      canvas.height = tempImg.height;
-      ctx.drawImage(tempImg, 0, 0);
+    // Try common static frame naming conventions
+    const staticExtensions = ['-static.jpg', '-static.png', '-frame.jpg', '-frame.png'];
+    
+    return staticExtensions.map(ext => basePath + ext);
+  }
+
+  // Check if static frame exists
+  function loadStaticFrame(gifSrc, onSuccess, onFallback) {
+    const staticUrls = getStaticFrameUrl(gifSrc);
+    let attemptIndex = 0;
+
+    function tryNextUrl() {
+      if (attemptIndex >= staticUrls.length) {
+        // No static frame found, use fallback
+        onFallback();
+        return;
+      }
+
+      const staticUrl = staticUrls[attemptIndex];
+      const testImg = new Image();
       
-      // Convert to blob for better performance
-      canvas.toBlob(callback, 'image/png', 0.8);
-    };
-    
-    tempImg.onerror = function() {
-      callback(null); // Fallback to original loading
-    };
-    
-    tempImg.src = gifSrc;
+      testImg.onload = function() {
+        // Static frame found and loaded successfully
+        onSuccess(staticUrl);
+      };
+      
+      testImg.onerror = function() {
+        // Try next URL
+        attemptIndex++;
+        tryNextUrl();
+      };
+      
+      testImg.src = staticUrl;
+    }
+
+    tryNextUrl();
   }
 
   // Add loading effect to any image
@@ -176,22 +197,24 @@
     const isGif = img.src.toLowerCase().endsWith('.gif');
     
     if (isGif) {
-      // First, extract and show the first frame
-      extractFirstFrame(img.src, function(staticBlob) {
-        if (staticBlob) {
-          const staticUrl = URL.createObjectURL(staticBlob);
+      // Try to load a pre-generated static frame first
+      const originalGifSrc = img.src;
+      
+      loadStaticFrame(originalGifSrc, 
+        function(staticUrl) {
+          // Static frame found - show it immediately
           img.src = staticUrl;
           img.classList.add('static-frame');
           
-          // Clean up the static URL when we're done with it
-          img.addEventListener('load', function() {
-            URL.revokeObjectURL(staticUrl);
-          }, { once: true });
+          // Start loading the full animated GIF in the background
+          loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader);
+        },
+        function() {
+          // No static frame available - proceed with direct GIF loading
+          log('No static frame found for:', originalGifSrc);
+          loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader);
         }
-        
-        // Now start loading the full animated GIF in the background
-        loadAnimatedGif(img, percentageDisplay, progressIndicator, removeLoader);
-      });
+      );
     } else {
       // For non-GIF images, use simplified timer-based loading
       const updatePercentage = () => {
@@ -255,8 +278,8 @@
   }
 
   // Load animated GIF with progress tracking
-  function loadAnimatedGif(img, percentageDisplay, progressIndicator, removeLoader) {
-    const originalSrc = img.getAttribute('data-original-src') || img.dataset.originalSrc || img.src;
+  function loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader) {
+    const originalSrc = originalGifSrc || img.getAttribute('data-original-src') || img.dataset.originalSrc || img.src;
     let lastPercentage = 0;
     let loadStartTime = Date.now();
     
