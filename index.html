@@ -117,31 +117,42 @@
         
         <!-- MODAL HEADER SECTION -->
         <div class="h2 modal-title choice-modal-title">
-          <h2>Hey! I'm Doruk 👋</h2>
+          <h2>Welcome</h2>
+          <p class="subtitle">Cyber Defense Engineer • Developer • Music Producer</p>
         </div>
 
         <!-- MODAL CONTENT SECTION -->
-        <h3>Explore my work through these portals:</h3>
+        <h3>Choose your experience:</h3>
         <div class="button-container">
-          <!-- Business vCard Button -->
-          <button class="form-btn" id="showCV">
-            <ion-icon name="id-card-outline"></ion-icon>
-            <span>Business vCard</span>
+          <!-- Primary Portfolio Button -->
+          <button class="form-btn primary-btn" id="showCV">
+            <ion-icon name="briefcase-outline"></ion-icon>
+            <div class="btn-content">
+              <span class="btn-title">Professional Portfolio</span>
+              <span class="btn-subtitle">Projects, experience & technical skills</span>
+            </div>
           </button>
 
-          <!-- Ubuntu PC Simulator Button -->
-          <button class="form-btn"
-                  onclick="window.location.href='https://pc.doruk.ch';">
-            <ion-icon name="desktop-outline"></ion-icon>
-            <span>Ubuntu PC Simulator</span>
-          </button>
+          <!-- Secondary Options -->
+          <div class="secondary-options">
+            <button class="form-btn secondary-btn"
+                    onclick="window.location.href='https://pc.doruk.ch';">
+              <ion-icon name="terminal-outline"></ion-icon>
+              <div class="btn-content">
+                <span class="btn-title">Interactive Desktop</span>
+                <span class="btn-subtitle">Ubuntu environment simulation</span>
+              </div>
+            </button>
 
-          <!-- Music Producer Website Button -->
-          <button class="form-btn"
-                  onclick="window.location.href='https://peaktwilight.com';">
-            <ion-icon name="musical-notes-outline"></ion-icon>
-            <span>Music Producer Website</span>
-          </button>
+            <button class="form-btn secondary-btn"
+                    onclick="window.location.href='https://peaktwilight.com';">
+              <ion-icon name="musical-notes-outline"></ion-icon>
+              <div class="btn-content">
+                <span class="btn-title">Music Portfolio</span>
+                <span class="btn-subtitle">100M+ streams, Soothe Records</span>
+              </div>
+            </button>
+          </div>
         </div>
 
         <!-- Performance Mode Toggle -->
