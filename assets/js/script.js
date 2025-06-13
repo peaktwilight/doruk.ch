@@ -447,8 +447,8 @@ const projectModalStatus = document.querySelector("[data-project-modal-status]")
 const projectModalAppStoreBtn = document.querySelector("[data-project-modal-appstore-btn]");
 const projectModalPlayStoreBtn = document.querySelector("[data-project-modal-playstore-btn]");
 
-// Select all project items with the trigger attribute
-const projectItems = document.querySelectorAll("[data-modal-trigger]");
+// Select all project items (enable modal for all projects)
+const projectItems = document.querySelectorAll(".project-item");
 
 // Function to open and populate the modal
 const openProjectModal = function (item) {
@@ -726,7 +726,13 @@ const openProjectModal = function (item) {
   projectModalTitle.textContent = title;
   projectModalCategory.textContent = category;
   
-  projectModalLiveBtn.href = liveUrl;
+  // Conditionally show/hide View Live button based on URL availability
+  if (liveUrl && liveUrl.trim() !== '') {
+    projectModalLiveBtn.href = liveUrl;
+    projectModalLiveBtn.style.display = 'inline-flex';
+  } else {
+    projectModalLiveBtn.style.display = 'none';
+  }
 
   // Populate Status Indicator
   if (liveStatus && statusReason) {

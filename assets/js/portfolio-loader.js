@@ -95,7 +95,7 @@
   }
 
   // Load video progressively for all portfolio projects
-  function loadVideoInBackground(img, originalSrc, onVideoReady) {
+  function loadVideoInBackground(originalSrc, onVideoReady) {
     const videoUrl = getVideoUrl(originalSrc);
     log('Loading video in background:', videoUrl);
     
@@ -130,9 +130,6 @@
     
     // Store original image src
     const originalImgSrc = img.src;
-    
-    // Find the entire project item for hover interactions
-    const projectItem = container.closest('.project-item');
     
     // Add video indicator
     const videoIndicator = document.createElement('div');
@@ -236,7 +233,7 @@
       img.classList.add('loaded');
       
       // Load video in background for interactive playback
-      loadVideoInBackground(img, originalSrc, function(video) {
+      loadVideoInBackground(originalSrc, function(video) {
         log('Video loaded successfully, setting up interactions');
         // Set up hover interactions (immediate play, no delay)
         setupVideoInteraction(img, video, container);
@@ -537,7 +534,7 @@
         img.classList.add('static-frame');
         
         // Load video in background for interactive playback
-        loadVideoInBackground(img, originalSrc, function(video) {
+        loadVideoInBackground(originalSrc, function(video) {
           log('Video loaded for cached image, setting up interactions');
           setupVideoInteraction(img, video, container);
         });
