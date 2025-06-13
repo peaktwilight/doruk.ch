@@ -776,6 +776,30 @@ const openProjectModal = function (item) {
 // Function to close the modal
 const closeProjectModal = function () {
   projectModalContainer.classList.remove("active");
+  
+  // Clean up any loading states
+  const modalImgWrapper = document.querySelector('.project-modal-img-wrapper');
+  if (modalImgWrapper) {
+    // Remove any remaining loaders
+    const loader = modalImgWrapper.querySelector('.shimmer-container');
+    if (loader) {
+      loader.remove();
+    }
+    
+    // Stop and remove any videos
+    const video = modalImgWrapper.querySelector('video');
+    if (video) {
+      video.pause();
+      video.remove();
+    }
+    
+    // Reset modal image visibility
+    const modalImg = modalImgWrapper.querySelector('[data-project-modal-img]');
+    if (modalImg) {
+      modalImg.style.display = 'block';
+      modalImg.style.opacity = '1';
+    }
+  }
 }
 
 // Add click listener to all project items
@@ -841,6 +865,78 @@ function showVideoInModal(staticImageSrc, imgWrapper) {
     modalImg.style.display = 'none';
   }
   
+  // Create and show loader while video loads
+  const loader = document.createElement('div');
+  loader.className = 'shimmer-container';
+
+  // Create shimmer effect
+  const shimmer = document.createElement('div');
+  shimmer.className = 'shimmer';
+
+  const shimmerCenter = document.createElement('div');
+  shimmerCenter.className = 'shimmer-center';
+  
+  // Create percentage display
+  const percentageDisplay = document.createElement('div');
+  percentageDisplay.className = 'loader-percentage';
+  percentageDisplay.textContent = '0%';
+  
+  // Create progress indicator bar
+  const progressIndicator = document.createElement('div');
+  progressIndicator.className = 'progress-indicator';
+  
+  // Add elements to loader
+  shimmerCenter.appendChild(progressIndicator);
+  shimmerCenter.appendChild(percentageDisplay);
+  loader.appendChild(shimmer);
+  loader.appendChild(shimmerCenter);
+  
+  // Add loader to wrapper
+  imgWrapper.appendChild(loader);
+  
+  // Timer for simulated progress (since video progress events are limited)
+  let loadStartTime = Date.now();
+  let lastPercentage = 0;
+  
+  const updatePercentage = () => {
+    if (!loader.parentNode) return; // Stop if loader was removed
+    
+    const elapsed = Date.now() - loadStartTime;
+    // Time-based percentage for video loading (max 8s)
+    const percent = Math.min(Math.round((elapsed / 8000) * 100), 95);
+    
+    if (percent >= lastPercentage + 10) {
+      lastPercentage = percent;
+      percentageDisplay.textContent = percent + '%';
+      progressIndicator.style.width = percent + '%';
+    }
+    
+    if (percent < 95) {
+      setTimeout(updatePercentage, 500);
+    }
+  };
+  
+  updatePercentage();
+  
+  // Function to remove loader
+  function removeLoader() {
+    if (!loader.parentNode) return;
+
+    // Show 100% before removing
+    percentageDisplay.textContent = '100%';
+    progressIndicator.style.width = '100%';
+
+    // Fade out loader after a brief delay
+    setTimeout(() => {
+      loader.classList.add('hidden');
+
+      // Remove from DOM after transition
+      setTimeout(() => {
+        if (loader.parentNode) loader.remove();
+      }, 300);
+    }, 200);
+  }
+  
   // Get video URL using the same logic as portfolio-loader.js
   function getVideoUrl(originalSrc) {
     const filename = originalSrc.split('/').pop();
@@ -876,15 +972,38 @@ function showVideoInModal(staticImageSrc, imgWrapper) {
   
   const videoUrl = getVideoUrl(staticImageSrc);
   
-  // Load video
+  // Load video with progress tracking
+  video.onloadstart = function() {
+    // Video loading started
+    percentageDisplay.textContent = '10%';
+    progressIndicator.style.width = '10%';
+  };
+  
+  video.onprogress = function() {
+    // Video is downloading
+    if (lastPercentage < 50) {
+      percentageDisplay.textContent = '50%';
+      progressIndicator.style.width = '50%';
+      lastPercentage = 50;
+    }
+  };
+  
+  video.oncanplay = function() {
+    // Video can start playing
+    percentageDisplay.textContent = '80%';
+    progressIndicator.style.width = '80%';
+  };
+  
   video.oncanplaythrough = function() {
     // Video is ready to play
+    removeLoader();
     video.style.opacity = '1';
   };
   
   video.onerror = function() {
     // If video fails to load, fallback to static image
     console.log('Video failed to load, showing static image instead');
+    removeLoader();
     if (modalImg) {
       modalImg.style.display = 'block';
       modalImg.src = staticImageSrc;
@@ -899,6 +1018,11 @@ function showVideoInModal(staticImageSrc, imgWrapper) {
   
   // Add video to wrapper
   imgWrapper.appendChild(video);
+  
+  // Fallback timeout to remove loader (safety net)
+  setTimeout(() => {
+    removeLoader();
+  }, 12000); // 12 seconds timeout
   
   // Start loading
   video.load();
