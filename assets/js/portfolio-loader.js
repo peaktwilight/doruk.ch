@@ -139,12 +139,17 @@
       loadStaticFrame(originalGifSrc, 
         function(staticUrl) {
           // Static frame found - show it immediately without loader
-          img.src = staticUrl;
-          img.classList.add('static-frame');
-          img.classList.add('loaded'); // Mark as loaded since static frame loads quickly
-          
-          // Start loading the full animated GIF in the background
-          loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId);
+          // But only if we haven't already loaded the animated version
+          if (!img.classList.contains('animated-loaded')) {
+            img.src = staticUrl;
+            img.classList.add('static-frame');
+            img.classList.add('loaded'); // Mark as loaded since static frame loads quickly
+            
+            // Start loading the full animated GIF in the background
+            loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId);
+          } else {
+            log('Skipped static frame - animated already loaded:', originalGifSrc);
+          }
         },
         function() {
           // No static frame available - show loader and proceed with direct GIF loading
@@ -290,26 +295,45 @@
 
   // Load animated GIF in background while static frame is shown
   function loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId) {
+    log('Starting background load for:', originalGifSrc);
+    
+    // Add flag to prevent race conditions
+    img.dataset.loadingAnimated = 'true';
+    
     // Load the full GIF silently in the background
     const backgroundImg = new Image();
     
     backgroundImg.onload = function() {
-      // Once loaded, smoothly transition to animated version
-      img.src = originalGifSrc;
-      img.classList.add('animated-loaded');
-      img.classList.remove('static-frame');
+      log('Background GIF loaded successfully:', originalGifSrc);
       
-      // Clean up
-      processedImages.delete(imageId);
-      if (currentPosition === 'static') {
-        container.style.position = '';
+      // Check if we should still replace (prevent race conditions)
+      if (img.dataset.loadingAnimated === 'true' && img.classList.contains('static-frame')) {
+        // Once loaded, smoothly transition to animated version
+        img.src = originalGifSrc;
+        img.classList.add('animated-loaded');
+        img.classList.remove('static-frame');
+        img.dataset.loadingAnimated = 'false';
+        
+        log('Transitioned to animated GIF:', originalGifSrc);
+        
+        // Clean up
+        processedImages.delete(imageId);
+        if (currentPosition === 'static') {
+          container.style.position = '';
+        }
+      } else {
+        log('Skipped transition - image state changed:', img.src);
       }
     };
     
     backgroundImg.onerror = function() {
       log('Failed to load animated GIF in background:', originalGifSrc);
+      img.dataset.loadingAnimated = 'false';
       // Keep the static frame - it's better than nothing
     };
+    
+    // Add crossOrigin for better compatibility
+    backgroundImg.crossOrigin = 'anonymous';
     
     // Start loading
     backgroundImg.src = originalGifSrc;
