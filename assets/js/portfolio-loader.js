@@ -43,6 +43,7 @@
 
     // Check if portfolio is active immediately
     if (portfolioPage && portfolioPage.classList.contains('active')) {
+      log('Portfolio is active on page load, processing images');
       // Delay slightly to ensure all resources have been fetched
       setTimeout(processImages, 100);
     }
@@ -66,57 +67,6 @@
         }
       }
     });
-  }
-  // Get static frame URL for a GIF or any image (using naming convention)
-  function getStaticFrameUrl(imageSrc) {
-    // Convert image path to static frame path
-    // e.g., "image.gif" -> "image-static.jpg"
-    // e.g., "image-static.jpg" -> ["image-static.jpg"] (already static)
-    
-    // If it's already a static file, return it as-is
-    if (imageSrc.includes('-static.')) {
-      return [imageSrc];
-    }
-    
-    // Remove any existing extension and add static extensions
-    const basePath = imageSrc.replace(/\.(gif|jpg|jpeg|png)$/i, '');
-    
-    // Try common static frame naming conventions
-    const staticExtensions = ['-static.jpg', '-static.png', '-frame.jpg', '-frame.png'];
-    
-    return staticExtensions.map(ext => basePath + ext);
-  }
-
-  // Check if static frame exists (works for both GIFs and videos)
-  function loadStaticFrame(mediaSrc, onSuccess, onFallback) {
-    const staticUrls = getStaticFrameUrl(mediaSrc);
-    let attemptIndex = 0;
-
-    function tryNextUrl() {
-      if (attemptIndex >= staticUrls.length) {
-        // No static frame found, use fallback
-        onFallback();
-        return;
-      }
-
-      const staticUrl = staticUrls[attemptIndex];
-      const testImg = new Image();
-      
-      testImg.onload = function() {
-        // Static frame found and loaded successfully
-        onSuccess(staticUrl);
-      };
-      
-      testImg.onerror = function() {
-        // Try next URL
-        attemptIndex++;
-        tryNextUrl();
-      };
-      
-      testImg.src = staticUrl;
-    }
-
-    tryNextUrl();
   }
 
   // Get video URL from GitHub releases - updated for v2.0.0-all-videos
@@ -143,7 +93,7 @@
     return baseUrl + videoName;
   }
 
-  // Load video progressively (for infrastructure projects)
+  // Load video progressively for all portfolio projects
   function loadVideoInBackground(img, originalSrc, onVideoReady) {
     const videoUrl = getVideoUrl(originalSrc);
     log('Loading video in background:', videoUrl);
@@ -580,6 +530,25 @@
     // Check if image is already loaded (cached)
     if (img.complete) {
       img.classList.add('loaded');
+      
+      // Still set up video interactions for cached portfolio images
+      const isPortfolioProject = container.closest('.project-item');
+      if (isPortfolioProject) {
+        log('Cached portfolio image detected, setting up video interactions:', img.src);
+        
+        // Mark as processed to avoid duplicates
+        processedImages.add(imageId);
+        
+        // Set up video interactions
+        const originalSrc = img.src;
+        img.classList.add('static-frame');
+        
+        // Load video in background for interactive playback
+        loadVideoInBackground(img, originalSrc, function(video) {
+          log('Video loaded for cached image, setting up interactions');
+          setupVideoInteraction(img, video, container);
+        });
+      }
 
       // Force layout recalculation for masonry
       const projectList = container.closest('.project-list');
