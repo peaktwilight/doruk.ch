@@ -172,7 +172,7 @@ img.static-frame.animated-loaded {
 /* Video play indicator */
 .video-indicator {
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   background: rgba(0, 0, 0, 0.7);
   color: var(--vegas-gold);

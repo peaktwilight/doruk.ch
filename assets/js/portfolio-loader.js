@@ -119,33 +119,28 @@
     tryNextUrl();
   }
 
-  // Get video URL from GitHub releases
+  // Get video URL from GitHub releases - updated for v2.0.0-all-videos
   function getVideoUrl(originalSrc) {
     const filename = originalSrc.split('/').pop();
-    const videoName = filename.replace(/\.(gif|jpg|png)$/i, '.mp4');
     
-    // GitHub releases URL pattern
-    const baseUrl = 'https://github.com/peaktwilight/CV-Card/releases/download/v1.0.0-videos/';
+    // GitHub releases URL pattern (updated to v2.0.0-all-videos)
+    const baseUrl = 'https://github.com/peaktwilight/CV-Card/releases/download/v2.0.0-all-videos/';
     
-    // Map image names to video names  
-    const videoMapping = {
-      'uptime-kuma.gif': 'uptime-kuma-video.mp4',
-      'glances.gif': 'tmux-video.mp4', // Using tmux video as placeholder
-      'portainer.gif': 'peakops-video.mp4', // Using PeakOps dashboard video
-      'traefik.gif': 'traefik-video.mp4',
-      'grafana-ttstats.gif': 'grafana-doruk.mp4', // TTStats analytics uses grafana video
-      'watchtower.gif': 'tmux-video.mp4', // Using tmux video as placeholder
-      'nocodb.gif': 'nocodb-video.mp4',
-      'unidocs.gif': 'unidocs-video.mp4',
-      'soothe-discord-bot.gif': 'soothe-discord-bot-video.mp4',
-      'soothe-playlist-autorotator.gif': 'playlist-rotator-video.mp4',
-      'waha-whatsapp-api.gif': 'tmux-video.mp4' // Using tmux video as placeholder
+    // Handle special naming cases
+    const specialMappings = {
+      'soothe-playlist-autorotator-static.jpg': 'playlist-rotator-video.mp4',
+      'grafana-ttstats-static.jpg': 'grafana-doruk.mp4'
     };
     
-    const baseFilename = filename.replace(/\-static\.(jpg|png)$/i, '.gif');
-    const actualVideoName = videoMapping[baseFilename] || videoName;
+    if (specialMappings[filename]) {
+      return baseUrl + specialMappings[filename];
+    }
     
-    return baseUrl + actualVideoName;
+    // Convert static JPG filename to video filename
+    // e.g., "project-static.jpg" -> "project-video.mp4"
+    const videoName = filename.replace(/\-static\.(jpg|png)$/i, '-video.mp4');
+    
+    return baseUrl + videoName;
   }
 
   // Load video progressively (for infrastructure projects)
@@ -186,28 +181,34 @@
     // Store original image src
     const originalImgSrc = img.src;
     
+    // Find the entire project item for hover interactions
+    const projectItem = container.closest('.project-item');
+    
     // Add video indicator
     const videoIndicator = document.createElement('div');
     videoIndicator.className = 'video-indicator';
     videoIndicator.innerHTML = '<ion-icon name="play-outline"></ion-icon>';
     container.appendChild(videoIndicator);
     
-    // Auto-play video on hover (immediate)
-    container.addEventListener('mouseenter', function() {
-      if (!isVideoActive) {
-        playVideo();
-      }
-    });
+    // Auto-play video on hover over entire project item (immediate)
+    if (projectItem) {
+      projectItem.addEventListener('mouseenter', function() {
+        log('Mouse entered project item, isVideoActive:', isVideoActive);
+        if (!isVideoActive) {
+          playVideo();
+        }
+      });
+      
+      projectItem.addEventListener('mouseleave', function() {
+        clearTimeout(hoverTimeout);
+        if (!isVideoActive) {
+          stopVideo();
+        }
+      });
+    }
     
-    container.addEventListener('mouseleave', function() {
-      clearTimeout(hoverTimeout);
-      if (!isVideoActive) {
-        stopVideo();
-      }
-    });
-    
-    // Click to toggle video
-    container.addEventListener('click', function(e) {
+    // Click video indicator to toggle video
+    videoIndicator.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       
@@ -223,12 +224,26 @@
     });
     
     function playVideo() {
+      log('Playing video for:', img.src);
       // Replace image with video
       const imgParent = img.parentNode;
-      imgParent.replaceChild(video, img);
-      video.play();
-      img.classList.add('video-loaded');
-      videoIndicator.style.opacity = '0.7';
+      if (imgParent && video) {
+        // Copy image attributes and classes to video
+        video.alt = img.alt;
+        video.className = img.className;
+        video.loading = img.loading;
+        
+        imgParent.replaceChild(video, img);
+        video.play().then(() => {
+          log('Video started playing successfully');
+        }).catch(err => {
+          log('Video play failed:', err);
+        });
+        img.classList.add('video-loaded');
+        videoIndicator.style.opacity = '0.7';
+      } else {
+        log('Cannot play video - missing parent or video element');
+      }
     }
     
     function stopVideo() {
@@ -262,56 +277,36 @@
       container.style.position = 'relative';
     }
 
-    // Progressive loading for GIFs and infrastructure videos
-    const isGif = img.src.toLowerCase().endsWith('.gif');
-    const isInfrastructure = container.closest('[data-category*="infrastructure"]');
+    // Progressive loading for all portfolio projects (now uniform)
+    const isPortfolioProject = container.closest('.project-item');
     
-    if (isGif || isInfrastructure) {
-      // Try to load a pre-generated static frame first
+    log('Processing image:', img.src, 'isPortfolioProject:', !!isPortfolioProject);
+    
+    if (isPortfolioProject) {
+      // All portfolio projects now use static JPG + MP4 video pattern
       const originalSrc = img.src;
       
-      loadStaticFrame(originalSrc, 
-        function(staticUrl) {
-          // Static frame found - show it immediately without loader
-          if (!img.classList.contains('animated-loaded') && !img.classList.contains('video-loaded')) {
-            img.src = staticUrl;
-            img.classList.add('static-frame');
-            img.classList.add('loaded');
-            
-            if (isInfrastructure) {
-              // For infrastructure projects, load video in background
-              loadVideoInBackground(img, originalSrc, function(video) {
-                // Set up hover interactions (immediate play, no delay)
-                setupVideoInteraction(img, video, container);
-              });
-            } else {
-              // For regular GIFs, load animated GIF in background
-              loadAnimatedGifInBackground(img, originalSrc, container, currentPosition, imageId);
-            }
-          }
-        },
-        function() {
-          // No static frame available - show loader and proceed with direct loading
-          if (isInfrastructure) {
-            log('No static frame found for infrastructure project:', originalSrc);
-            // For infrastructure without static frames, try to load video directly
-            loadVideoInBackground(img, originalSrc, function(video) {
-              setupVideoInteraction(img, video, container);
-            });
-          } else {
-            log('No static frame found for GIF:', originalSrc);
-            showLoaderAndLoadImage(img, container, currentPosition, imageId, true, originalSrc);
-          }
-        }
-      );
+      log('Portfolio project detected, loading video for:', originalSrc);
+      
+      // Static frame is already loaded (since HTML now uses static JPGs)
+      img.classList.add('static-frame');
+      img.classList.add('loaded');
+      
+      // Load video in background for interactive playback
+      loadVideoInBackground(img, originalSrc, function(video) {
+        log('Video loaded successfully, setting up interactions');
+        // Set up hover interactions (immediate play, no delay)
+        setupVideoInteraction(img, video, container);
+      });
     } else {
-      // For non-GIF images, show loader immediately
-      showLoaderAndLoadImage(img, container, currentPosition, imageId, false, null);
+      // For non-portfolio images, show loader immediately
+      log('Non-portfolio image, showing loader');
+      showLoaderAndLoadImage(img, container, currentPosition, imageId);
     }
   }
 
   // Show loader and load image (for cases where we need loading animation)
-  function showLoaderAndLoadImage(img, container, currentPosition, imageId, isGif, originalGifSrc) {
+  function showLoaderAndLoadImage(img, container, currentPosition, imageId) {
     // Create loader with minimal DOM operations
     const loader = document.createElement('div');
     loader.className = 'shimmer-container';
@@ -372,35 +367,30 @@
       }, 200);
     }
 
-    if (isGif) {
-      // Load GIF with progress tracking
-      loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader);
-    } else {
-      // For non-GIF images, use simplified timer-based loading
-      let loadStartTime = Date.now();
-      let lastPercentage = 0;
+    // Use simplified timer-based loading for all images
+    let loadStartTime = Date.now();
+    let lastPercentage = 0;
+    
+    const updatePercentage = () => {
+      if (!loader.parentNode) return; // Stop if loader was removed
       
-      const updatePercentage = () => {
-        if (!loader.parentNode) return; // Stop if loader was removed
-        
-        const elapsed = Date.now() - loadStartTime;
-        // Simple time-based percentage (max 5s for small images)
-        const percent = Math.min(Math.round((elapsed / 5000) * 100), 95);
-        
-        if (percent >= lastPercentage + 10) {
-          lastPercentage = percent;
-          percentageDisplay.textContent = percent + '%';
-          progressIndicator.style.width = percent + '%';
-        }
-        
-        if (percent < 95) {
-          const timerId = setTimeout(updatePercentage, 500);
-          timeouts.push(timerId);
-        }
-      };
+      const elapsed = Date.now() - loadStartTime;
+      // Simple time-based percentage (max 5s for images)
+      const percent = Math.min(Math.round((elapsed / 5000) * 100), 95);
       
-      updatePercentage();
-    }
+      if (percent >= lastPercentage + 10) {
+        lastPercentage = percent;
+        percentageDisplay.textContent = percent + '%';
+        progressIndicator.style.width = percent + '%';
+      }
+      
+      if (percent < 95) {
+        const timerId = setTimeout(updatePercentage, 500);
+        timeouts.push(timerId);
+      }
+    };
+    
+    updatePercentage();
 
     // Use passive and once for optimal performance
     img.addEventListener('load', () => {
@@ -440,154 +430,7 @@
     timeouts.push(timeout);
   }
 
-  // Load animated GIF in background while static frame is shown
-  function loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId) {
-    log('Starting background load for:', originalGifSrc);
-    
-    // Add flag to prevent race conditions
-    img.dataset.loadingAnimated = 'true';
-    
-    // Load the full GIF silently in the background
-    const backgroundImg = new Image();
-    
-    backgroundImg.onload = function() {
-      log('Background GIF loaded successfully:', originalGifSrc);
-      
-      // Check if we should still replace (prevent race conditions)
-      if (img.dataset.loadingAnimated === 'true' && img.classList.contains('static-frame')) {
-        // Once loaded, smoothly transition to animated version
-        img.src = originalGifSrc;
-        img.classList.add('animated-loaded');
-        img.classList.remove('static-frame');
-        img.dataset.loadingAnimated = 'false';
-        
-        log('Transitioned to animated GIF:', originalGifSrc);
-        
-        // Clean up
-        processedImages.delete(imageId);
-        if (currentPosition === 'static') {
-          container.style.position = '';
-        }
-      } else {
-        log('Skipped transition - image state changed:', img.src);
-      }
-    };
-    
-    backgroundImg.onerror = function() {
-      log('Failed to load animated GIF in background:', originalGifSrc);
-      img.dataset.loadingAnimated = 'false';
-      // Keep the static frame - it's better than nothing
-    };
-    
-    // Add crossOrigin for better compatibility
-    backgroundImg.crossOrigin = 'anonymous';
-    
-    // Start loading
-    backgroundImg.src = originalGifSrc;
-  }
 
-  // Load animated GIF with progress tracking
-  function loadAnimatedGif(img, originalGifSrc, percentageDisplay, progressIndicator, removeLoader) {
-    const originalSrc = originalGifSrc || img.getAttribute('data-original-src') || img.dataset.originalSrc || img.src;
-    let lastPercentage = 0;
-    let loadStartTime = Date.now();
-    
-    try {
-      // Create a new XMLHttpRequest to track progress
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', originalSrc, true);
-      xhr.responseType = 'blob';
-        
-      // Higher priority for GIFs
-      if (typeof xhr.setRequestHeader === 'function') {
-        xhr.setRequestHeader('X-Priority', 'high');
-      }
-      
-      // Throttle UI updates for better performance when loading many images in parallel
-      let lastUpdateTime = Date.now();
-      
-      // When data is received, update the percentage
-      xhr.onprogress = function(event) {
-        // Limit UI updates to once per 100ms to reduce DOM overhead during parallel loading
-        const now = Date.now();
-        if (now - lastUpdateTime < 100 && lastPercentage > 0) return;
-        
-        if (event.lengthComputable && event.total > 0) {
-          const percent = Math.min(Math.round((event.loaded / event.total) * 100), 100);
-          
-          // Only update if percentage has changed significantly 
-          if (percent >= lastPercentage + 5 || percent === 100) {
-            lastPercentage = percent;
-            percentageDisplay.textContent = percent + '%';
-            progressIndicator.style.width = percent + '%';
-            lastUpdateTime = now;
-          }
-        } else {
-          // If length is not computable, use time-based estimation
-          const elapsed = Date.now() - loadStartTime;
-          // Simple time-based percentage (max 20s, matching our timeout)
-          const percent = Math.min(Math.round((elapsed / 20000) * 100), 95);
-          if (percent >= lastPercentage + 5) {
-            lastPercentage = percent;
-            percentageDisplay.textContent = percent + '%';
-            progressIndicator.style.width = percent + '%';
-            lastUpdateTime = now;
-          }
-        }
-      };
-      
-      // When download completes
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          percentageDisplay.textContent = '100%';
-          progressIndicator.style.width = '100%';
-          
-          // Create an object URL from the downloaded blob
-          const url = URL.createObjectURL(xhr.response);
-          
-          // Replace static frame with animated GIF
-          img.src = url;
-          img.classList.add('animated-loaded');
-          img.classList.remove('static-frame');
-          
-          // Clean up the object URL when the image loads
-          img.onload = function() {
-            removeLoader();
-            img.classList.add('loaded');
-            URL.revokeObjectURL(url);
-          };
-        } else {
-          // Fallback to original src if XHR fails
-          img.src = originalSrc;
-          img.onload = function() {
-            removeLoader();
-            img.classList.add('loaded');
-          };
-        }
-      };
-      
-      // Handle errors
-      xhr.onerror = function() {
-        log('XHR error loading animated GIF:', originalSrc);
-        // Fallback to original src
-        img.src = originalSrc;
-        img.onload = function() {
-          removeLoader();
-          img.classList.add('loaded');
-        };
-      };
-      
-      xhr.send();
-    } catch (e) {
-      log('Error loading animated GIF:', e);
-      // Fallback to original loading
-      img.src = originalSrc;
-      img.onload = function() {
-        removeLoader();
-        img.classList.add('loaded');
-      };
-    }
-  }
 
   // Handler for portfolio tab clicks
   function handlePortfolioClick() {
