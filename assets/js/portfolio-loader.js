@@ -79,7 +79,8 @@
     // Handle special naming cases
     const specialMappings = {
       'soothe-playlist-autorotator-static.jpg': 'playlist-rotator-video.mp4',
-      'grafana-ttstats-static.jpg': 'grafana-doruk.mp4'
+      'grafana-ttstats-static.jpg': 'grafana-doruk.mp4',
+      'waha-whatsapp-api-static.jpg': 'waha-video.mp4'
     };
     
     if (specialMappings[filename]) {

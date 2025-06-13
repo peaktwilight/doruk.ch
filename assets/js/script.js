@@ -475,6 +475,8 @@ const openProjectModal = function (item) {
       staticFilename = 'grafana-ttstats-static.jpg';
     } else if (videoFilename === 'playlist-rotator-video.mp4') {
       staticFilename = 'soothe-playlist-autorotator-static.jpg';
+    } else if (videoFilename === 'waha-video.mp4') {
+      staticFilename = 'waha-whatsapp-api-static.jpg';
     } else {
       // Regular conversion: "project-video.mp4" -> "project-static.jpg"
       staticFilename = videoFilename.replace('-video.mp4', '-static.jpg');
@@ -841,7 +843,8 @@ function showVideoInModal(staticImageSrc, imgWrapper) {
     // Handle special naming cases
     const specialMappings = {
       'soothe-playlist-autorotator-static.jpg': 'playlist-rotator-video.mp4',
-      'grafana-ttstats-static.jpg': 'grafana-doruk.mp4'
+      'grafana-ttstats-static.jpg': 'grafana-doruk.mp4',
+      'waha-whatsapp-api-static.jpg': 'waha-video.mp4'
     };
     
     if (specialMappings[filename]) {
