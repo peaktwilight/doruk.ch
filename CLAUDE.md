@@ -15,6 +15,7 @@ This is a personal portfolio website for Doruk Tan Öztürk built with HTML, CSS
   - `js/` - JavaScript files that handle site functionality
     - `script.js` - Core functionality including modals, navigation, and animations
     - `portfolio-loader.js` - Optimized loading for portfolio images
+    - `portfolio-filter.js` - Portfolio project filtering and badge interactions
 
 ## Development Commands
 
@@ -75,6 +76,11 @@ All styles use a consistent color scheme defined in variables.css with the main 
 - **Optimized Image Loading**: Uses IntersectionObserver to prioritize loading visible images
 - **Loading Effects**: Adds shimmer animations while images load
 - **Performance Optimizations**: Batched processing, minimal DOM operations, and cleanup
+
+#### Portfolio Filtering (portfolio-filter.js)
+- **Grid-Based Filtering**: Optimized filtering without animations to prevent layout shifts
+- **Badge Interactions**: Handles GitHub and App Store badge clicks with proper event handling
+- **Overflow Prevention**: Implements safeguards to maintain layout stability during filtering
 
 ### Main Components
 
