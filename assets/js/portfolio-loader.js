@@ -67,11 +67,19 @@
       }
     });
   }
-  // Get static frame URL for a GIF (using naming convention)
-  function getStaticFrameUrl(gifSrc) {
-    // Convert GIF path to static frame path
-    // e.g., "image.gif" -> "image-static.jpg" or "image-static.png"
-    const basePath = gifSrc.replace(/\.gif$/i, '');
+  // Get static frame URL for a GIF or any image (using naming convention)
+  function getStaticFrameUrl(imageSrc) {
+    // Convert image path to static frame path
+    // e.g., "image.gif" -> "image-static.jpg"
+    // e.g., "image-static.jpg" -> ["image-static.jpg"] (already static)
+    
+    // If it's already a static file, return it as-is
+    if (imageSrc.includes('-static.')) {
+      return [imageSrc];
+    }
+    
+    // Remove any existing extension and add static extensions
+    const basePath = imageSrc.replace(/\.(gif|jpg|jpeg|png)$/i, '');
     
     // Try common static frame naming conventions
     const staticExtensions = ['-static.jpg', '-static.png', '-frame.jpg', '-frame.png'];
@@ -79,9 +87,9 @@
     return staticExtensions.map(ext => basePath + ext);
   }
 
-  // Check if static frame exists
-  function loadStaticFrame(gifSrc, onSuccess, onFallback) {
-    const staticUrls = getStaticFrameUrl(gifSrc);
+  // Check if static frame exists (works for both GIFs and videos)
+  function loadStaticFrame(mediaSrc, onSuccess, onFallback) {
+    const staticUrls = getStaticFrameUrl(mediaSrc);
     let attemptIndex = 0;
 
     function tryNextUrl() {
@@ -111,6 +119,131 @@
     tryNextUrl();
   }
 
+  // Get video URL from GitHub releases
+  function getVideoUrl(originalSrc) {
+    const filename = originalSrc.split('/').pop();
+    const videoName = filename.replace(/\.(gif|jpg|png)$/i, '.mp4');
+    
+    // GitHub releases URL pattern
+    const baseUrl = 'https://github.com/peaktwilight/CV-Card/releases/download/v1.0.0-videos/';
+    
+    // Map image names to video names  
+    const videoMapping = {
+      'uptime-kuma.gif': 'uptime-kuma-video.mp4',
+      'glances.gif': 'tmux-video.mp4', // Using tmux video as placeholder
+      'portainer.gif': 'peakops-video.mp4', // Using PeakOps dashboard video
+      'traefik.gif': 'traefik-video.mp4',
+      'grafana-ttstats.gif': 'grafana-doruk.mp4', // TTStats analytics uses grafana video
+      'watchtower.gif': 'tmux-video.mp4', // Using tmux video as placeholder
+      'nocodb.gif': 'nocodb-video.mp4',
+      'unidocs.gif': 'unidocs-video.mp4',
+      'soothe-discord-bot.gif': 'soothe-discord-bot-video.mp4',
+      'soothe-playlist-autorotator.gif': 'playlist-rotator-video.mp4',
+      'waha-whatsapp-api.gif': 'tmux-video.mp4' // Using tmux video as placeholder
+    };
+    
+    const baseFilename = filename.replace(/\-static\.(jpg|png)$/i, '.gif');
+    const actualVideoName = videoMapping[baseFilename] || videoName;
+    
+    return baseUrl + actualVideoName;
+  }
+
+  // Load video progressively (for infrastructure projects)
+  function loadVideoInBackground(img, originalSrc, onVideoReady) {
+    const videoUrl = getVideoUrl(originalSrc);
+    log('Loading video in background:', videoUrl);
+    
+    // Create video element to preload
+    const video = document.createElement('video');
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.style.objectFit = 'cover';
+    
+    video.oncanplaythrough = function() {
+      log('Video ready:', videoUrl);
+      if (onVideoReady) onVideoReady(video);
+    };
+    
+    video.onerror = function() {
+      log('Video load failed:', videoUrl);
+      // Keep the static frame if video fails
+    };
+    
+    video.src = videoUrl;
+    video.load();
+  }
+
+  // Setup video interaction (hover to play, click to toggle)
+  function setupVideoInteraction(img, video, container) {
+    log('Setting up video interaction for:', img.src);
+    
+    let isVideoActive = false;
+    let hoverTimeout;
+    
+    // Store original image src
+    const originalImgSrc = img.src;
+    
+    // Add video indicator
+    const videoIndicator = document.createElement('div');
+    videoIndicator.className = 'video-indicator';
+    videoIndicator.innerHTML = '<ion-icon name="play-outline"></ion-icon>';
+    container.appendChild(videoIndicator);
+    
+    // Auto-play video on hover (immediate)
+    container.addEventListener('mouseenter', function() {
+      if (!isVideoActive) {
+        playVideo();
+      }
+    });
+    
+    container.addEventListener('mouseleave', function() {
+      clearTimeout(hoverTimeout);
+      if (!isVideoActive) {
+        stopVideo();
+      }
+    });
+    
+    // Click to toggle video
+    container.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      isVideoActive = !isVideoActive;
+      
+      if (isVideoActive) {
+        playVideo();
+        videoIndicator.innerHTML = '<ion-icon name="pause-outline"></ion-icon>';
+      } else {
+        stopVideo();
+        videoIndicator.innerHTML = '<ion-icon name="play-outline"></ion-icon>';
+      }
+    });
+    
+    function playVideo() {
+      // Replace image with video
+      const imgParent = img.parentNode;
+      imgParent.replaceChild(video, img);
+      video.play();
+      img.classList.add('video-loaded');
+      videoIndicator.style.opacity = '0.7';
+    }
+    
+    function stopVideo() {
+      // Replace video with image
+      const videoParent = video.parentNode;
+      if (videoParent) {
+        videoParent.replaceChild(img, video);
+      }
+      video.pause();
+      video.currentTime = 0;
+      img.src = originalImgSrc;
+      videoIndicator.style.opacity = '1';
+    }
+  }
+
   // Add loading effect to any image
   function addLoaderToImage(img, container) {
     // Mark as processed
@@ -129,32 +262,46 @@
       container.style.position = 'relative';
     }
 
-    // Progressive loading for GIFs - try static frame first
+    // Progressive loading for GIFs and infrastructure videos
     const isGif = img.src.toLowerCase().endsWith('.gif');
+    const isInfrastructure = container.closest('[data-category*="infrastructure"]');
     
-    if (isGif) {
+    if (isGif || isInfrastructure) {
       // Try to load a pre-generated static frame first
-      const originalGifSrc = img.src;
+      const originalSrc = img.src;
       
-      loadStaticFrame(originalGifSrc, 
+      loadStaticFrame(originalSrc, 
         function(staticUrl) {
           // Static frame found - show it immediately without loader
-          // But only if we haven't already loaded the animated version
-          if (!img.classList.contains('animated-loaded')) {
+          if (!img.classList.contains('animated-loaded') && !img.classList.contains('video-loaded')) {
             img.src = staticUrl;
             img.classList.add('static-frame');
-            img.classList.add('loaded'); // Mark as loaded since static frame loads quickly
+            img.classList.add('loaded');
             
-            // Start loading the full animated GIF in the background
-            loadAnimatedGifInBackground(img, originalGifSrc, container, currentPosition, imageId);
-          } else {
-            log('Skipped static frame - animated already loaded:', originalGifSrc);
+            if (isInfrastructure) {
+              // For infrastructure projects, load video in background
+              loadVideoInBackground(img, originalSrc, function(video) {
+                // Set up hover interactions (immediate play, no delay)
+                setupVideoInteraction(img, video, container);
+              });
+            } else {
+              // For regular GIFs, load animated GIF in background
+              loadAnimatedGifInBackground(img, originalSrc, container, currentPosition, imageId);
+            }
           }
         },
         function() {
-          // No static frame available - show loader and proceed with direct GIF loading
-          log('No static frame found for:', originalGifSrc);
-          showLoaderAndLoadImage(img, container, currentPosition, imageId, true, originalGifSrc);
+          // No static frame available - show loader and proceed with direct loading
+          if (isInfrastructure) {
+            log('No static frame found for infrastructure project:', originalSrc);
+            // For infrastructure without static frames, try to load video directly
+            loadVideoInBackground(img, originalSrc, function(video) {
+              setupVideoInteraction(img, video, container);
+            });
+          } else {
+            log('No static frame found for GIF:', originalSrc);
+            showLoaderAndLoadImage(img, container, currentPosition, imageId, true, originalSrc);
+          }
         }
       );
     } else {
