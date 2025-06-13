@@ -122,12 +122,11 @@
     video.load();
   }
 
-  // Setup video interaction (hover to play, click to toggle)
+  // Setup video interaction (auto-play for all videos)
   function setupVideoInteraction(img, video, container) {
     log('Setting up video interaction for:', img.src);
     
     let isVideoActive = false;
-    let hoverTimeout;
     
     // Store original image src
     const originalImgSrc = img.src;
@@ -141,24 +140,16 @@
     videoIndicator.innerHTML = '<ion-icon name="play-outline"></ion-icon>';
     container.appendChild(videoIndicator);
     
-    // Auto-play video on hover over entire project item (immediate)
-    if (projectItem) {
-      projectItem.addEventListener('mouseenter', function() {
-        log('Mouse entered project item, isVideoActive:', isVideoActive);
-        if (!isVideoActive) {
-          playVideo();
-        }
-      });
-      
-      projectItem.addEventListener('mouseleave', function() {
-        clearTimeout(hoverTimeout);
-        if (!isVideoActive) {
-          stopVideo();
-        }
-      });
-    }
+    // Auto-play video immediately (regardless of performance mode)
+    log('Auto-playing video for all performance modes');
+    setTimeout(() => {
+      playVideo();
+      isVideoActive = true; // Mark as active since we auto-played
+      videoIndicator.innerHTML = '<ion-icon name="pause-outline"></ion-icon>'; // Show pause icon
+      videoIndicator.style.opacity = '0.7'; // Show dimmed indicator since video is playing
+    }, 500); // Small delay to ensure everything is loaded
     
-    // Click video indicator to toggle video
+    // Click video indicator to toggle video (works in both modes)
     videoIndicator.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -168,9 +159,11 @@
       if (isVideoActive) {
         playVideo();
         videoIndicator.innerHTML = '<ion-icon name="pause-outline"></ion-icon>';
+        videoIndicator.style.opacity = '0.7';
       } else {
         stopVideo();
         videoIndicator.innerHTML = '<ion-icon name="play-outline"></ion-icon>';
+        videoIndicator.style.opacity = '1';
       }
     });
     
@@ -191,7 +184,6 @@
           log('Video play failed:', err);
         });
         img.classList.add('video-loaded');
-        videoIndicator.style.opacity = '0.7';
       } else {
         log('Cannot play video - missing parent or video element');
       }
