@@ -54,6 +54,7 @@
   <link rel="stylesheet" href="./assets/css/background.css">
   <link rel="stylesheet" href="./assets/css/animations.css">
   <link rel="stylesheet" href="./assets/css/choice-modal.css">
+  <link rel="stylesheet" href="./assets/css/code-showcase.css">
   <link rel="stylesheet" href="./assets/css/responsive.css">
   
   <!-- Google Fonts -->
@@ -380,86 +381,63 @@
           </p>
         </section>
 
-        <!-- TECHNICAL SKILLS SECTION -->
-        <section class="skill">
-          <h3 class="h3 skill-title">Technical Skills</h3>
-
-          <ul class="skill-list">
-
-            <!-- CYBERSECURITY SKILL -->
-            <li class="skill-item">
-              <div class="skill-icon-box">
-                <img src="./assets/images/icon-design.svg"
-                     alt="design icon"
-                     width="40"
-                     loading="lazy">
-              </div>
-              <div class="skill-content-box">
-                <h4 class="h4 skill-item-title">Cybersecurity</h4>
-                <p class="skill-item-text">
-                  Working with SIEM/SOAR implementations, EDR management and incident response.
-                  Certified in Swimlane Developer & Administrator - helping create custom tools, 
-                  playbooks and automations for our SOC analysts.
-                </p>
-              </div>
-            </li>
-
-            <!-- DEVELOPMENT EXPERIENCE -->
-            <li class="skill-item">
-              <div class="skill-icon-box">
-                <img src="./assets/images/icon-dev.svg"
-                     alt="Web development icon"
-                     width="40"
-                     loading="lazy">
-              </div>
-              <div class="skill-content-box">
-                <h4 class="h4 skill-item-title">Software Development</h4>
-                <p class="skill-item-text">
-                  Backend: Java, Python, PHP, OOP, SQL, Git
-                  <br>Frontend: HTML/CSS/JavaScript, WordPress, WooCommerce, Shopify
-                  <br>API Integration: Building with Spotify, Discord, Google Maps, and Office 365 APIs
-                </p>
-              </div>
-            </li>
-
-            <!-- AI & AUTOMATION -->
-            <li class="skill-item">
-              <div class="skill-icon-box">
-                <img src="./assets/images/icon-app.svg"
-                     alt="mobile app icon"
-                     width="40"
-                     loading="lazy">
-              </div>
-              <div class="skill-content-box">
-                <h4 class="h4 skill-item-title">AI & Automation</h4>
-                <p class="skill-item-text">
-                  Actively implementing cutting-edge AI technologies to enhance workflow efficiency 
-                  and project outcomes. Experienced with both open-source and commercial AI models 
-                  like Ollama, DeepSeek Coder, Claude, and OpenAI.
-                </p>
-              </div>
-            </li>
-
-            <!-- DATA ANALYTICS -->
-            <li class="skill-item">
-              <div class="skill-icon-box">
-                <img src="./assets/images/icon-photo.svg"
-                     alt="camera icon"
-                     width="40"
-                     loading="lazy">
-              </div>
-              <div class="skill-content-box">
-                <h4 class="h4 skill-item-title">Data Analytics</h4>
-                <p class="skill-item-text">
-                  Competent with analytical platforms like Google/YouTube Analytics, Spotify for Artists 
-                  and Meta Business Suite, creating visualisations to identify trends and to make informed 
-                  decisions. Using standards like Office 365.
-                </p>
-              </div>
-            </li>
-
-          </ul>
+        <!-- ANIMATED TECH SHOWCASE -->
+        <section class="tech-showcase">
+          <h3 class="h3 tech-showcase-title">My Tech Stack</h3>
+          <div class="marquee-container">
+            <div class="marquee" data-speed="30">
+              <span class="tech-tag frontend">React</span>
+              <span class="tech-tag backend">Python</span>
+              <span class="tech-tag database">PostgreSQL</span>
+              <span class="tech-tag devops">Docker</span>
+              <span class="tech-tag security">SIEM</span>
+              <span class="tech-tag frontend">TypeScript</span>
+              <span class="tech-tag backend">FastAPI</span>
+              <span class="tech-tag database">MongoDB</span>
+              <span class="tech-tag devops">Kubernetes</span>
+              <span class="tech-tag security">EDR</span>
+              <span class="tech-tag frontend">Next.js</span>
+              <span class="tech-tag backend">Node.js</span>
+              <span class="tech-tag database">MySQL</span>
+              <span class="tech-tag devops">Prometheus</span>
+              <span class="tech-tag security">SOAR</span>
+            </div>
+            <div class="marquee" data-speed="25">
+              <span class="tech-tag cloud">AWS</span>
+              <span class="tech-tag tools">Git</span>
+              <span class="tech-tag frontend">Tailwind</span>
+              <span class="tech-tag backend">Java</span>
+              <span class="tech-tag devops">Grafana</span>
+              <span class="tech-tag security">Swimlane</span>
+              <span class="tech-tag cloud">Vercel</span>
+              <span class="tech-tag tools">Linux</span>
+              <span class="tech-tag frontend">CSS3</span>
+              <span class="tech-tag backend">PHP</span>
+              <span class="tech-tag devops">Nginx</span>
+              <span class="tech-tag security">Incident Response</span>
+              <span class="tech-tag cloud">Firebase</span>
+              <span class="tech-tag tools">Bash</span>
+              <span class="tech-tag frontend">HTML5</span>
+            </div>
+            <div class="marquee" data-speed="35">
+              <span class="tech-tag music">Logic Pro</span>
+              <span class="tech-tag music">Ableton Live</span>
+              <span class="tech-tag devops">Traefik</span>
+              <span class="tech-tag devops">Loki</span>
+              <span class="tech-tag database">Redis</span>
+              <span class="tech-tag tools">Spotify API</span>
+              <span class="tech-tag music">Audio Engineering</span>
+              <span class="tech-tag music">Mixing</span>
+              <span class="tech-tag devops">Watchtower</span>
+              <span class="tech-tag devops">Uptime Kuma</span>
+              <span class="tech-tag database">Firestore</span>
+              <span class="tech-tag tools">REST APIs</span>
+              <span class="tech-tag music">Mastering</span>
+              <span class="tech-tag music">100M+ Streams</span>
+            </div>
+          </div>
         </section>
+
 
 
         <section class="skill">
@@ -478,7 +456,7 @@
                     <span class="block filled"></span><span class="block filled"></span><span class="block filled"></span>
                 </div>
                 </div>
-                <p class="language-description">Business Fluent</p> 
+                <p class="language-description">Bilingual Native</p> 
               </div>
             </li>
 
@@ -553,9 +531,49 @@
 
         <section class="testimonials">
 
-          <h3 class="h3 testimonials-title">Achievements & Recognition</h3>
+          <h3 class="h3 testimonials-title">Achievements, Recognition & Certifications</h3>
 
           <ul class="testimonials-list has-scrollbar">
+
+            <!-- SWIMLANE CERTIFICATION -->
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/icon-design.svg" alt="Swimlane Certification" width="60" data-testimonials-avatar loading="lazy">
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Swimlane Developer & Administrator</h4>
+                <time datetime="2024"> 2024</time>
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    Certified in Swimlane SOAR platform development and administration. Creating custom tools, 
+                    playbooks and automations for SOC analysts at Switzerland's largest retail company.
+                  </p>
+                </div>
+
+              </div>
+            </li>
+
+            <!-- OPEN SOURCE CONTRIBUTIONS -->
+            <li class="testimonials-item">
+              <div class="content-card" data-testimonials-item>
+
+                <figure class="testimonials-avatar-box">
+                  <img src="./assets/images/icon-app.svg" alt="Open Source" width="60" data-testimonials-avatar loading="lazy">
+                </figure>
+
+                <h4 class="h4 testimonials-item-title" data-testimonials-title>Open Source Contributor</h4>
+                <time datetime="2024"> 2024 - Present</time>
+                <div class="testimonials-text" data-testimonials-text>
+                  <p>
+                    Active contributor to the open source community with multiple MIT-licensed projects including 
+                    linear algebra tools, database management utilities, and educational platforms.
+                  </p>
+                </div>
+
+              </div>
+            </li>
 
             <li class="testimonials-item">
               <div class="content-card" data-testimonials-item>
@@ -2108,6 +2126,7 @@
   <script src="./assets/js/script.js"></script>
   <script src="./assets/js/portfolio-loader.js"></script>
   <script src="./assets/js/portfolio-filter.js"></script>
+  <script src="./assets/js/code-showcase.js"></script>
 
   <!-- IONICONS - ICON LIBRARY -->
   <script type="module"
