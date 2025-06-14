@@ -11,13 +11,17 @@
 
   function initTechShowcase() {
     const techShowcase = document.querySelector('.tech-showcase');
+    const achievementsShowcase = document.querySelector('.achievements-showcase');
     const marquees = document.querySelectorAll('.marquee');
     
-    if (!techShowcase || !marquees.length) return;
+    if ((!techShowcase && !achievementsShowcase) || !marquees.length) return;
 
     // Duplicate tags for seamless infinite scroll
     marquees.forEach(marquee => {
-      const tags = marquee.querySelectorAll('.tech-tag');
+      const techTags = marquee.querySelectorAll('.tech-tag');
+      const achievementTags = marquee.querySelectorAll('.achievement-tag');
+      const tags = [...techTags, ...achievementTags];
+      
       tags.forEach(tag => {
         const clone = tag.cloneNode(true);
         marquee.appendChild(clone);
@@ -32,27 +36,33 @@
       });
     };
 
-    // Pause on hover (handled by CSS, but we can add extra logic here)
-    techShowcase.addEventListener('mouseenter', () => {
-      marquees.forEach(marquee => {
-        marquee.style.animationPlayState = 'paused';
-      });
-    });
-
-    techShowcase.addEventListener('mouseleave', () => {
-      if (!document.hidden) {
-        marquees.forEach(marquee => {
-          marquee.style.animationPlayState = 'running';
+    // Add hover handlers for both sections
+    [techShowcase, achievementsShowcase].forEach(showcase => {
+      if (!showcase) return;
+      
+      showcase.addEventListener('mouseenter', () => {
+        const showcaseMarquees = showcase.querySelectorAll('.marquee');
+        showcaseMarquees.forEach(marquee => {
+          marquee.style.animationPlayState = 'paused';
         });
-      }
+      });
+
+      showcase.addEventListener('mouseleave', () => {
+        if (!document.hidden) {
+          const showcaseMarquees = showcase.querySelectorAll('.marquee');
+          showcaseMarquees.forEach(marquee => {
+            marquee.style.animationPlayState = 'running';
+          });
+        }
+      });
     });
 
     // Handle page visibility changes
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Add click handlers for tech tags
-    const techTags = document.querySelectorAll('.tech-tag');
-    techTags.forEach(tag => {
+    // Add click handlers for both tech tags and achievement tags
+    const allTags = document.querySelectorAll('.tech-tag, .achievement-tag');
+    allTags.forEach(tag => {
       tag.addEventListener('click', function(e) {
         e.preventDefault();
         
@@ -87,11 +97,13 @@
     const observerCallback = (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          marquees.forEach(marquee => {
+          const showcaseMarquees = entry.target.querySelectorAll('.marquee');
+          showcaseMarquees.forEach(marquee => {
             marquee.style.animationPlayState = 'running';
           });
         } else {
-          marquees.forEach(marquee => {
+          const showcaseMarquees = entry.target.querySelectorAll('.marquee');
+          showcaseMarquees.forEach(marquee => {
             marquee.style.animationPlayState = 'paused';
           });
         }
@@ -103,7 +115,9 @@
       rootMargin: '50px'
     });
 
-    observer.observe(techShowcase);
+    // Observe both showcases
+    if (techShowcase) observer.observe(techShowcase);
+    if (achievementsShowcase) observer.observe(achievementsShowcase);
   }
 
   // Add ripple animation CSS
