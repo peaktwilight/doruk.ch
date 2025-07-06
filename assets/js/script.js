@@ -303,6 +303,7 @@ if (showCVButton) {
   showCVButton.addEventListener('click', closeChoiceModal);
 }
 
+
 // Close modal via overlay click
 if (choiceModalOverlay) {
   choiceModalOverlay.addEventListener('click', closeChoiceModal);
@@ -312,6 +313,26 @@ if (choiceModalOverlay) {
 if (choiceModalCloseBtn) {
   choiceModalCloseBtn.addEventListener('click', closeChoiceModal);
 }
+
+// Add event listeners for all modal triggers (use event delegation for dynamic elements)
+document.addEventListener('click', function(e) {
+  if (e.target.closest('[data-choice-modal-trigger]')) {
+    e.preventDefault();
+    openChoiceModal();
+  }
+});
+
+// Add keyboard shortcut to open modal (? key)
+document.addEventListener('keydown', function(event) {
+  // Check if user is not typing in an input field
+  if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+    // Press '?' to open modal
+    if (event.key === '?' || (event.shiftKey && event.key === '/')) {
+      event.preventDefault();
+      openChoiceModal();
+    }
+  }
+});
 
 // Sidebar variables
 const sidebar = document.querySelector("[data-sidebar]");

@@ -129,8 +129,8 @@
           <button class="form-btn primary-btn" id="showCV">
             <ion-icon name="briefcase-outline"></ion-icon>
             <div class="btn-content">
-              <span class="btn-title">Professional Portfolio</span>
-              <span class="btn-subtitle">Projects, experience & technical skills</span>
+              <span class="btn-title">View Projects</span>
+              <span class="btn-subtitle">Portfolio, work & technical demos</span>
             </div>
           </button>
 
@@ -182,7 +182,7 @@
 
       <!-- PROFILE SECTION -->
       <div class="sidebar-info">
-        <figure class="avatar-box">
+        <figure class="avatar-box" data-choice-modal-trigger style="cursor: pointer;">
           <img src="assets/images/doruk_color_portrait.png"
                alt="Doruk Tan Öztürk"
                width="90"
@@ -190,7 +190,9 @@
         </figure>
 
         <div class="info-content">
-          <h1 class="name" title="Doruk Tan Öztürk">Doruk Tan Öztürk</h1>
+          <h1 class="name" title="Doruk Tan Öztürk" data-choice-modal-trigger style="cursor: pointer;">
+            Doruk Tan Öztürk
+          </h1>
           <a class="title" 
              href="https://sootherecords.com" 
              style="display: block;">
@@ -309,7 +311,7 @@
          <!-- Navbar Items -->
 
           <li class="navbar-item">
-            <button class="navbar-link active" data-nav-link>About</button>
+            <button class="navbar-link" data-nav-link>About</button>
           </li>
 
           <li class="navbar-item">
@@ -317,7 +319,7 @@
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Portfolio</button>
+            <button class="navbar-link active" data-nav-link>Portfolio</button>
           </li>
 
           <!-- In case I want to use Blog
@@ -328,10 +330,6 @@
 
           <li class="navbar-item">
             <button class="navbar-link" data-nav-link>Contact</button>
-          </li>
-          <!-- Ubuntu Link -->
-          <li class="navbar-item">
-            <a href="http://pc.doruk.ch" class="navbar-link" data-nav-link>Open PC</a>
           </li>
 
         </ul>
@@ -345,7 +343,7 @@
       <!-- ============================================
            ABOUT SECTION - PERSONAL INTRODUCTION & SKILLS
            ============================================ -->
-      <article class="about active" data-page="about">
+      <article class="about" data-page="about">
 
         <!-- SECTION HEADER -->
         <header>
@@ -794,7 +792,7 @@
       <!-- ============================================
       PORTFOLIO SECTION - PROJECT SHOWCASE
       ============================================ -->
-      <article class="portfolio" data-page="portfolio">
+      <article class="portfolio active" data-page="portfolio">
 
         <!-- SECTION HEADER -->
         <header>
@@ -2066,6 +2064,12 @@
   <script nomodule
           src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
   </script>
+
+  <!-- KEYBOARD HINT -->
+  <div class="keyboard-shortcut-hint" data-choice-modal-trigger>
+    <kbd>?</kbd>
+    <div class="hint-tooltip">Explore more options</div>
+  </div>
 
 </body>
 </html>

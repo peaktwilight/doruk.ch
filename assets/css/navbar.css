@@ -46,17 +46,3 @@
   transform: none;
 }
 
-/* Ubuntu specific styles */
-.navbar-item:last-child .navbar-link {
-  background: var(--orange-yellow-crayola);
-  color: var(--smoky-black);
-  font-weight: var(--fw-600);
-  position: relative;
-}
-
-.navbar-item:last-child .navbar-link:hover,
-.navbar-item:last-child .navbar-link:focus {
-  background: var(--orange-yellow-crayola);
-  color: var(--smoky-black);
-  transform: translateY(-5px);
-}
