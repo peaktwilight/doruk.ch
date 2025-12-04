@@ -1,0 +1,674 @@
+@import "tailwindcss";
+
+/* Editorial Noir Design System */
+@theme {
+  /* Noir Palette */
+  --color-noir-950: #0C0A09;
+  --color-noir-900: #1C1917;
+  --color-noir-800: #292524;
+  --color-noir-700: #44403C;
+  --color-noir-600: #57534E;
+  --color-noir-500: #78716C;
+  --color-noir-400: #A8A29E;
+  --color-noir-300: #D6D3D1;
+  --color-noir-200: #E7E5E4;
+  --color-noir-100: #F5F5F4;
+  --color-noir-50: #FAFAF9;
+
+  /* Accents */
+  --color-amber: #D97706;
+  --color-amber-light: #F59E0B;
+  --color-amber-dark: #B45309;
+  --color-sage: #059669;
+  --color-sage-light: #10B981;
+  --color-rose: #DB2777;
+  --color-rose-light: #EC4899;
+
+  /* Typography */
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.12);
+  --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.16);
+  --shadow-dramatic: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--color-noir-950);
+    color: var(--color-noir-300);
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  ion-icon {
+    pointer-events: none;
+  }
+
+  /* Elegant strong text */
+  strong {
+    color: var(--color-amber);
+    font-weight: 600;
+  }
+
+  /* Refined heading styles */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    color: var(--color-noir-50);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    color: var(--color-noir-400);
+  }
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+/* Editorial Display - Large headers */
+.text-editorial-display {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--color-noir-50);
+}
+
+/* Editorial Title */
+.text-editorial-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--color-noir-50);
+}
+
+/* Editorial Subtitle */
+.text-editorial-subtitle {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-noir-300);
+}
+
+/* Mono label style */
+.text-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-noir-500);
+}
+
+/* ============================================
+   BACKGROUND & ATMOSPHERE
+   ============================================ */
+
+/* Subtle gradient overlay for depth */
+.bg-gradient-editorial {
+  background: linear-gradient(
+    180deg,
+    var(--color-noir-950) 0%,
+    var(--color-noir-900) 50%,
+    var(--color-noir-950) 100%
+  );
+}
+
+/* Subtle noise texture - very light */
+.texture-noise {
+  position: relative;
+}
+
+.texture-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* Ambient glow - subtle background accent */
+.ambient-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-amber {
+  background: var(--color-amber);
+  top: -200px;
+  right: -200px;
+}
+
+.ambient-glow-sage {
+  background: var(--color-sage);
+  bottom: -200px;
+  left: -200px;
+}
+
+/* ============================================
+   CARDS & CONTAINERS
+   ============================================ */
+
+/* Editorial card - clean and sophisticated */
+.card-editorial {
+  background: var(--color-noir-900);
+  border: 1px solid var(--color-noir-800);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-editorial:hover {
+  border-color: var(--color-noir-700);
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-4px);
+}
+
+/* Glass card - frosted effect */
+.card-glass {
+  background: rgba(28, 25, 23, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+/* ============================================
+   INTERACTIVE ELEMENTS
+   ============================================ */
+
+/* Refined button */
+.btn-editorial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-editorial-primary {
+  background: var(--color-amber);
+  color: var(--color-noir-950);
+}
+
+.btn-editorial-primary:hover {
+  background: var(--color-amber-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(217, 119, 6, 0.2);
+}
+
+.btn-editorial-ghost {
+  background: transparent;
+  color: var(--color-noir-300);
+  border: 1px solid var(--color-noir-700);
+}
+
+.btn-editorial-ghost:hover {
+  background: var(--color-noir-800);
+  border-color: var(--color-noir-600);
+  color: var(--color-noir-50);
+}
+
+/* Tag/Badge style */
+.tag-editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background: var(--color-noir-800);
+  color: var(--color-noir-400);
+  border: 1px solid var(--color-noir-700);
+  transition: all 0.2s ease;
+}
+
+.tag-editorial:hover {
+  background: var(--color-noir-700);
+  color: var(--color-noir-300);
+}
+
+.tag-editorial-amber {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--color-amber-light);
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.tag-editorial-sage {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--color-sage-light);
+  border-color: rgba(5, 150, 105, 0.2);
+}
+
+.tag-editorial-rose {
+  background: rgba(219, 39, 119, 0.1);
+  color: var(--color-rose-light);
+  border-color: rgba(219, 39, 119, 0.2);
+}
+
+/* ============================================
+   LINKS & NAVIGATION
+   ============================================ */
+
+/* Underline link effect */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-amber);
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Nav item */
+.nav-item {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-noir-400);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  color: var(--color-noir-100);
+  background: var(--color-noir-800);
+}
+
+.nav-item.active {
+  color: var(--color-amber);
+  background: rgba(217, 119, 6, 0.1);
+}
+
+/* ============================================
+   STATUS INDICATORS
+   ============================================ */
+
+/* Live indicator */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-dot-live {
+  background: var(--color-sage);
+  box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
+}
+
+.status-dot-offline {
+  background: var(--color-noir-500);
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* ============================================
+   DIVIDERS & SEPARATORS
+   ============================================ */
+
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-noir-700) 20%,
+    var(--color-noir-700) 80%,
+    transparent
+  );
+}
+
+.divider-accent {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-amber),
+    var(--color-amber-light),
+    transparent
+  );
+  width: 60px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth hover lift */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* Fade transition */
+.transition-fade {
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-noir-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-noir-700);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-noir-600);
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-noir-950);
+}
+
+::-moz-selection {
+  background: var(--color-amber);
+  color: var(--color-noir-950);
+}
+
+/* ============================================
+   FOCUS STATES
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* ============================================
+   MARQUEE ANIMATIONS
+   ============================================ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
+}
+
+@keyframes marquee-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% - var(--gap))); }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
+
+/* ============================================
+   GRADIENT TEXT ANIMATION
+   ============================================ */
+
+@keyframes gradient {
+  to { background-position: 200% center; }
+}
+
+.animate-gradient {
+  animation: gradient 3s linear infinite;
+}
+
+/* ============================================
+   RADIAL GRADIENT UTILITY
+   ============================================ */
+
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-from), var(--tw-gradient-to));
+}
+
+/* ============================================
+   PROJECT GRID - NO LAYOUT ANIMATIONS
+   ============================================ */
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .project-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .project-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Project card transitions - simple fade, no layout shift */
+.project-card {
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.project-card.hiding {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+/* ============================================
+   TIMELINE
+   ============================================ */
+
+.timeline-item {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  border: 2px solid var(--color-amber);
+  background: var(--color-noir-900);
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 1.5rem;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-noir-700);
+}
+
+.timeline-item:last-child::after {
+  display: none;
+}
+
+/* ============================================
+   SCROLLBAR HIDE UTILITY
+   ============================================ */
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

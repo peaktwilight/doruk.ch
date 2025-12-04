@@ -4,128 +4,120 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal portfolio website for Doruk Tan Öztürk built with HTML, CSS, and JavaScript. It features a responsive design that works on all device sizes and showcases the owner's skills, experience, and projects in a card-based layout. The site includes animated backgrounds using Vanta.js, interactive modals, and optimized image loading.
+This is a personal portfolio website for Doruk Tan Öztürk built with React, TypeScript, Vite, and Tailwind CSS v4. It features a modern, responsive design with smooth animations using Framer Motion and GSAP, an animated Vanta.js background, and a clean component-based architecture.
 
 ## Repository Structure
 
-- `index.html` - The main HTML file that structures the entire website
-- `assets/` - Contains all static assets
-  - `css/` - CSS files organized by component/functionality
-  - `images/` - Images and icons used throughout the site
-  - `js/` - JavaScript files that handle site functionality
-    - `script.js` - Core functionality including modals, navigation, and animations
-    - `portfolio-loader.js` - Optimized loading for portfolio images
-    - `portfolio-filter.js` - Portfolio project filtering and badge interactions
+```
+├── index.html          # Entry HTML with meta tags and Vanta.js scripts
+├── src/
+│   ├── App.tsx         # Main app component with layout and navigation
+│   ├── main.tsx        # React entry point
+│   ├── components/
+│   │   ├── layout/     # Layout components (Navbar, Sidebar, ChoiceModal)
+│   │   ├── sections/   # Page sections (Hero, Projects, Experience, TechStack, Footer)
+│   │   └── ui/         # Reusable UI components (Dock, BentoGrid, Marquee, etc.)
+│   ├── data/           # Static data (projects.ts, resume.ts)
+│   ├── lib/            # Utilities (utils.ts with cn() helper)
+│   └── styles/         # Global CSS (main.css)
+├── assets/
+│   └── images/         # Static images and project thumbnails
+├── tailwind.config.js  # Tailwind CSS configuration
+├── vite.config.js      # Vite build configuration
+└── tsconfig.json       # TypeScript configuration
+```
 
 ## Development Commands
 
-### Local Development
-
-To preview the website locally, you can use any static file server:
-
 ```bash
-# Using Python's built-in HTTP server
-python -m http.server
+# Install dependencies
+npm install
 
-# Using Node.js http-server (if installed)
-http-server
+# Start development server
+npm run dev
 
-# Using PHP's built-in server
-php -S localhost:8000
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Run linting
+npm run lint
 ```
 
-### Deployment
+## Deployment
 
-The site is automatically published to cv.doruk.ch via Vercel:
-
-```bash
-# If you need to manually deploy to Vercel
-vercel
-```
+The site is automatically published to cv.doruk.ch via Vercel. Pushing to main triggers deployment.
 
 ## Architecture Details
 
-### CSS Organization
+### Tech Stack
 
-The CSS is modular and organized into multiple files by component/functionality:
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Tailwind CSS v4** - Utility-first styling
+- **Framer Motion** - Animations and transitions
+- **GSAP** - Advanced animations
+- **Lenis** - Smooth scrolling
+- **Vanta.js** - Animated background (WAVES effect)
+- **Lucide React** - Icons
 
-- `variables.css` - CSS variables for colors, typography, and transitions
-- `base.css` - Base styles and structure
-- `reset.css` - CSS reset for consistent rendering
-- `reused.css` - Shared/reusable styles
-- `animations.css` - Animation definitions including shimmer effects for loading
-- `background.css` - Styles for the animated background
-- Component-specific files (navbar.css, sidebar.css, portfolio.css, etc.)
-- `responsive.css` - Media queries for responsive design (applied last)
+### Key Components
 
-All styles use a consistent color scheme defined in variables.css with the main accent color being a gold tone (--vegas-gold: hsl(45, 54%, 58%)).
+**Layout Components (`src/components/layout/`)**
+- `Navbar.tsx` - Top navigation bar
+- `Sidebar.tsx` - Profile sidebar with contact info
+- `ChoiceModal.tsx` - Initial welcome modal
 
-### JavaScript Architecture
+**Section Components (`src/components/sections/`)**
+- `Hero.tsx` - Landing section with profile and intro
+- `Projects.tsx` - Portfolio projects grid
+- `Experience.tsx` - Work experience timeline
+- `TechStack.tsx` - Skills and technologies marquee
+- `Footer.tsx` - Footer with social links
 
-#### Core Functionality (script.js)
-- **Background Animations**: Uses Vanta.js to create dynamic animated backgrounds
-  - Main background: NET effect with gold lines
-  - Modal background: BIRDS effect with animated gold birds
-- **Choice Modal**: Initial welcome screen that appears on page load
-- **Sidebar Toggle**: Mobile-friendly toggle for the sidebar
-- **Page Navigation**: Handles tab switching between sections
-- **Modal System**: Controls for testimonials and project detail modals
-- **Project Details**: Handles displaying project information in modal dialogs
+**UI Components (`src/components/ui/`)**
+- `Dock.tsx` - Floating navigation dock (macOS-style)
+- `BentoGrid.tsx` - Grid layout for cards
+- `Marquee.tsx` - Infinite scrolling marquee
+- `SpotlightCard.tsx` - Card with spotlight hover effect
+- `TextReveal.tsx` - Animated text reveal
+- `AnimatedGradientText.tsx` - Gradient text animation
 
-#### Image Loading (portfolio-loader.js)
-- **Optimized Image Loading**: Uses IntersectionObserver to prioritize loading visible images
-- **Loading Effects**: Adds shimmer animations while images load
-- **Performance Optimizations**: Batched processing, minimal DOM operations, and cleanup
+### Styling
 
-#### Portfolio Filtering (portfolio-filter.js)
-- **Grid-Based Filtering**: Optimized filtering without animations to prevent layout shifts
-- **Badge Interactions**: Handles GitHub and App Store badge clicks with proper event handling
-- **Overflow Prevention**: Implements safeguards to maintain layout stability during filtering
+- Uses Tailwind CSS v4 with custom configuration
+- Main accent color: gold/amber tones
+- Dark theme with neutral-950 background
+- Custom fonts: Fraunces (display), DM Sans (body), IBM Plex Mono (code)
 
-### Main Components
+### Data Files
 
-1. **Choice Modal** - Initial welcome screen with navigation options to:
-   - Business vCard (current site)
-   - Ubuntu PC Simulator
-   - Music Producer Website
-   
-2. **Sidebar** - Profile information and contact details including:
-   - Profile picture
-   - Name and title
-   - Contact information (hidden by default on mobile)
-   - Social media links
+- `src/data/projects.ts` - Portfolio project definitions
+- `src/data/resume.ts` - Resume/experience data
 
-3. **Main Content Area** - Contains tabbed sections:
-   - **About**: Bio, technical skills, language skills, and achievements
-   - **Resume**: Education and work experience
-   - **Portfolio**: Interactive project cards with detailed modals
-   - **Contact**: Location and contact information
+### Key Patterns
 
-4. **Project Cards** - Each project card in the portfolio section:
-   - Shows animated GIF preview (with optimized loading)
-   - Displays project title and technologies used
-   - Shows live/offline status
-   - Opens detailed modal with links to live site and source code
+1. **Section-based Layout** - Single page with scrollable sections
+2. **Intersection Observer** - Tracks active section for navigation
+3. **Smooth Scroll** - Native smooth scrolling to sections
+4. **Image Optimization** - Static images in `/assets/images/`
 
-### Animation and Visual Effects
+### Adding New Projects
 
-1. **Background Animation**: Uses Vanta.js to create interactive animated backgrounds
-2. **Loading Animations**: Shimmer effects for loading project images
-3. **Transition Effects**: Smooth transitions between modals and sections
+Edit `src/data/projects.ts` and add a new project object:
 
-### Responsive Design Breakpoints
-
-The site uses these responsive breakpoints:
-- 450px+: Basic mobile layouts
-- 580px+: Tablet layouts
-- 768px+: Larger tablet layouts
-- 1024px+: Desktop layouts
-- 1250px+: Wide desktop layouts
-
-### Key Features to Maintain
-
-1. **Consistent Visual Design**: Maintain the gold accent color scheme and dark background
-2. **Responsive Layouts**: Ensure all new components work at all breakpoints
-3. **Optimized Loading**: Follow the performance patterns in portfolio-loader.js
-4. **Interactive Elements**: Preserve the animated backgrounds and modal interactions
-5. **Component-Based Organization**: Keep CSS modular and organized by component
+```typescript
+{
+  title: 'Project Name',
+  description: 'Brief description',
+  image: '/assets/images/project-static.jpg',
+  tech: ['React', 'TypeScript'],
+  category: 'development',
+  liveUrl: 'https://example.com',
+  sourceUrl: 'https://github.com/...',
+  status: 'live'
+}
+```
