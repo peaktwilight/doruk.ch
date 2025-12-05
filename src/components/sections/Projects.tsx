@@ -610,21 +610,23 @@ export function Projects() {
     { id: 'fhnw-dashboard', size: 'single' },
     { id: 'galaxus', size: 'single' },
 
-    // Row of 3 singles
+    // Block 2: 2 singles left + Featured right
     { id: 'thatsapp', size: 'single' },
     { id: 'unidocs', size: 'single' },
-    { id: 'dreamhop', size: 'single' },
+    { id: 'soothe-records', size: 'featured-right' },
 
-    // Row of 3 singles
-    { id: 'soothe-records', size: 'single' },
+    // Block 3: Featured left + 2 singles right
+    { id: 'dreamhop', size: 'featured-left' },
     { id: 'peak-twilight-spotify', size: 'single' },
     { id: 'soothe-studios', size: 'single' },
 
-    // Rest as singles
+    // Block 4: 2 singles left + Featured right (infrastructure)
     { id: 'studio-dreamhop', size: 'single' },
-    { id: 'uptime-kuma', size: 'single' },
-    { id: 'glances', size: 'single' },
     { id: 'grafana', size: 'single' },
+    { id: 'uptime-kuma', size: 'featured-right' },
+
+    // Rest as singles
+    { id: 'glances', size: 'single' },
     { id: 'portainer', size: 'single' },
     { id: 'traefik', size: 'single' },
     { id: 'watchtower', size: 'single' },
