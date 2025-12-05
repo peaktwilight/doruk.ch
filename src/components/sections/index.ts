@@ -1,0 +1,6 @@
+export { About } from './About'
+export { AboutStrip } from './AboutStrip'
+export { Experience } from './Experience'
+export { Footer } from './Footer'
+export { Hero } from './Hero'
+export { Projects } from './Projects'
