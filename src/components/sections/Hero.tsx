@@ -1,6 +1,14 @@
 import { useEffect, useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
+
+// Rotating identities - all use the main amber accent color
+const identities = [
+  'Cyber Defense Engineer',
+  'Music Producer',
+  'Builder of Things',
+  'Table Tennis Coach',
+]
 
 // Language flags
 const languages = [
@@ -62,6 +70,15 @@ function InlineUserCount() {
 }
 
 export function Hero() {
+  const [currentIdentity, setCurrentIdentity] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIdentity((prev) => (prev + 1) % identities.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient orbs */}
@@ -94,7 +111,7 @@ export function Hero() {
             {/* Image container */}
             <div className="relative w-full h-full rounded-full overflow-hidden ring-1 ring-white/10">
               <img
-                src="/assets/images/Doruk_Black_picture.jpg"
+                src="/assets/images/doruk_color_portrait_square.png"
                 alt="Doruk Tan Öztürk"
                 className="w-full h-full object-cover"
               />
@@ -133,19 +150,52 @@ export function Hero() {
           Doruk Tan Öztürk
         </motion.h1>
 
-        {/* Duality tagline */}
-        <motion.p
+        {/* Rotating identity tagline */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-neutral-400 mb-6 max-w-xl mx-auto"
+          className="text-lg md:text-xl mb-6 max-w-xl mx-auto h-8 relative overflow-hidden"
         >
-          <span className="text-neutral-300">Cyber Defense Engineer</span>
-          <span className="text-neutral-600 mx-2">/</span>
-          <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
-            Builder of Things
-          </span>
-        </motion.p>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={currentIdentity}
+              className="absolute inset-0 flex items-center justify-center font-medium text-amber-400"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.03 } },
+                exit: { transition: { staggerChildren: 0.02, staggerDirection: -1 } },
+              }}
+            >
+              {identities[currentIdentity].split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  className="inline-block"
+                  variants={{
+                    hidden: { opacity: 0, y: 20, filter: "blur(8px)" },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+                    },
+                    exit: {
+                      opacity: 0,
+                      y: -20,
+                      filter: "blur(8px)",
+                      transition: { duration: 0.2, ease: "easeIn" },
+                    },
+                  }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </motion.span>
+          </AnimatePresence>
+        </motion.div>
 
         {/* Bio with inline counter */}
         <motion.p
@@ -178,26 +228,10 @@ export function Hero() {
             </svg>
           </a>
           <a
-            href="https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#about"
             className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/10 px-5 text-sm text-neutral-400 transition-all hover:border-white/20 hover:text-white"
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-            </svg>
-            Spotify
-          </a>
-          <a
-            href="https://github.com/peaktwilight"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/10 px-5 text-sm text-neutral-400 transition-all hover:border-white/20 hover:text-white"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-            </svg>
-            GitHub
+            My Story
           </a>
         </motion.div>
       </div>
