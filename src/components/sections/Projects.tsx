@@ -562,6 +562,16 @@ export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [showMore, setShowMore] = useState(false)
 
+  // Track if mobile
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // Lock body scroll when overlay is open
   useEffect(() => {
     if (showMore) {
@@ -580,8 +590,10 @@ export function Projects() {
   const scrollerRef = useRef<HTMLDivElement>(null)
   const keywordsRef = useRef<HTMLDivElement>(null)
 
-  // GSAP horizontal scroll effect
+  // GSAP horizontal scroll effect (desktop only)
   useLayoutEffect(() => {
+    if (isMobile) return
+
     const section = sectionRef.current
     const trigger = triggerRef.current
     const scroller = scrollerRef.current
@@ -633,7 +645,7 @@ export function Projects() {
     }, section)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
 
   // Get projects by ID helper
   const getProject = (id: string) => projects.find(p => p.id === id)
@@ -690,7 +702,57 @@ export function Projects() {
   return (
     <>
       <section ref={sectionRef} id="projects" className="relative">
-        {/* Horizontal scroll section */}
+        {/* Mobile: Simple vertical scroll */}
+        {isMobile ? (
+          <div className="py-16 px-4">
+            <div className="text-center mb-8">
+              <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Featured</span>
+              <h2 className="text-2xl font-serif text-white mt-2">Currently Building</h2>
+            </div>
+            <div className="space-y-4">
+              {featuredProjects.map((project) => (
+                <motion.article
+                  key={project.id}
+                  onClick={() => setSelectedProject(project)}
+                  className="relative cursor-pointer rounded-2xl overflow-hidden bg-neutral-900/80 border border-white/[0.08]"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={cn(
+                        'w-1.5 h-1.5 rounded-full',
+                        project.category === 'webapp' && 'bg-amber-400',
+                        project.category === 'music' && 'bg-violet-400',
+                        project.category === 'infrastructure' && 'bg-emerald-400',
+                        project.category === 'fullstack' && 'bg-cyan-400',
+                      )} />
+                      <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+                        {categoryLabels[project.category]}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{project.title}</h3>
+                    <p className="text-sm text-neutral-400 line-clamp-2">{project.description}</p>
+                  </div>
+                </motion.article>
+              ))}
+              {/* Show More Button */}
+              <button
+                onClick={() => setShowMore(true)}
+                className="w-full py-4 rounded-2xl border border-dashed border-white/20 text-neutral-400 hover:border-amber-500/40 hover:text-amber-400 transition-colors"
+              >
+                View {bentoProjects.length} More Projects
+              </button>
+            </div>
+          </div>
+        ) : (
+        /* Desktop: Horizontal scroll section */
         <div ref={triggerRef} className="h-screen overflow-hidden relative flex flex-col">
           {/* Gradient masks for smooth fade in/out */}
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-neutral-950 via-neutral-950/50 to-transparent z-[5] pointer-events-none" />
@@ -847,6 +909,7 @@ export function Projects() {
             )}
           </div>
         </div>
+        )}
       </section>
 
       {/* Full-screen Projects Overlay */}

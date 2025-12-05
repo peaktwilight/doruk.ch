@@ -30,6 +30,7 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/migros-ai-search.png',
     video: '/assets/images/migros-ai-search-video.mp4',
+    href: 'https://aistuff.ch',
     description: 'AI-powered product search for Migros with intelligent shopping list creation. An AI agent helps you find products and build shopping lists directly on the website.',
     badges: ['Products Indexed', 'AI Agent'],
     tech: ['Next.js', 'TypeScript', 'AI']
