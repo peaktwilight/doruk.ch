@@ -1,7 +1,16 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Vite cache
+.vite/
+
+# Environment and local settings
 .aider*
 .env
 .claude
-
 **/.claude/settings.local.json
 
 # Node.js
