@@ -220,19 +220,19 @@ export function Hero() {
           className="flex flex-wrap justify-center gap-3"
         >
           <a
-            href="#projects"
+            href="#about"
             className="group inline-flex h-11 items-center gap-2 rounded-xl bg-amber-500 px-5 text-sm font-medium text-neutral-900 transition-all hover:bg-amber-400"
           >
-            View Projects
+            My Story
             <svg className="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </a>
           <a
-            href="#about"
-            className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/10 px-5 text-sm text-neutral-400 transition-all hover:border-white/20 hover:text-white"
+            href="#projects"
+            className="inline-flex h-11 items-center rounded-xl border border-white/10 px-5 text-sm text-neutral-400 transition-all hover:border-white/20 hover:text-white"
           >
-            My Story
+            My Portfolio
           </a>
         </motion.div>
       </div>

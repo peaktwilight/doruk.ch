@@ -299,7 +299,7 @@ export function Dock({ children, className, activeIndex = 0 }: DockProps) {
                   animate={{ y: [0, 2, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </motion.svg>
                 <span className="hidden sm:inline text-xs font-mono text-amber-500/90 tabular-nums w-[2ch]">
                   {progressPercent}
