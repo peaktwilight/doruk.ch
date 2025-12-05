@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@number-flow/react": "^0.5.10",
-    "@studio-freight/lenis": "^1.0.42",
     "@tailwindcss/postcss": "^4.1.17",
     "autoprefixer": "^10.4.22",
     "clsx": "^2.1.1",

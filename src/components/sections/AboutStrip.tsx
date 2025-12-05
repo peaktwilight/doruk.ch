@@ -83,7 +83,9 @@ export function AboutStrip() {
           <div className="text-center md:text-left">
             <div className="inline-flex items-center gap-2 mb-2">
               <div className="w-5 h-5 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                <ion-icon name="trophy" class="text-amber-500 text-xs" />
+                <svg className="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                </svg>
               </div>
               <span className="text-[10px] uppercase tracking-widest text-amber-500/70">Featured</span>
             </div>

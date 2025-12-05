@@ -7,11 +7,6 @@ export interface TimelineItem {
   items?: string[]
 }
 
-export interface Language {
-  name: string
-  level: string
-  proficiency: number // 1-3
-}
 
 export const education: TimelineItem[] = [
   {
@@ -132,18 +127,3 @@ export const experience: TimelineItem[] = [
   }
 ]
 
-export const languages: Language[] = [
-  { name: 'English', level: 'Native', proficiency: 3 },
-  { name: 'French', level: 'Native', proficiency: 3 },
-  { name: 'Turkish', level: 'Native', proficiency: 3 },
-  { name: 'German', level: 'C1', proficiency: 2 },
-  { name: 'Swiss German', level: 'B2', proficiency: 1 }
-]
-
-export const achievements = [
-  { icon: 'trophy-outline', text: 'FHNW Startup Challenge - 2nd Place (TTStats)' },
-  { icon: 'shield-checkmark-outline', text: 'Swimlane SOAR Certified' },
-  { icon: 'logo-github', text: 'Open Source Contributor' },
-  { icon: 'trophy-outline', text: 'Math Olympiad Semi-Finalist' },
-  { icon: 'musical-notes-outline', text: 'Piano "Mention Excellence"' }
-]
