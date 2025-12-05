@@ -6,40 +6,11 @@ import { Experience } from './components/sections/Experience'
 import { AboutStrip } from './components/sections/AboutStrip'
 import { Footer } from './components/sections/Footer'
 import { Dock, DockItem } from './components/ui/Dock'
+import { ScrollAura } from './components/ui/ScrollAura'
 import './styles/main.css'
-
-declare global {
-  interface Window {
-    VANTA?: {
-      WAVES: (config: Record<string, unknown>) => { destroy: () => void }
-    }
-  }
-}
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero')
-
-  // Initialize Vanta background
-  useEffect(() => {
-    if (window.VANTA) {
-      const vantaEffect = window.VANTA.WAVES({
-        el: '#vanta-bg',
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.0,
-        minWidth: 200.0,
-        scale: 1.0,
-        scaleMobile: 1.0,
-        color: 0x0a0a0a,
-        shininess: 15.0,
-        waveHeight: 8.0,
-        waveSpeed: 0.25,
-        zoom: 0.65
-      })
-      return () => vantaEffect?.destroy()
-    }
-  }, [])
 
   // Track active section on scroll
   useEffect(() => {
@@ -71,16 +42,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
-      {/* Background */}
-      <div id="vanta-bg" className="fixed inset-0 -z-10 opacity-60" />
-
-      {/* Noise texture overlay */}
-      <div
-        className="fixed inset-0 -z-10 pointer-events-none opacity-[0.015]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
-        }}
-      />
+      {/* Scroll aura effect */}
+      <ScrollAura />
 
       {/* Main Content */}
       <main id="hero">
@@ -135,7 +98,7 @@ export default function App() {
             {/* CTA - Email */}
             <a
               href="mailto:hello@doruk.ch"
-              className="flex h-10 items-center gap-2 px-4 rounded-xl bg-amber-500 text-neutral-900 font-medium text-sm hover:bg-amber-400 transition-colors"
+              className="flex h-12 items-center gap-2 px-4 rounded-xl bg-amber-500 text-neutral-900 font-medium text-sm hover:bg-amber-400 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

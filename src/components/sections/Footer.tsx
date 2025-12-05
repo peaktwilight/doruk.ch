@@ -75,7 +75,7 @@ export function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-xl border border-white/10 text-neutral-400 hover:text-white hover:border-white/20 transition-all"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-neutral-400 hover:text-white hover:border-white/20 transition-all"
                 aria-label={link.name}
               >
                 {link.icon}
@@ -92,11 +92,11 @@ export function Footer() {
           >
             <a
               href="mailto:hello@doruk.ch"
-              className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 text-sm font-medium text-neutral-900 transition-all hover:bg-amber-400"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-amber-500 px-5 text-sm font-medium text-neutral-900 transition-all hover:bg-amber-400"
             >
               Let's Connect
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </a>
           </motion.div>

@@ -1,7 +1,7 @@
 export interface Project {
   id: string
   title: string
-  category: 'webapp' | 'music' | 'infrastructure'
+  category: 'webapp' | 'music' | 'infrastructure' | 'fullstack'
   image: string
   href?: string
   sourceUrl?: string
@@ -21,7 +21,7 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/migros-ai-search.png',
     description: 'AI-powered product search for Migros with intelligent shopping list creation. An AI agent helps you find products and build shopping lists directly on the website.',
-    badges: ['AI Agent', 'Concept Project'],
+    badges: ['Products Indexed', 'AI Agent'],
     tech: ['Next.js', 'TypeScript', 'AI']
   },
   {
@@ -59,7 +59,7 @@ export const projects: Project[] = [
   {
     id: 'ttstats',
     title: 'TTStats',
-    category: 'webapp',
+    category: 'fullstack',
     image: '/assets/images/TTStats-static.jpg',
     href: 'https://ttstats.ch',
     description: 'Swiss Table Tennis statistics platform with web app + native iOS/Android apps (Kotlin Multiplatform). Tracking 5,500+ players, 69K+ matches across 249 clubs.',
@@ -285,12 +285,3 @@ export const projects: Project[] = [
     badges: ['WhatsApp', 'REST API']
   }
 ]
-
-export const filters = [
-  { key: 'all', label: 'All Projects' },
-  { key: 'webapp', label: 'Web Apps' },
-  { key: 'music', label: 'Music & Labels' },
-  { key: 'infrastructure', label: 'Infrastructure' }
-] as const
-
-export type FilterKey = typeof filters[number]['key']

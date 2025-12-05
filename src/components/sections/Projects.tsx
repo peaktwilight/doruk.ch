@@ -1,9 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { projects, type Project } from '../../data/projects'
 import { cn } from '../../lib/utils'
 import { ProjectModal } from '../ui/ProjectModal'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // Live counter config
 const START_DATE = new Date('2021-01-01T00:00:00')
@@ -11,13 +15,7 @@ const TARGET_DATE = new Date('2025-12-31T23:59:59')
 const TARGET_STREAMS = 110000000
 const TARGET_BUNZLI = 9500
 const TARGET_TTSTATS_USERS = 1200
-
-// Tech stack for marquee
-const techStack = {
-  row1: ['React', 'Python', 'PostgreSQL', 'Docker', 'SIEM', 'TypeScript', 'FastAPI', 'MongoDB', 'Kubernetes', 'EDR', 'Next.js', 'Node.js', 'MySQL', 'Prometheus', 'SOAR'],
-  row2: ['AWS', 'Git', 'Tailwind', 'Java', 'Grafana', 'Swimlane', 'Vercel', 'Linux', 'CSS3', 'PHP', 'Nginx', 'Incident Response', 'Firebase', 'Bash', 'HTML5'],
-  row3: ['Logic Pro', 'Ableton Live', 'Traefik', 'Loki', 'Redis', 'Spotify API', 'Audio Engineering', 'Mixing', 'Watchtower', 'Uptime Kuma', 'Firestore', 'REST APIs', 'Mastering'],
-}
+const TARGET_MIGROS_PRODUCTS = 31478
 
 function calculateCurrentValue(target: number) {
   const now = new Date()
@@ -100,11 +98,12 @@ const cellConfig: Record<CellSize, {
 }
 
 // Badge type detection for special styling
-function getBadgeType(badge: string, projectId?: string): 'metric' | 'media' | 'award' | 'live-streams' | 'live-bunzli' | 'live-ttstats' | 'default' {
+function getBadgeType(badge: string, projectId?: string): 'metric' | 'media' | 'award' | 'live-streams' | 'live-bunzli' | 'live-ttstats' | 'live-migros' | 'default' {
   // Live animated badges for specific projects
   if (projectId === 'peak-twilight-web' && /Streams/i.test(badge)) return 'live-streams'
   if (projectId === 'bunzlimeter' && /Quiz Takers/i.test(badge)) return 'live-bunzli'
   if (projectId === 'ttstats' && /Monthly Users/i.test(badge)) return 'live-ttstats'
+  if (projectId === 'migros-ai-search' && /Products Indexed/i.test(badge)) return 'live-migros'
 
   if (/Streams/i.test(badge) && /\d+M\+/.test(badge)) return 'metric'
   if (/\d+[KMB]?\+/.test(badge) || /Monthly|Users|Takers/i.test(badge)) return 'metric'
@@ -205,6 +204,10 @@ function LiveTTStatsBadge() {
   return <LiveCounterBadge target={TARGET_TTSTATS_USERS} label="monthly users" colorScheme="blue" />
 }
 
+function LiveMigrosBadge() {
+  return <LiveCounterBadge target={TARGET_MIGROS_PRODUCTS} label="products indexed" colorScheme="amber" />
+}
+
 function BadgeWithIcon({ badge, projectId }: { badge: string; projectId?: string }) {
   const type = getBadgeType(badge, projectId)
 
@@ -220,9 +223,13 @@ function BadgeWithIcon({ badge, projectId }: { badge: string; projectId?: string
     return <LiveTTStatsBadge />
   }
 
+  if (type === 'live-migros') {
+    return <LiveMigrosBadge />
+  }
+
   if (type === 'metric') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/30 shadow-sm shadow-amber-500/10">
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400">
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
@@ -233,7 +240,7 @@ function BadgeWithIcon({ badge, projectId }: { badge: string; projectId?: string
 
   if (type === 'media') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-gradient-to-r from-rose-500/20 to-pink-500/20 text-rose-300 border border-rose-500/30">
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-rose-400">
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
         </svg>
@@ -244,7 +251,7 @@ function BadgeWithIcon({ badge, projectId }: { badge: string; projectId?: string
 
   if (type === 'award') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-300 border border-yellow-500/30 shadow-sm shadow-yellow-500/10">
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-yellow-400">
         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
           <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
         </svg>
@@ -254,9 +261,123 @@ function BadgeWithIcon({ badge, projectId }: { badge: string; projectId?: string
   }
 
   return (
-    <span className="px-2 py-0.5 text-[10px] font-medium rounded-md bg-white/[0.04] border border-white/[0.08] text-neutral-400">
+    <span className="text-[10px] font-medium text-neutral-500">
       {badge}
     </span>
+  )
+}
+
+// Horizontal scroll card - larger format for featured projects
+function HorizontalCard({
+  project,
+  index,
+  onClick,
+  isSelected = false
+}: {
+  project: Project
+  index: number
+  onClick: () => void
+  isSelected?: boolean
+}) {
+  const categoryLabels = {
+    webapp: 'Web App',
+    music: 'Music',
+    infrastructure: 'Infrastructure',
+    fullstack: 'Full Stack'
+  }
+
+  return (
+    <motion.article
+      layoutId={`card-${project.id}`}
+      onClick={onClick}
+      className={cn(
+        'group relative cursor-pointer flex-shrink-0',
+        'w-[80vw] md:w-[55vw] lg:w-[45vw] h-[55vh] min-h-[400px] max-h-[480px]',
+        'rounded-3xl overflow-hidden',
+        'bg-gradient-to-br from-neutral-900/90 to-neutral-950',
+        'border border-white/[0.08] hover:border-white/[0.15]',
+        'transition-all duration-500'
+      )}
+      style={{ opacity: isSelected ? 0 : 1 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+    >
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <motion.img
+          layoutId={`image-${project.id}`}
+          src={project.image}
+          alt={project.title}
+          className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-transparent" />
+      </div>
+
+      {/* Content overlay */}
+      <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10">
+        {/* Category - refined minimal style */}
+        <div className="self-start flex items-center gap-2 mb-4">
+          <span className={cn(
+            'w-2 h-2 rounded-full',
+            project.category === 'webapp' && 'bg-amber-400',
+            project.category === 'music' && 'bg-violet-400',
+            project.category === 'infrastructure' && 'bg-emerald-400',
+            project.category === 'fullstack' && 'bg-cyan-400',
+          )} />
+          <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-400">
+            {categoryLabels[project.category]}
+          </span>
+        </div>
+
+        {/* Title */}
+        <motion.h3
+          layoutId={`title-${project.id}`}
+          className="text-3xl md:text-4xl font-serif text-white mb-4 group-hover:text-amber-200 transition-colors"
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        >
+          {project.title}
+        </motion.h3>
+
+        {/* Badges */}
+        {project.badges && project.badges.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {project.badges.map((badge) => (
+              <BadgeWithIcon key={badge} badge={badge} projectId={project.id} />
+            ))}
+          </div>
+        )}
+
+        {/* Description */}
+        <p className="text-neutral-400 text-sm md:text-base leading-relaxed mb-6 max-w-lg">
+          {project.description}
+        </p>
+
+        {/* Tech stack - clean monospace style */}
+        {project.tech && project.tech.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {project.tech.map((tech) => (
+              <span
+                key={tech}
+                className={cn(
+                  'text-xs font-mono',
+                  techColors[tech] || 'text-neutral-500'
+                )}
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Live indicator - minimal */}
+        {project.href && (
+          <div className="absolute top-6 right-6 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10px] font-medium text-emerald-400/80 uppercase tracking-widest">Live</span>
+          </div>
+        )}
+      </div>
+    </motion.article>
   )
 }
 
@@ -264,25 +385,29 @@ function ProjectCard({
   project,
   size = 'single',
   index = 0,
-  onClick
+  onClick,
+  isSelected = false
 }: {
   project: Project
   size?: CellSize
   index?: number
   onClick: () => void
+  isSelected?: boolean
 }) {
   const config = cellConfig[size]
 
   const categoryLabels = {
     webapp: 'Web',
     music: 'Music',
-    infrastructure: 'Infra'
+    infrastructure: 'Infra',
+    fullstack: 'Full Stack'
   }
 
   const isFeatured = size === 'featured-left' || size === 'featured-right'
 
   return (
-    <article
+    <motion.article
+      layoutId={`card-${project.id}`}
       onClick={onClick}
       className={cn(
         'group relative cursor-pointer overflow-hidden rounded-2xl',
@@ -293,41 +418,45 @@ function ProjectCard({
         config.gridClass,
         'flex flex-col'
       )}
+      style={{ opacity: isSelected ? 0 : 1 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
       {/* Image section */}
       <div className={cn(
         'relative overflow-hidden',
         isFeatured ? 'h-56 sm:h-80' : 'h-32 sm:h-36'
       )}>
-        <img
+        <motion.img
+          layoutId={`image-${project.id}`}
           src={project.image}
           alt={project.title}
           className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
           loading="lazy"
           decoding="async"
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         />
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
 
-        {/* Category pill */}
-        <div className="absolute top-3 left-3">
+        {/* Category indicator - minimal dot + text */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5">
           <span className={cn(
-            'px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full',
-            'bg-black/60 backdrop-blur-sm border',
-            project.category === 'webapp' && 'text-blue-300 border-blue-500/40',
-            project.category === 'music' && 'text-purple-300 border-purple-500/40',
-            project.category === 'infrastructure' && 'text-emerald-300 border-emerald-500/40',
-          )}>
+            'w-1.5 h-1.5 rounded-full',
+            project.category === 'webapp' && 'bg-amber-400',
+            project.category === 'music' && 'bg-violet-400',
+            project.category === 'infrastructure' && 'bg-emerald-400',
+            project.category === 'fullstack' && 'bg-cyan-400',
+          )} />
+          <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-neutral-500">
             {categoryLabels[project.category]}
           </span>
         </div>
 
-        {/* Live indicator */}
+        {/* Live indicator - just the dot */}
         {project.href && (
-          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[9px] font-medium text-emerald-300 uppercase tracking-wider">Live</span>
+          <div className="absolute top-3 right-3">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse block" />
           </div>
         )}
       </div>
@@ -338,15 +467,17 @@ function ProjectCard({
         isFeatured ? 'p-4 lg:p-5' : 'p-2.5 lg:p-3'
       )}>
         {/* Title */}
-        <h3
+        <motion.h3
+          layoutId={`title-${project.id}`}
           className={cn(
             'font-semibold text-white leading-tight',
             'group-hover:text-amber-200 transition-colors duration-300',
             config.titleSize
           )}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
           {project.title}
-        </h3>
+        </motion.h3>
 
         {/* Achievement badges - show prominently */}
         {project.badges && project.badges.length > 0 && (
@@ -357,17 +488,15 @@ function ProjectCard({
           </div>
         )}
 
-        {/* Tech stack - only on featured cards */}
+        {/* Tech stack - clean monospace, only on featured cards */}
         {isFeatured && project.tech && project.tech.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
+          <div className="flex flex-wrap gap-2 mt-2">
             {project.tech.slice(0, 4).map((tech) => (
               <span
                 key={tech}
                 className={cn(
-                  'px-2 py-0.5 text-[10px] font-medium rounded-md',
-                  'bg-white/[0.04] border border-white/[0.08]',
-                  'transition-colors duration-300 group-hover:border-white/[0.15]',
-                  techColors[tech] || 'text-neutral-400'
+                  'text-[10px] font-mono',
+                  techColors[tech] || 'text-neutral-500'
                 )}
               >
                 {tech}
@@ -394,280 +523,356 @@ function ProjectCard({
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
       </div>
-    </article>
+    </motion.article>
   )
 }
 
 
-type FilterCategory = 'all' | 'webapp' | 'music' | 'infrastructure'
-
-const filterOptions: { value: FilterCategory; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'webapp', label: 'Web' },
-  { value: 'music', label: 'Music' },
-  { value: 'infrastructure', label: 'Infra' },
-]
-
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [showAll, setShowAll] = useState(false)
-  const [filter, setFilter] = useState<FilterCategory>('all')
-  const showMoreRef = useRef<HTMLDivElement>(null)
+  const [showMore, setShowMore] = useState(false)
 
-  const handleShowMore = () => {
-    // Get the current scroll position of the button relative to viewport
-    const buttonRect = showMoreRef.current?.getBoundingClientRect()
-    const scrollY = window.scrollY
-    const buttonTop = buttonRect?.top ?? 0
+  // Refs for horizontal scroll
+  const sectionRef = useRef<HTMLElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const keywordsRef = useRef<HTMLDivElement>(null)
 
-    setShowAll(true)
+  // GSAP horizontal scroll effect
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    const trigger = triggerRef.current
+    const scroller = scrollerRef.current
+    const keywords = keywordsRef.current
 
-    // After state update, scroll to keep roughly same view
-    requestAnimationFrame(() => {
-      window.scrollTo({
-        top: scrollY,
-        behavior: 'instant'
-      })
-    })
-  }
+    if (!section || !trigger || !scroller) return
+
+    // Calculate how far to scroll - add extra padding for last item visibility
+    const scrollWidth = scroller.scrollWidth - window.innerWidth + 200
+
+    const ctx = gsap.context(() => {
+      // Create shared ScrollTrigger config
+      const scrollTriggerConfig = {
+        trigger: trigger,
+        start: 'top 10%',
+        end: () => `+=${scrollWidth + 300}`,
+        pin: true,
+        scrub: 1.5,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+      }
+
+      // Horizontal scroll for cards
+      gsap.fromTo(scroller,
+        { x: 0 },
+        {
+          x: -scrollWidth,
+          ease: 'none',
+          scrollTrigger: scrollTriggerConfig,
+        }
+      )
+
+      // Vertical scroll for background keywords (scrolls up as you scroll sideways)
+      if (keywords) {
+        gsap.fromTo(keywords,
+          { yPercent: 0 },
+          {
+            yPercent: -75, // Scroll up through the 400% tall container
+            ease: 'none',
+            scrollTrigger: {
+              trigger: trigger,
+              start: 'top 10%',
+              end: () => `+=${scrollWidth + 300}`,
+              scrub: 0.5,
+            },
+          }
+        )
+      }
+    }, section)
+
+    return () => ctx.revert()
+  }, [])
 
   // Get projects by ID helper
   const getProject = (id: string) => projects.find(p => p.id === id)
 
-  // Bento grid layout - 3 columns
-  // All featured items use featured-left for consistent layout
-  const gridItems: Array<{ project: Project; size: CellSize }> = [
-    // Block 1: TTStats (1K+ users, 2nd FHNW award)
-    { project: getProject('ttstats')!, size: 'featured-left' },
-    { project: getProject('fhnw-dashboard')!, size: 'single' },
-    { project: getProject('linear-algebra')!, size: 'single' },
+  // Featured projects for horizontal scroll
+  const featuredIds = [
+    'ttstats', 'bunzlimeter', 'migros-ai-search', 'peakops',
+    'linear-algebra', 'password-cleaner', 'peak-plugins', 'peak-twilight-web'
+  ]
 
-    // Block 2: Bunzlimeter (9K+ users, SRF viral)
-    { project: getProject('bunzlimeter')!, size: 'featured-left' },
-    { project: getProject('migros-ai-search')!, size: 'single' },
-    { project: getProject('witelli20')!, size: 'single' },
+  // Bento grid layout for "More Projects" section
+  // Featured items span 2x2, singles are 1x1
+  const bentoGridItems: Array<{ id: string; size: CellSize }> = [
+    // Block 1: Featured left + 2 singles right
+    { id: 'witelli20', size: 'featured-left' },
+    { id: 'fhnw-dashboard', size: 'single' },
+    { id: 'galaxus', size: 'single' },
 
-    // Block 3: Peak Twilight (100M+ streams)
-    { project: getProject('peak-twilight-web')!, size: 'featured-left' },
-    { project: getProject('galaxus')!, size: 'single' },
-    { project: getProject('thatsapp')!, size: 'single' },
+    // Row of 3 singles
+    { id: 'thatsapp', size: 'single' },
+    { id: 'unidocs', size: 'single' },
+    { id: 'dreamhop', size: 'single' },
 
-    // Block 4: Soothe Records (30M+ streams)
-    { project: getProject('soothe-records')!, size: 'featured-left' },
-    { project: getProject('dreamhop')!, size: 'single' },
-    { project: getProject('peakops')!, size: 'single' },
+    // Row of 3 singles
+    { id: 'soothe-records', size: 'single' },
+    { id: 'peak-twilight-spotify', size: 'single' },
+    { id: 'soothe-studios', size: 'single' },
 
     // Rest as singles
-    { project: getProject('unidocs')!, size: 'single' },
-    { project: getProject('password-cleaner')!, size: 'single' },
-    { project: getProject('soothe-studios')!, size: 'single' },
-    { project: getProject('uptime-kuma')!, size: 'single' },
-    { project: getProject('glances')!, size: 'single' },
-    { project: getProject('grafana')!, size: 'single' },
-    { project: getProject('portainer')!, size: 'single' },
-    { project: getProject('traefik')!, size: 'single' },
-    { project: getProject('watchtower')!, size: 'single' },
-    { project: getProject('nocodb')!, size: 'single' },
-    { project: getProject('peak-plugins')!, size: 'single' },
-    { project: getProject('soothe-bot')!, size: 'single' },
-    { project: getProject('playlist-rotator')!, size: 'single' },
-    { project: getProject('waha')!, size: 'single' },
-    { project: getProject('studio-dreamhop')!, size: 'single' },
-  ].filter(item => item.project)
+    { id: 'studio-dreamhop', size: 'single' },
+    { id: 'uptime-kuma', size: 'single' },
+    { id: 'glances', size: 'single' },
+    { id: 'grafana', size: 'single' },
+    { id: 'portainer', size: 'single' },
+    { id: 'traefik', size: 'single' },
+    { id: 'watchtower', size: 'single' },
+    { id: 'nocodb', size: 'single' },
+    { id: 'soothe-bot', size: 'single' },
+    { id: 'playlist-rotator', size: 'single' },
+    { id: 'waha', size: 'single' },
+  ]
 
-  // Filter items by category
-  const filteredItems = filter === 'all'
-    ? gridItems
-    : gridItems.filter(item => item.project.category === filter)
+  const featuredProjects = featuredIds
+    .map(id => getProject(id))
+    .filter((p): p is Project => !!p)
 
-  // Show first 9 items initially (3 complete blocks), all when expanded
-  const visibleItems = showAll ? filteredItems : filteredItems.slice(0, 9)
-  const hasMore = filteredItems.length > 9
+  // Build bento grid with projects
+  const bentoProjects = bentoGridItems
+    .map(item => ({ project: getProject(item.id), size: item.size }))
+    .filter((item): item is { project: Project; size: CellSize } => !!item.project)
 
   return (
     <>
-      <section id="projects" className="py-24 md:py-32 relative">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 -left-64 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 -right-64 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
-        </div>
+      <section ref={sectionRef} id="projects" className="relative">
+        {/* Horizontal scroll section */}
+        <div ref={triggerRef} className="h-screen overflow-hidden relative flex flex-col">
+          {/* Gradient masks for smooth fade in/out */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-neutral-950 via-neutral-950/50 to-transparent z-[5] pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-transparent z-[5] pointer-events-none" />
 
-        <div className="container mx-auto px-4 md:px-6 max-w-7xl relative">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8"
+          {/* Floating background keywords - scrolls up as you scroll sideways */}
+          <div
+            ref={keywordsRef}
+            className="absolute inset-x-0 pointer-events-none select-none"
+            style={{ height: '400%', top: '0' }}
           >
-            <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Portfolio</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
-              What I Build
-            </h2>
-          </motion.div>
+            {/* Large scattered keywords with rotation and color variations - MORE VISIBLE */}
+            {[
+              // Layer 1 - starts at ~25% of 400% = 100% = at bottom of viewport initially
+              { text: 'SIEM', x: '8%', y: '26%', size: 'text-7xl md:text-8xl', rotate: -3, color: 'text-amber-500/[0.08]' },
+              { text: 'EDR', x: '70%', y: '27%', size: 'text-6xl md:text-7xl', rotate: 4, color: 'text-red-500/[0.07]' },
+              { text: 'SOAR', x: '35%', y: '28%', size: 'text-5xl md:text-6xl', rotate: -2, color: 'text-purple-500/[0.07]' },
+              { text: 'React', x: '5%', y: '29%', size: 'text-7xl md:text-8xl', rotate: -5, color: 'text-cyan-500/[0.08]' },
+              { text: 'TypeScript', x: '55%', y: '30%', size: 'text-6xl md:text-7xl', rotate: 3, color: 'text-blue-500/[0.07]' },
 
-          {/* Filter Tabs */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex justify-center mb-10"
-          >
-            <div className="relative flex">
-              {/* Sliding indicator */}
-              <motion.div
-                className="absolute inset-y-0 rounded-lg bg-amber-500/15 border border-amber-500/30"
-                initial={false}
-                animate={{
-                  left: `${filterOptions.findIndex(o => o.value === filter) * 25}%`,
+              // Layer 2
+              { text: 'Python', x: '60%', y: '32%', size: 'text-7xl md:text-8xl', rotate: -2, color: 'text-yellow-500/[0.07]' },
+              { text: 'Docker', x: '5%', y: '34%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-sky-500/[0.08]' },
+              { text: 'Next.js', x: '35%', y: '36%', size: 'text-6xl md:text-7xl', rotate: -3, color: 'text-white/[0.07]' },
+              { text: 'FastAPI', x: '78%', y: '37%', size: 'text-5xl md:text-6xl', rotate: 2, color: 'text-emerald-500/[0.07]' },
+
+              // Layer 3
+              { text: 'Tailwind', x: '8%', y: '38%', size: 'text-5xl md:text-6xl', rotate: -4, color: 'text-teal-500/[0.08]' },
+              { text: 'Node.js', x: '60%', y: '39%', size: 'text-6xl md:text-7xl', rotate: 3, color: 'text-green-500/[0.07]' },
+              { text: 'PostgreSQL', x: '35%', y: '40%', size: 'text-5xl md:text-6xl', rotate: -2, color: 'text-blue-400/[0.07]' },
+              { text: 'MySQL', x: '80%', y: '41%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-sky-500/[0.07]' },
+
+              // Layer 4
+              { text: 'Kubernetes', x: '5%', y: '44%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-blue-500/[0.08]' },
+              { text: 'Logic Pro', x: '48%', y: '45%', size: 'text-6xl md:text-7xl', rotate: -3, color: 'text-neutral-400/[0.07]' },
+              { text: 'Grafana', x: '75%', y: '46%', size: 'text-5xl md:text-6xl', rotate: 2, color: 'text-orange-500/[0.07]' },
+
+              // Layer 5
+              { text: 'AWS', x: '20%', y: '49%', size: 'text-6xl md:text-7xl', rotate: -4, color: 'text-amber-500/[0.07]' },
+              { text: 'Firebase', x: '55%', y: '50%', size: 'text-5xl md:text-6xl', rotate: 3, color: 'text-yellow-500/[0.07]' },
+              { text: 'MongoDB', x: '85%', y: '51%', size: 'text-6xl md:text-7xl', rotate: -2, color: 'text-green-500/[0.08]' },
+              { text: 'Ableton', x: '10%', y: '52%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-neutral-400/[0.07]' },
+
+              // Layer 6
+              { text: 'Redis', x: '40%', y: '55%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-red-500/[0.07]' },
+              { text: 'Vercel', x: '70%', y: '56%', size: 'text-6xl md:text-7xl', rotate: -3, color: 'text-white/[0.07]' },
+              { text: 'Linux', x: '5%', y: '57%', size: 'text-5xl md:text-6xl', rotate: 2, color: 'text-yellow-500/[0.08]' },
+              { text: 'Bash', x: '25%', y: '58%', size: 'text-5xl md:text-6xl', rotate: -4, color: 'text-green-500/[0.07]' },
+
+              // Layer 7
+              { text: 'Git', x: '60%', y: '61%', size: 'text-7xl md:text-8xl', rotate: -4, color: 'text-orange-500/[0.07]' },
+              { text: 'Nginx', x: '15%', y: '62%', size: 'text-5xl md:text-6xl', rotate: 3, color: 'text-green-500/[0.07]' },
+              { text: 'Traefik', x: '80%', y: '63%', size: 'text-5xl md:text-6xl', rotate: -2, color: 'text-cyan-500/[0.07]' },
+
+              // Layer 8
+              { text: 'GraphQL', x: '35%', y: '66%', size: 'text-6xl md:text-7xl', rotate: -2, color: 'text-pink-500/[0.08]' },
+              { text: 'REST APIs', x: '70%', y: '67%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-blue-500/[0.07]' },
+              { text: 'Prometheus', x: '5%', y: '68%', size: 'text-5xl md:text-6xl', rotate: -3, color: 'text-orange-500/[0.07]' },
+
+              // Layer 9
+              { text: 'Loki', x: '50%', y: '71%', size: 'text-5xl md:text-6xl', rotate: 2, color: 'text-amber-500/[0.07]' },
+              { text: 'Spotify API', x: '20%', y: '72%', size: 'text-5xl md:text-6xl', rotate: -4, color: 'text-green-500/[0.08]' },
+              { text: 'Firestore', x: '75%', y: '73%', size: 'text-5xl md:text-6xl', rotate: 3, color: 'text-yellow-500/[0.07]' },
+
+              // Layer 10
+              { text: 'Mixing', x: '8%', y: '76%', size: 'text-6xl md:text-7xl', rotate: -3, color: 'text-violet-500/[0.07]' },
+              { text: 'Mastering', x: '45%', y: '77%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-fuchsia-500/[0.07]' },
+              { text: 'Terraform', x: '80%', y: '78%', size: 'text-5xl md:text-6xl', rotate: -2, color: 'text-purple-500/[0.07]' },
+
+              // Layer 11
+              { text: 'Rust', x: '30%', y: '81%', size: 'text-7xl md:text-8xl', rotate: 3, color: 'text-orange-500/[0.07]' },
+              { text: 'Go', x: '65%', y: '82%', size: 'text-6xl md:text-7xl', rotate: -4, color: 'text-cyan-500/[0.07]' },
+              { text: 'Kafka', x: '10%', y: '83%', size: 'text-6xl md:text-7xl', rotate: 2, color: 'text-white/[0.08]' },
+
+              // Layer 12
+              { text: 'Swift', x: '55%', y: '86%', size: 'text-5xl md:text-6xl', rotate: -3, color: 'text-orange-500/[0.07]' },
+              { text: 'Vue.js', x: '25%', y: '87%', size: 'text-5xl md:text-6xl', rotate: 4, color: 'text-emerald-500/[0.07]' },
+              { text: 'Django', x: '80%', y: '88%', size: 'text-6xl md:text-7xl', rotate: -2, color: 'text-green-500/[0.07]' },
+
+              // Final layer
+              { text: 'TensorFlow', x: '40%', y: '91%', size: 'text-5xl md:text-6xl', rotate: 3, color: 'text-orange-500/[0.07]' },
+              { text: 'Splunk', x: '70%', y: '92%', size: 'text-6xl md:text-7xl', rotate: -4, color: 'text-green-500/[0.07]' },
+              { text: 'Ansible', x: '15%', y: '93%', size: 'text-5xl md:text-6xl', rotate: 2, color: 'text-red-500/[0.07]' },
+            ].map((item, i) => (
+              <span
+                key={i}
+                className={cn(
+                  'absolute font-mono font-black whitespace-nowrap tracking-tight',
+                  item.size,
+                  item.color
+                )}
+                style={{
+                  left: item.x,
+                  top: item.y,
+                  transform: `rotate(${item.rotate}deg)`,
                 }}
-                style={{ width: '25%' }}
-                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-              />
-
-              {/* Filter buttons */}
-              {filterOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => {
-                    setFilter(option.value)
-                    setShowAll(false)
-                  }}
-                  className={cn(
-                    'relative z-10 w-20 py-2.5 text-xs font-medium transition-colors duration-200',
-                    filter === option.value
-                      ? 'text-amber-300'
-                      : 'text-neutral-500 hover:text-neutral-300'
-                  )}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Tech Stack Marquee */}
-          <div className="relative mb-12 overflow-hidden">
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-neutral-950 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-neutral-950 to-transparent z-10 pointer-events-none" />
-
-            {/* Row 1 - Forward */}
-            <div
-              className="flex animate-marquee-forward mb-2"
-              style={{ '--duration': '35s' } as React.CSSProperties}
-            >
-              {[...techStack.row1, ...techStack.row1].map((tech, i) => (
-                <span
-                  key={i}
-                  className="mx-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            {/* Row 2 - Reverse */}
-            <div
-              className="flex animate-marquee-reverse mb-2"
-              style={{ '--duration': '40s' } as React.CSSProperties}
-            >
-              {[...techStack.row2, ...techStack.row2].map((tech, i) => (
-                <span
-                  key={i}
-                  className="mx-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            {/* Row 3 - Forward slower */}
-            <div
-              className="flex animate-marquee-forward"
-              style={{ '--duration': '45s' } as React.CSSProperties}
-            >
-              {[...techStack.row3, ...techStack.row3].map((tech, i) => (
-                <span
-                  key={i}
-                  className="mx-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+              >
+                {item.text}
+              </span>
+            ))}
           </div>
 
-          {/* Bento Grid - 3 columns with auto rows */}
-          <div className="relative">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:[grid-auto-rows:minmax(140px,auto)] sm:[grid-auto-flow:dense]">
-              {visibleItems.map((item, index) => (
-                <ProjectCard
-                  key={item.project.id}
-                  project={item.project}
-                  size={item.size}
-                  index={index}
-                  onClick={() => setSelectedProject(item.project)}
-                />
-              ))}
-            </div>
+          {/* Fixed header - stays in place */}
+          <div className="pt-24 md:pt-32 pb-8 text-center relative z-10">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Featured</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
+              Currently Building
+            </h2>
+          </div>
 
-            {/* Fade overlay and Show More button */}
-            {hasMore && !showAll && (
-              <div ref={showMoreRef} className="relative mt-[-120px] pt-32 pb-4">
-                {/* Gradient fade */}
-                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-t from-neutral-950 via-neutral-950/95 to-transparent pointer-events-none" />
+          {/* Scrolling cards */}
+          <div
+            ref={scrollerRef}
+            className="flex items-start gap-8 flex-1 pl-[10vw] pr-[50vw] relative z-10"
+          >
+            {featuredProjects.map((project, index) => (
+              <HorizontalCard
+                key={project.id}
+                project={project}
+                index={index}
+                onClick={() => setSelectedProject(project)}
+                isSelected={selectedProject?.id === project.id}
+              />
+            ))}
 
-                {/* Show More button */}
-                <div className="relative flex justify-center">
-                  <motion.button
-                    onClick={handleShowMore}
-                    className="group flex items-center gap-3 px-8 py-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] transition-all duration-300"
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <span className="text-sm font-medium text-neutral-300 group-hover:text-white transition-colors">
-                      Show {filteredItems.length - 9} more projects
-                    </span>
-                    <svg
-                      className="w-4 h-4 text-amber-500 transition-transform duration-300 group-hover:translate-y-0.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </motion.button>
-                </div>
-              </div>
-            )}
-
-            {/* Show Less button when expanded */}
-            {showAll && (
-              <div className="flex justify-center mt-8">
-                <motion.button
-                  onClick={() => setShowAll(false)}
-                  className="group flex items-center gap-3 px-6 py-3 rounded-xl text-neutral-500 hover:text-neutral-300 transition-colors"
-                  whileHover={{ y: -2 }}
-                >
-                  <span className="text-sm font-medium">Show less</span>
-                  <svg
-                    className="w-4 h-4 transition-transform duration-300 group-hover:-translate-y-0.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+            {/* Show More Card - at the end of horizontal scroll */}
+            {bentoProjects.length > 0 && (
+              <button
+                onClick={() => setShowMore(true)}
+                className={cn(
+                  'group relative cursor-pointer flex-shrink-0',
+                  'w-[60vw] md:w-[40vw] lg:w-[30vw] h-[55vh] min-h-[400px] max-h-[480px]',
+                  'rounded-3xl overflow-hidden',
+                  'bg-gradient-to-br from-neutral-900/50 to-neutral-950/80',
+                  'border border-dashed border-white/[0.15] hover:border-amber-500/40',
+                  'transition-all duration-500',
+                  'flex flex-col items-center justify-center gap-4'
+                )}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <svg className="w-8 h-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
-                </motion.button>
-              </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-serif text-white mb-2">
+                    {bentoProjects.length} More
+                  </p>
+                  <p className="text-sm text-neutral-500">
+                    Explore all projects
+                  </p>
+                </div>
+              </button>
             )}
           </div>
         </div>
       </section>
+
+      {/* Full-screen Projects Overlay */}
+      <AnimatePresence>
+        {showMore && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-40"
+              onClick={() => setShowMore(false)}
+            />
+
+            {/* Overlay Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 z-50 overflow-y-auto"
+            >
+              <div className="min-h-screen py-16 px-4 md:px-8">
+                {/* Header */}
+                <div className="max-w-7xl mx-auto mb-12">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Archive</span>
+                      <h2 className="text-3xl md:text-4xl font-serif text-white mt-2">
+                        All Projects
+                      </h2>
+                    </div>
+                    <button
+                      onClick={() => setShowMore(false)}
+                      className="flex h-11 w-11 items-center justify-center rounded-full bg-white/[0.05] border border-white/[0.1] text-neutral-400 hover:text-white hover:border-white/[0.2] transition-all"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bento Grid */}
+                <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 auto-rows-fr sm:[grid-auto-rows:minmax(180px,1fr)] sm:[grid-auto-flow:dense]">
+                  {bentoProjects.map((item, index) => (
+                    <motion.div
+                      key={item.project.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, delay: Math.min(index * 0.02, 0.15) }}
+                      className={cellConfig[item.size].gridClass}
+                    >
+                      <ProjectCard
+                        project={item.project}
+                        size={item.size}
+                        index={index}
+                        onClick={() => setSelectedProject(item.project)}
+                        isSelected={selectedProject?.id === item.project.id}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Modal */}
       <ProjectModal
