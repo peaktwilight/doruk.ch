@@ -449,7 +449,7 @@ export function About() {
         <div ref={timelineRef} className="relative max-w-2xl mx-auto">
           {milestones.map((milestone, index) => (
             <MilestoneCard
-              key={milestone.year}
+              key={index}
               milestone={milestone}
               index={index}
               isLast={index === milestones.length - 1}

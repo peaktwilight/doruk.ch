@@ -4,7 +4,6 @@ import { About } from './components/sections/About'
 import { Projects } from './components/sections/Projects'
 import { Experience } from './components/sections/Experience'
 import { AboutStrip } from './components/sections/AboutStrip'
-import { Footer } from './components/sections/Footer'
 import { Dock, DockItem } from './components/ui/Dock'
 import { ScrollAura } from './components/ui/ScrollAura'
 import './styles/main.css'
@@ -55,8 +54,6 @@ export default function App() {
       <Experience />
 
       <AboutStrip />
-
-      <Footer />
 
       {/* Floating Dock Navigation */}
       {(() => {
