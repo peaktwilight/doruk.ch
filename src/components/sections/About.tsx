@@ -242,7 +242,7 @@ const milestones = [
   {
     year: 'Now',
     age: '',
-    title: 'Still Building',
+    title: 'Currently Building',
     description: 'Security by day. Apps, AI tools, and beats by night.',
     highlight: 'I\'ll rest when I\'m dead. Or maybe next week. Probably not.',
     icon: (
@@ -253,6 +253,51 @@ const milestones = [
     color: '#eab308' // yellow/gold
   }
 ]
+
+// Sleek sticky header bar with smooth animation
+function StickyBuildingHeader({ milestone, visible }: { milestone: typeof milestones[0]; visible: boolean }) {
+  return (
+    <div
+      className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${
+        visible
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 -translate-y-full pointer-events-none'
+      }`}
+    >
+      {/* Gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-950/95 to-neutral-950/80 backdrop-blur-md" />
+
+      <div className="relative container mx-auto px-6 py-4 flex items-center gap-4">
+        {/* Icon */}
+        <div
+          className="w-9 h-9 rounded-full flex items-center justify-center border transition-transform duration-500"
+          style={{
+            backgroundColor: `${milestone.color}15`,
+            borderColor: `${milestone.color}40`,
+            color: milestone.color,
+            transform: visible ? 'scale(1)' : 'scale(0.8)'
+          }}
+        >
+          <div className="w-4 h-4">{milestone.icon}</div>
+        </div>
+
+        {/* Text */}
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-mono font-medium uppercase tracking-wider" style={{ color: milestone.color }}>
+            {milestone.year}
+          </span>
+          <span className="text-neutral-700">·</span>
+          <h3 className="text-sm font-medium text-white">
+            {milestone.title}
+          </h3>
+          <span className="hidden md:block text-sm text-neutral-500">
+            — {milestone.description}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function MilestoneCard({
   milestone,
@@ -283,6 +328,7 @@ function MilestoneCard({
   const contentOpacity = isActive ? 1 : 0
   const contentX = isActive ? 0 : -20
   const nodeScale = isActive ? 1 : 0.5
+
 
   return (
     <div className="relative flex gap-6 md:gap-8">
@@ -404,6 +450,34 @@ function MilestoneCard({
 export function About() {
   const containerRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
+  const [isProjectsVisible, setIsProjectsVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Track when Projects section is pinned (horizontal scroll mode)
+  useEffect(() => {
+    const projectsSection = document.getElementById('projects')
+    if (!projectsSection || isMobile) return
+
+    const handleScroll = () => {
+      const rect = projectsSection.getBoundingClientRect()
+      // Show sticky only when projects section top is at or above viewport top (pinned state)
+      // The GSAP pin starts when the section reaches top ~10% of viewport
+      const isPinned = rect.top <= window.innerHeight * 0.1 && rect.bottom > window.innerHeight
+      setIsProjectsVisible(isPinned)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isMobile])
 
   // Scroll progress for the entire timeline
   const { scrollYProgress } = useScroll({
@@ -423,42 +497,50 @@ export function About() {
     return smoothProgress.on('change', (v) => setProgress(v))
   }, [smoothProgress])
 
+
+  const lastMilestone = milestones[milestones.length - 1]
+
   return (
-    <section id="about" className="py-24 md:py-32 relative overflow-hidden">
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/[0.015] to-transparent" />
+    <>
+      {/* Sticky header - shows when Projects section is visible */}
+      <StickyBuildingHeader milestone={lastMilestone} visible={isProjectsVisible} />
 
-      <div ref={containerRef} className="container mx-auto px-4 md:px-6 max-w-5xl">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16 md:mb-20"
-        >
-          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">About Me</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
-            How It All Started
-          </h2>
-          <p className="text-neutral-500 mt-4 max-w-md mx-auto text-sm md:text-base">
-            A journey from accidental malware to cyber defense, with music along the way.
-          </p>
-        </motion.div>
+      <section id="about" className="py-24 md:py-32 relative overflow-hidden">
+        {/* Subtle background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/[0.015] to-transparent" />
 
-        {/* Timeline */}
-        <div ref={timelineRef} className="relative max-w-2xl mx-auto">
-          {milestones.map((milestone, index) => (
-            <MilestoneCard
-              key={index}
-              milestone={milestone}
-              index={index}
-              isLast={index === milestones.length - 1}
-              scrollProgress={progress}
-            />
+        <div ref={containerRef} className="container mx-auto px-4 md:px-6 max-w-5xl">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16 md:mb-20"
+          >
+            <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">About Me</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
+              How It All Started
+            </h2>
+            <p className="text-neutral-500 mt-4 max-w-md mx-auto text-sm md:text-base">
+              A journey from accidental malware to cyber defense, with music along the way.
+            </p>
+          </motion.div>
+
+          {/* Timeline */}
+          <div ref={timelineRef} className="relative max-w-2xl mx-auto">
+            {milestones.map((milestone, index) => (
+              <MilestoneCard
+                key={index}
+                milestone={milestone}
+                index={index}
+                isLast={index === milestones.length - 1}
+                scrollProgress={progress}
+              />
           ))}
         </div>
 
       </div>
     </section>
+    </>
   )
 }

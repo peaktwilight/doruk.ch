@@ -183,25 +183,6 @@ export function ScrollAura() {
         style={{ opacity: 0.7 }}
       />
 
-      {/* Top edge pulse on scroll up */}
-      <div
-        className={`fixed top-0 left-0 right-0 h-px pointer-events-none z-40 transition-all duration-200 ${
-          isScrolling && velocityRef.current < 0 ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{
-          background: 'linear-gradient(90deg, transparent 10%, rgba(245, 158, 11, 0.4) 50%, transparent 90%)',
-        }}
-      />
-
-      {/* Bottom edge pulse on scroll down */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 h-px pointer-events-none z-40 transition-all duration-200 ${
-          isScrolling && velocityRef.current > 0 ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{
-          background: 'linear-gradient(90deg, transparent 10%, rgba(245, 158, 11, 0.4) 50%, transparent 90%)',
-        }}
-      />
     </>
   )
 }

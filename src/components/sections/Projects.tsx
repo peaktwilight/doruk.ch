@@ -865,14 +865,6 @@ export function Projects() {
             ))}
           </div>
 
-          {/* Fixed header - stays in place */}
-          <div className="pt-24 md:pt-32 pb-8 text-center relative z-10">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Featured</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
-              Currently Building
-            </h2>
-          </div>
-
           {/* Scrolling cards */}
           <div
             ref={scrollerRef}
