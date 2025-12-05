@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ExternalLink, Github, X } from 'lucide-react'
 import NumberFlow from '@number-flow/react'
-import { type Project } from '../../data/projects'
+import { categoryLabels, type Project } from '../../data/projects'
 import { cn } from '../../lib/utils'
 
 // Live counter config
@@ -208,13 +208,6 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
-  const categoryLabels: Record<string, string> = {
-    webapp: 'Web Application',
-    music: 'Music & Production',
-    infrastructure: 'Infrastructure',
-    fullstack: 'Full Stack'
-  }
-
   return (
     <AnimatePresence mode="popLayout">
       {isOpen && project && (
@@ -253,47 +246,31 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               </motion.button>
 
               <div className="max-h-[90vh] overflow-y-auto">
-                {/* Hero Image */}
+                {/* Hero Image/Video */}
                 <div className="relative h-64 md:h-80 overflow-hidden">
+                  {/* Static image (hidden if video exists and is playing) */}
                   <motion.img
                     layoutId={`image-${project.id}`}
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover object-top"
+                    className={cn(
+                      "w-full h-full object-cover object-top",
+                      project.video && "opacity-0"
+                    )}
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   />
+                  {/* Video (autoplay loop) */}
+                  {project.video && (
+                    <video
+                      src={project.video}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover object-top"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
-
-                  {/* Category + Live status overlay */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: 0.15 }}
-                    className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={cn(
-                          'w-2 h-2 rounded-full',
-                          project.category === 'webapp' && 'bg-amber-400',
-                          project.category === 'music' && 'bg-violet-400',
-                          project.category === 'infrastructure' && 'bg-emerald-400',
-                          project.category === 'fullstack' && 'bg-cyan-400',
-                        )}
-                      />
-                      <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-400">
-                        {categoryLabels[project.category]}
-                      </span>
-                    </div>
-
-                    {project.href && (
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="text-[10px] font-medium text-emerald-400/80 uppercase tracking-widest">Live</span>
-                      </div>
-                    )}
-                  </motion.div>
                 </div>
 
                 {/* Content */}
@@ -304,6 +281,22 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   transition={{ delay: 0.1 }}
                   className="p-6 md:p-8"
                 >
+                  {/* Category */}
+                  <div className="inline-flex items-center gap-2 mb-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                    <span
+                      className={cn(
+                        'w-2 h-2 rounded-full',
+                        project.category === 'webapp' && 'bg-amber-400',
+                        project.category === 'music' && 'bg-violet-400',
+                        project.category === 'infrastructure' && 'bg-emerald-400',
+                        project.category === 'fullstack' && 'bg-cyan-400',
+                      )}
+                    />
+                    <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-400">
+                      {categoryLabels[project.category]}
+                    </span>
+                  </div>
+
                   {/* Title */}
                   <motion.h2
                     layoutId={`title-${project.id}`}

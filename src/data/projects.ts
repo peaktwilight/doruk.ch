@@ -1,8 +1,17 @@
+// Single source of truth for category labels
+export const categoryLabels: Record<string, string> = {
+  webapp: 'Web App',
+  music: 'Music',
+  infrastructure: 'Infrastructure',
+  fullstack: 'Full Stack'
+}
+
 export interface Project {
   id: string
   title: string
   category: 'webapp' | 'music' | 'infrastructure' | 'fullstack'
   image: string
+  video?: string
   href?: string
   sourceUrl?: string
   description: string
@@ -29,6 +38,7 @@ export const projects: Project[] = [
     title: 'PeakOps Dashboard',
     category: 'infrastructure',
     image: '/assets/images/peakops-static.jpg',
+    video: '/assets/images/peakops-video.mp4',
     href: 'https://sheesh.ch',
     description: 'Full infrastructure dashboard with real-time monitoring of all my 25+ services, system metrics, Docker containers, and operational status using Prometheus, Grafana, and Glances integration.',
     badges: ['Full Observability', '25+ Services'],
@@ -39,6 +49,7 @@ export const projects: Project[] = [
     title: 'Linear Algebra Calculator',
     category: 'webapp',
     image: '/assets/images/linear-algebra-calculator-static.jpg',
+    video: '/assets/images/linear-algebra-calculator-video.mp4',
     href: 'https://lag.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/linear-algebra-calculator',
     description: 'Comprehensive linear algebra toolkit with web app (Streamlit), CLI, and TUI interfaces. Features interactive visualizations, step-by-step explanations, and practice quizzes.',
@@ -51,6 +62,7 @@ export const projects: Project[] = [
     title: 'BunzliMeter',
     category: 'webapp',
     image: '/assets/images/Bunzlimeter-static.jpg',
+    video: '/assets/images/Bunzlimeter-video.mp4',
     href: 'https://bunzlimeter.ch',
     description: 'Viral Swiss culture quiz featured on SRF Radio. Uses Gemini AI to analyze how "Swiss" your responses are.',
     badges: ['9K+ Quiz Takers', 'SRF Radio Feature'],
@@ -61,6 +73,7 @@ export const projects: Project[] = [
     title: 'TTStats',
     category: 'fullstack',
     image: '/assets/images/TTStats-static.jpg',
+    video: '/assets/images/TTStats-video.mp4',
     href: 'https://ttstats.ch',
     description: 'Swiss Table Tennis statistics platform with web app + native iOS/Android apps (Kotlin Multiplatform). Tracking 5,500+ players, 69K+ matches across 249 clubs.',
     badges: ['1K+ Monthly Users', '2nd Place Swiss Startup Award'],
@@ -73,6 +86,7 @@ export const projects: Project[] = [
     title: 'FHNW Dashboard',
     category: 'webapp',
     image: '/assets/images/FHNW_Dashboard-static.jpg',
+    video: '/assets/images/FHNW_Dashboard-video.mp4',
     href: 'https://fhnw.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/fhnw-dashboard',
     description: 'Student dashboard for FHNW with i18n, dark mode, campus maps, and live transit info.',
@@ -85,6 +99,7 @@ export const projects: Project[] = [
     title: 'Witelli20',
     category: 'webapp',
     image: '/assets/images/Witelli20-static.jpg',
+    video: '/assets/images/Witelli20-video.mp4',
     href: 'https://witelli20.ch',
     sourceUrl: 'https://github.com/peaktwilight/witelli20',
     description: 'Modern student housing portal with room reservations, transport info, and message board.',
@@ -97,6 +112,7 @@ export const projects: Project[] = [
     title: 'ThatsApp MQTT Debugger',
     category: 'webapp',
     image: '/assets/images/ThatsAppMQTTDebugger-static.jpg',
+    video: '/assets/images/ThatsAppMQTTDebugger-video.mp4',
     href: 'https://thatsapp.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/ThatsAppMQTTDebugger',
     description: 'Feature-rich MQTT debugging tool for ThatsApp messaging protocol.',
@@ -109,6 +125,7 @@ export const projects: Project[] = [
     title: 'Galaxus Price Tracker',
     category: 'webapp',
     image: '/assets/images/galaxus_price_tracker-static.jpg',
+    video: '/assets/images/galaxus_price_tracker-video.mp4',
     href: 'https://price.doruk.ch',
     description: 'Price tracking tool for Galaxus products, for educational purposes only.',
     badges: ['Price Tracking'],
@@ -119,6 +136,7 @@ export const projects: Project[] = [
     title: 'CSV Password Cleaner',
     category: 'webapp',
     image: '/assets/images/Passwords_Manager_Doruk-static.jpg',
+    video: '/assets/images/Passwords_Manager_Doruk-video.mp4',
     href: 'https://passwords.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/csv-password-cleaner',
     description: 'Secure client-side tool to clean & manage browser password exports (CSV).',
@@ -130,6 +148,7 @@ export const projects: Project[] = [
     title: 'UniDocs',
     category: 'webapp',
     image: '/assets/images/unidocs-static.jpg',
+    video: '/assets/images/unidocs-video.mp4',
     href: 'https://unidocs.ch',
     description: 'Swiss student platform providing exam summaries and study materials.',
     badges: ['Education', 'Community']
@@ -150,6 +169,7 @@ export const projects: Project[] = [
     title: 'Dreamhop Music',
     category: 'music',
     image: '/assets/images/Dreamhop_Website-static.jpg',
+    video: '/assets/images/Dreamhop_Website-video.mp4',
     href: 'https://dreamhopmusic.com',
     description: 'Designed & built with WordPress, WooCommerce, Divi & custom code for the record label.',
     badges: ['WordPress', 'Divi Builder']
@@ -159,6 +179,7 @@ export const projects: Project[] = [
     title: 'Studio Dreamhop',
     category: 'music',
     image: '/assets/images/Studio_Dreamhop-static.jpg',
+    video: '/assets/images/Studio_Dreamhop-video.mp4',
     description: 'Designed & built with WordPress, WooCommerce, Divi & custom code.',
     badges: ['WordPress', 'Studio']
   },
@@ -167,6 +188,7 @@ export const projects: Project[] = [
     title: 'Soothe Records',
     category: 'music',
     image: '/assets/images/Soothe_Records-static.jpg',
+    video: '/assets/images/Soothe_Records-video.mp4',
     href: 'https://sootherecords.com',
     description: 'Co-founded record label focused on ambient lofi music. Designed & built the website with WordPress, Divi & custom code.',
     badges: ['Co-Founder', '30M+ Streams']
@@ -176,6 +198,7 @@ export const projects: Project[] = [
     title: 'Soothe Studios',
     category: 'music',
     image: '/assets/images/Soothe_Studios-static.jpg',
+    video: '/assets/images/Soothe_Studios-video.mp4',
     href: 'https://soothestudios.ch',
     description: 'First in-house mix & mastering studio for a lofi record label.',
     badges: ['Co-Founder', '150+ Mixed Tracks']
@@ -185,6 +208,7 @@ export const projects: Project[] = [
     title: 'Peak Twilight Homepage',
     category: 'music',
     image: '/assets/images/peak-twilight-homepage.png',
+    video: '/assets/images/Peak_Twilight_Website-video.mp4',
     href: 'https://peaktwilight.com',
     description: 'Personal artist homepage with live Spotify stats, animated backgrounds, and immersive music experience.',
     badges: ['100M+ Streams', 'Live Spotify Stats'],
@@ -195,6 +219,7 @@ export const projects: Project[] = [
     title: 'Peak Twilight Spotify',
     category: 'music',
     image: '/assets/images/Peak_Twilight_Spotify-static.jpg',
+    video: '/assets/images/Peak_Twilight_Spotify-video.mp4',
     href: 'https://open.spotify.com/artist/25qDYhjZHVzZS6sOVzAVAx',
     description: 'Music production alias & Spotify Profile with over 100 million streams.',
     badges: ['100M+ Streams', 'SRF Video Feature']
@@ -205,6 +230,7 @@ export const projects: Project[] = [
     title: 'Uptime Kuma',
     category: 'infrastructure',
     image: '/assets/images/uptime-kuma-static.jpg',
+    video: '/assets/images/uptime-kuma-video.mp4',
     href: 'https://status.doruk.ch',
     description: 'Self-hosted uptime monitoring and status page for 20+ services.',
     badges: ['Monitoring', 'Production']
@@ -214,6 +240,7 @@ export const projects: Project[] = [
     title: 'Glances Monitoring',
     category: 'infrastructure',
     image: '/assets/images/glances-static.jpg',
+    video: '/assets/images/glances-video.mp4',
     href: 'https://glances.doruk.ch',
     description: 'Real-time system monitoring with CPU, memory, disk, network metrics.',
     badges: ['Real-time', 'System Metrics']
@@ -223,6 +250,7 @@ export const projects: Project[] = [
     title: 'Portainer',
     category: 'infrastructure',
     image: '/assets/images/portainer-static.jpg',
+    video: '/assets/images/portainer-video.mp4',
     description: 'Self-hosted Docker management for my 20+ production containers. Internal tool - no public access for security reasons.',
     badges: ['Self-Hosted', 'Docker']
   },
@@ -231,6 +259,7 @@ export const projects: Project[] = [
     title: 'Traefik',
     category: 'infrastructure',
     image: '/assets/images/traefik-static.jpg',
+    video: '/assets/images/traefik-video.mp4',
     description: 'My reverse proxy handling SSL and routing for all services. Internal dashboard - no public access for security reasons.',
     badges: ['Self-Hosted', 'SSL/TLS']
   },
@@ -239,6 +268,7 @@ export const projects: Project[] = [
     title: 'TTStats API Analytics',
     category: 'infrastructure',
     image: '/assets/images/grafana-ttstats-static.jpg',
+    video: '/assets/images/grafana-doruk.mp4',
     href: 'https://grafana.doruk.ch/public-dashboards/682b9b0d5f6d495396ea45f1d967d2d0',
     description: 'Public Grafana dashboard showcasing TTStats.ch analytics.',
     badges: ['Public Dashboard', 'Real-time']
@@ -256,6 +286,7 @@ export const projects: Project[] = [
     title: 'NocoDB',
     category: 'infrastructure',
     image: '/assets/images/nocodb-static.jpg',
+    video: '/assets/images/nocodb-video.mp4',
     description: 'Self-hosted Airtable alternative I use for internal data management. No public access for security reasons.',
     badges: ['Self-Hosted', 'Database']
   },
@@ -264,6 +295,7 @@ export const projects: Project[] = [
     title: 'Soothe Discord Bot',
     category: 'infrastructure',
     image: '/assets/images/soothe-discord-bot-static.jpg',
+    video: '/assets/images/soothe-discord-bot-video.mp4',
     description: 'Custom Discord bot I built for Soothe Records community. Runs on my infrastructure.',
     badges: ['Self-Hosted', 'Discord']
   },
@@ -272,6 +304,7 @@ export const projects: Project[] = [
     title: 'Soothe Playlist Autorotator',
     category: 'infrastructure',
     image: '/assets/images/soothe-playlist-autorotator-static.jpg',
+    video: '/assets/images/playlist-rotator-video.mp4',
     href: 'https://playlist.sootherecords.com',
     description: 'Automated Spotify playlist rotation service for Soothe Records.',
     badges: ['Automation', 'Spotify API']
@@ -281,6 +314,7 @@ export const projects: Project[] = [
     title: 'Waha WhatsApp API',
     category: 'infrastructure',
     image: '/assets/images/waha-whatsapp-api-static.jpg',
+    video: '/assets/images/waha-video.mp4',
     description: 'Self-hosted WhatsApp API I use for automations. Internal service - no public access for security reasons.',
     badges: ['Self-Hosted', 'REST API']
   }

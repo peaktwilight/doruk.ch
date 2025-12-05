@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { projects, type Project } from '../../data/projects'
+import { projects, categoryLabels, type Project } from '../../data/projects'
 import { cn } from '../../lib/utils'
 import { ProjectModal } from '../ui/ProjectModal'
 
@@ -33,6 +33,54 @@ function formatCompactNumber(num: number): string {
     return (num / 1000).toFixed(0) + 'K'
   }
   return num.toString()
+}
+
+// Video component that plays on parent hover
+function HoverVideo({ src, className }: { src: string; className?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const parent = video.closest('.group')
+    if (!parent) return
+
+    const handleEnter = () => {
+      setIsHovered(true)
+      video.play().catch(() => {})
+    }
+    const handleLeave = () => {
+      setIsHovered(false)
+      video.pause()
+      video.currentTime = 0
+    }
+
+    parent.addEventListener('mouseenter', handleEnter)
+    parent.addEventListener('mouseleave', handleLeave)
+
+    return () => {
+      parent.removeEventListener('mouseenter', handleEnter)
+      parent.removeEventListener('mouseleave', handleLeave)
+    }
+  }, [])
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className={cn(
+        "absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 pointer-events-none",
+        isHovered ? "opacity-100" : "opacity-0",
+        className
+      )}
+    />
+  )
 }
 
 // Tech badge color mapping
@@ -279,13 +327,6 @@ function HorizontalCard({
   onClick: () => void
   isSelected?: boolean
 }) {
-  const categoryLabels = {
-    webapp: 'Web App',
-    music: 'Music',
-    infrastructure: 'Infrastructure',
-    fullstack: 'Full Stack'
-  }
-
   return (
     <motion.article
       layoutId={`card-${project.id}`}
@@ -301,22 +342,26 @@ function HorizontalCard({
       style={{ opacity: isSelected ? 0 : 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
-      {/* Background image */}
+      {/* Background image/video */}
       <div className="absolute inset-0">
         <motion.img
           layoutId={`image-${project.id}`}
           src={project.image}
           alt={project.title}
-          className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+          className={cn(
+            "w-full h-full object-cover object-top transition-all duration-700",
+            project.video ? "group-hover:opacity-0" : "group-hover:scale-105"
+          )}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         />
+        {project.video && <HoverVideo src={project.video} />}
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-transparent" />
       </div>
 
       {/* Content overlay */}
       <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10">
-        {/* Category - refined minimal style */}
-        <div className="self-start flex items-center gap-2 mb-4">
+        {/* Category - with background for visibility */}
+        <div className="self-start flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm">
           <span className={cn(
             'w-2 h-2 rounded-full',
             project.category === 'webapp' && 'bg-amber-400',
@@ -324,7 +369,7 @@ function HorizontalCard({
             project.category === 'infrastructure' && 'bg-emerald-400',
             project.category === 'fullstack' && 'bg-cyan-400',
           )} />
-          <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-400">
+          <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-300">
             {categoryLabels[project.category]}
           </span>
         </div>
@@ -369,13 +414,6 @@ function HorizontalCard({
           </div>
         )}
 
-        {/* Live indicator - minimal */}
-        {project.href && (
-          <div className="absolute top-6 right-6 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10px] font-medium text-emerald-400/80 uppercase tracking-widest">Live</span>
-          </div>
-        )}
       </div>
     </motion.article>
   )
@@ -395,14 +433,6 @@ function ProjectCard({
   isSelected?: boolean
 }) {
   const config = cellConfig[size]
-
-  const categoryLabels = {
-    webapp: 'Web',
-    music: 'Music',
-    infrastructure: 'Infra',
-    fullstack: 'Full Stack'
-  }
-
   const isFeatured = size === 'featured-left' || size === 'featured-right'
 
   return (
@@ -421,26 +451,39 @@ function ProjectCard({
       style={{ opacity: isSelected ? 0 : 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
-      {/* Image section */}
+      {/* Image/Video section */}
       <div className={cn(
         'relative overflow-hidden',
         isFeatured ? 'flex-1' : 'h-32 sm:h-36'
       )}>
+        {/* Static image (always visible, fades on hover if video exists) */}
         <motion.img
           layoutId={`image-${project.id}`}
           src={project.image}
           alt={project.title}
-          className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+          className={cn(
+            "w-full h-full object-cover object-top transition-all duration-700 ease-out",
+            project.video ? "group-hover:opacity-0" : "group-hover:scale-105"
+          )}
           loading="lazy"
           decoding="async"
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         />
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
+        {/* Video (plays on hover) */}
+        {project.video && <HoverVideo src={project.video} />}
 
-        {/* Category indicator - minimal dot + text */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent pointer-events-none" />
+      </div>
+
+      {/* Content section */}
+      <div className={cn(
+        'relative',
+        isFeatured ? 'p-4 lg:p-5' : 'p-2.5 lg:p-3'
+      )}>
+        {/* Category indicator */}
+        <div className="flex items-center gap-1.5 mb-1.5">
           <span className={cn(
             'w-1.5 h-1.5 rounded-full',
             project.category === 'webapp' && 'bg-amber-400',
@@ -453,19 +496,6 @@ function ProjectCard({
           </span>
         </div>
 
-        {/* Live indicator - just the dot */}
-        {project.href && (
-          <div className="absolute top-3 right-3">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse block" />
-          </div>
-        )}
-      </div>
-
-      {/* Content section */}
-      <div className={cn(
-        'relative',
-        isFeatured ? 'p-4 lg:p-5' : 'p-2.5 lg:p-3'
-      )}>
         {/* Title */}
         <motion.h3
           layoutId={`title-${project.id}`}
