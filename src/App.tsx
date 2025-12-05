@@ -90,19 +90,6 @@ export default function App() {
               </svg>
             </DockItem>
 
-            {/* Divider */}
-            <div className="w-px h-6 bg-white/10 mx-2" />
-
-            {/* CTA - Email */}
-            <a
-              href="mailto:hello@doruk.ch"
-              className="flex h-12 items-center gap-2 px-4 rounded-xl bg-amber-500 text-neutral-900 font-medium text-sm hover:bg-amber-400 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span className="hidden sm:inline">Say Hi</span>
-            </a>
           </Dock>
         )
       })()}
