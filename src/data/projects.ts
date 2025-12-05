@@ -7,6 +7,7 @@ export interface Project {
   sourceUrl?: string
   description: string
   badges?: string[]
+  tech?: string[]
   openSource?: boolean
   appStoreUrl?: string
   playStoreUrl?: string
@@ -15,13 +16,23 @@ export interface Project {
 export const projects: Project[] = [
   // Web Apps & Tools
   {
+    id: 'migros-ai-search',
+    title: 'Migros AI Product Search',
+    category: 'webapp',
+    image: '/assets/images/migros-ai-search.png',
+    description: 'AI-powered product search for Migros with intelligent shopping list creation. An AI agent helps you find products and build shopping lists directly on the website.',
+    badges: ['AI Agent', 'Concept Project'],
+    tech: ['Next.js', 'TypeScript', 'AI']
+  },
+  {
     id: 'peakops',
     title: 'PeakOps Dashboard',
     category: 'infrastructure',
     image: '/assets/images/peakops-static.jpg',
     href: 'https://sheesh.ch',
     description: 'Full infrastructure dashboard with real-time monitoring of all my 25+ services, system metrics, Docker containers, and operational status using Prometheus, Grafana, and Glances integration.',
-    badges: ['Full Observability', '25+ Services']
+    badges: ['Full Observability', '25+ Services'],
+    tech: ['Docker', 'Grafana', 'Prometheus', 'Traefik']
   },
   {
     id: 'linear-algebra',
@@ -32,6 +43,7 @@ export const projects: Project[] = [
     sourceUrl: 'https://github.com/peaktwilight/linear-algebra-calculator',
     description: 'Comprehensive linear algebra toolkit with web app (Streamlit), CLI, and TUI interfaces. Features interactive visualizations, step-by-step explanations, and practice quizzes.',
     badges: ['Open Source', 'MIT License'],
+    tech: ['Python', 'Streamlit', 'NumPy'],
     openSource: true
   },
   {
@@ -40,8 +52,9 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/Bunzlimeter-static.jpg',
     href: 'https://bunzlimeter.ch',
-    description: 'Next.js 14 (App Router), TypeScript, Tailwind CSS, Firebase (Firestore), DeepSeek AI API, Google Analytics 4, Framer Motion, Vercel Edge Functions',
-    badges: ['SRF Radio Feature', 'Viral Project']
+    description: 'Viral Swiss culture quiz that went viral and was featured on SRF Radio. Uses AI to analyze how "Swiss" your responses are.',
+    badges: ['SRF Radio Feature', 'Viral Project'],
+    tech: ['Next.js', 'TypeScript', 'Firebase', 'AI']
   },
   {
     id: 'ttstats',
@@ -51,6 +64,7 @@ export const projects: Project[] = [
     href: 'https://ttstats.ch',
     description: 'Swiss Table Tennis Statistics with web app and native mobile apps (Kotlin Multiplatform for iOS/Android), with Python backend for data scraping.',
     badges: ['Web App', 'Mobile App'],
+    tech: ['Kotlin', 'Python', 'Next.js', 'FastAPI'],
     appStoreUrl: 'https://apps.apple.com/ch/app/ttstats/id6744279609',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.peaktwilight.ttstats'
   },
@@ -61,8 +75,9 @@ export const projects: Project[] = [
     image: '/assets/images/FHNW_Dashboard-static.jpg',
     href: 'https://fhnw.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/fhnw-dashboard',
-    description: 'Next.js 14, Tailwind CSS, Framer Motion, Dark Mode, Mobile First design.',
+    description: 'Student dashboard for FHNW with dark mode, mobile-first design, and smooth animations.',
     badges: ['Open Source', 'MIT License'],
+    tech: ['Next.js', 'Tailwind', 'Framer'],
     openSource: true
   },
   {
@@ -72,8 +87,9 @@ export const projects: Project[] = [
     image: '/assets/images/Witelli20-static.jpg',
     href: 'https://witelli20.ch',
     sourceUrl: 'https://github.com/peaktwilight/witelli20',
-    description: 'Modern student housing portal with room reservations, transport info, and message board. Built with Next.js, Firebase, Tailwind CSS, TypeScript.',
+    description: 'Modern student housing portal with room reservations, transport info, and message board.',
     badges: ['Open Source', 'MIT License'],
+    tech: ['Next.js', 'Firebase', 'TypeScript'],
     openSource: true
   },
   {
@@ -83,8 +99,9 @@ export const projects: Project[] = [
     image: '/assets/images/ThatsAppMQTTDebugger-static.jpg',
     href: 'https://thatsapp.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/ThatsAppMQTTDebugger',
-    description: 'Feature-rich MQTT debugging tool for ThatsApp messaging protocol. Built with Next.js, TypeScript, Material UI, Framer Motion.',
+    description: 'Feature-rich MQTT debugging tool for ThatsApp messaging protocol.',
     badges: ['Open Source', 'ISC License'],
+    tech: ['Next.js', 'TypeScript', 'MQTT'],
     openSource: true
   },
   {
@@ -93,8 +110,9 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/galaxus_price_tracker-static.jpg',
     href: 'https://price.doruk.ch',
-    description: 'Next.js, React, Tailwind CSS, TypeScript - for educational purposes only.',
-    badges: ['Price Tracking', 'Next.js']
+    description: 'Price tracking tool for Galaxus products, for educational purposes only.',
+    badges: ['Price Tracking'],
+    tech: ['Next.js', 'React', 'Tailwind']
   },
   {
     id: 'password-cleaner',
@@ -156,10 +174,11 @@ export const projects: Project[] = [
     id: 'peak-twilight-web',
     title: 'Peak Twilight Homepage',
     category: 'music',
-    image: '/assets/images/Peak_Twilight_Website-static.jpg',
+    image: '/assets/images/peak-twilight-homepage.png',
     href: 'https://peaktwilight.com',
-    description: 'Built with WordPress, Divi + custom code | compressed into a static page.',
-    badges: ['Artist Site', 'WordPress']
+    description: 'Personal artist homepage for Peak Twilight, a lofi music producer with 100M+ streams. Built with WordPress and Divi, optimized and compressed into a fast static page.',
+    badges: ['Artist Site', '100M+ Streams'],
+    tech: ['WordPress', 'Divi', 'Static']
   },
   {
     id: 'peak-twilight-spotify',

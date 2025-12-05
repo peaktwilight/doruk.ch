@@ -572,6 +572,20 @@
   animation: marquee-vertical var(--duration) linear infinite;
 }
 
+/* Optimized marquee - GPU accelerated */
+@keyframes marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-marquee-forward {
+  animation: marquee-scroll var(--duration, 60s) linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-scroll var(--duration, 60s) linear infinite reverse;
+}
+
 /* ============================================
    GRADIENT TEXT ANIMATION
    ============================================ */

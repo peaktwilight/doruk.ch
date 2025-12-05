@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { education, experience, languages, achievements } from '../../data/resume'
+import { education, experience } from '../../data/resume'
 import { cn } from '../../lib/utils'
 
 function TimelineCard({ item, index }: { item: typeof experience[0]; index: number }) {
@@ -133,66 +133,6 @@ export function Experience() {
           </div>
         </div>
 
-        {/* Bottom row: Languages & Achievements */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Languages */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5"
-          >
-            <div className="flex items-center gap-3 mb-5">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-neutral-500">Languages</span>
-              <span className="flex-1 h-px bg-neutral-800" />
-            </div>
-            <div className="space-y-3">
-              {languages.map((lang) => (
-                <div key={lang.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-neutral-300">{lang.name}</span>
-                    <span className="text-[9px] text-neutral-600 uppercase tracking-wider">{lang.level}</span>
-                  </div>
-                  <div className="flex gap-1">
-                    {[1, 2, 3].map((n) => (
-                      <div
-                        key={n}
-                        className={cn(
-                          'w-6 h-1 rounded-full transition-colors',
-                          n <= lang.proficiency ? 'bg-amber-500/70' : 'bg-neutral-800'
-                        )}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Achievements */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5"
-          >
-            <div className="flex items-center gap-3 mb-5">
-              <span className="text-[10px] uppercase tracking-[0.15em] text-neutral-500">Achievements</span>
-              <span className="flex-1 h-px bg-neutral-800" />
-            </div>
-            <div className="space-y-3">
-              {achievements.map((ach) => (
-                <div key={ach.text} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
-                    <ion-icon name={ach.icon} class="text-amber-500 text-sm" />
-                  </div>
-                  <span className="text-sm text-neutral-400">{ach.text}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
       </div>
     </section>
   )
