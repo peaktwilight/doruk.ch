@@ -5,6 +5,7 @@ import NumberFlow from '@number-flow/react'
 // Rotating identities - all use the main amber accent color
 const identities = [
   'Cyber Defense Engineer',
+  'CS & Business Student',
   'Music Producer',
   'Builder of Things',
   'Table Tennis Coach',
