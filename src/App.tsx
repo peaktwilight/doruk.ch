@@ -15,25 +15,23 @@ export default function App() {
   // Track active section on scroll
   useEffect(() => {
     const sections = ['hero', 'about', 'projects', 'experience', 'languages']
-    const observers: IntersectionObserver[] = []
 
-    sections.forEach((id) => {
-      const el = document.getElementById(id)
-      if (!el) return
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 3
 
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveSection(id)
-          }
-        },
-        { threshold: 0.3 }
-      )
-      observer.observe(el)
-      observers.push(observer)
-    })
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i])
+        if (el && el.offsetTop <= scrollPosition) {
+          setActiveSection(sections[i])
+          break
+        }
+      }
+    }
 
-    return () => observers.forEach((o) => o.disconnect())
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const scrollTo = (id: string) => {
