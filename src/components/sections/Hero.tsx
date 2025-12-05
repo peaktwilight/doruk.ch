@@ -15,7 +15,7 @@ const languages = [
 // Stats configuration
 const START_DATE = new Date('2021-01-01T00:00:00')
 const TARGET_DATE = new Date('2025-12-31T23:59:59')
-const TARGET_STREAMS = 110000000
+const TARGET_USERS = 75000
 
 function calculateCurrentValue(targetValue: number) {
   const now = new Date()
@@ -25,12 +25,8 @@ function calculateCurrentValue(targetValue: number) {
   return targetValue * progress
 }
 
-function AnimatedStat({ targetValue, label, suffix = '', delay = 0 }: {
-  targetValue: number
-  label: string
-  suffix?: string
-  delay?: number
-}) {
+// Inline user counter for bio text
+function InlineUserCount() {
   const [displayValue, setDisplayValue] = useState(0)
   const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef(null)
@@ -39,48 +35,30 @@ function AnimatedStat({ targetValue, label, suffix = '', delay = 0 }: {
   useEffect(() => {
     if (isInView && !hasAnimated) {
       const timer = setTimeout(() => {
-        if (targetValue >= 1000000) {
-          setDisplayValue(calculateCurrentValue(targetValue))
-        } else {
-          setDisplayValue(targetValue)
-        }
+        setDisplayValue(calculateCurrentValue(TARGET_USERS))
         setHasAnimated(true)
-      }, delay)
+      }, 300)
       return () => clearTimeout(timer)
     }
-  }, [isInView, targetValue, delay, hasAnimated])
+  }, [isInView, hasAnimated])
 
   useEffect(() => {
-    if (!hasAnimated || targetValue !== TARGET_STREAMS) return
+    if (!hasAnimated) return
     const interval = setInterval(() => {
-      setDisplayValue(calculateCurrentValue(targetValue))
+      setDisplayValue(calculateCurrentValue(TARGET_USERS))
     }, 1000)
     return () => clearInterval(interval)
-  }, [hasAnimated, targetValue])
-
-  const formatValue = () => {
-    if (targetValue >= 1000000) return Math.floor(displayValue / 1000000)
-    return Math.floor(displayValue)
-  }
-
-  const getSuffix = () => {
-    if (targetValue >= 1000000) return 'M+'
-    return suffix
-  }
+  }, [hasAnimated])
 
   return (
-    <div ref={ref}>
-      <div className="text-2xl md:text-3xl font-serif text-white flex items-baseline">
-        <NumberFlow
-          value={formatValue()}
-          className="tabular-nums"
-          transformTiming={{ duration: 1500, easing: 'ease-out' }}
-          spinTiming={{ duration: 1500, easing: 'ease-out' }}
-        />
-        <span className="text-lg md:text-xl ml-0.5">{getSuffix()}</span>
-      </div>
-      <div className="text-[10px] text-neutral-600 uppercase tracking-wider mt-1">{label}</div>
-    </div>
+    <span ref={ref} className="text-white font-medium tabular-nums">
+      <NumberFlow
+        value={Math.floor(displayValue)}
+        format={{ notation: 'standard', useGrouping: true }}
+        transformTiming={{ duration: 0 }}
+        spinTiming={{ duration: 1500, easing: 'ease-out' }}
+      />
+    </span>
   )
 }
 
@@ -126,27 +104,22 @@ export function Hero() {
             {/* Language flags - stacked horizontally */}
             <a
               href="#languages"
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 group flex flex-col items-center gap-2"
+              className="absolute -bottom-5 left-1/2 -translate-x-1/2 group flex -space-x-2"
             >
-              <div className="flex -space-x-2">
-                {languages.map((lang, i) => (
-                  <div
-                    key={lang.code}
-                    className="w-7 h-7 rounded-full border-2 border-neutral-900 overflow-hidden bg-neutral-800 transition-transform group-hover:scale-110"
-                    style={{ zIndex: languages.length - i }}
-                    title={lang.name}
-                  >
-                    <img
-                      src={`https://flagcdn.com/w40/${lang.code}.png`}
-                      alt={lang.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-              <span className="text-[9px] text-neutral-600 group-hover:text-amber-500 transition-colors uppercase tracking-wider">
-                5 languages
-              </span>
+              {languages.map((lang, i) => (
+                <div
+                  key={lang.code}
+                  className="w-7 h-7 rounded-full border-2 border-neutral-900 overflow-hidden bg-neutral-800 transition-transform group-hover:scale-110"
+                  style={{ zIndex: languages.length - i }}
+                  title={lang.name}
+                >
+                  <img
+                    src={`https://flagcdn.com/w40/${lang.code}.png`}
+                    alt={lang.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
             </a>
           </div>
         </motion.div>
@@ -171,30 +144,23 @@ export function Hero() {
           <span className="text-neutral-300">Cyber Defense Engineer</span>
           <span className="text-neutral-600 mx-2">/</span>
           <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
-            100M+ Streams
+            Co-Founder @ Soothe Records
           </span>
         </motion.p>
 
-        {/* Bio */}
+        {/* Bio with inline counter */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-neutral-500 mb-10 max-w-lg mx-auto leading-relaxed"
+          className="text-neutral-500 mb-10 max-w-xl mx-auto leading-relaxed"
         >
-          Security engineer at Switzerland's largest retailer. Co-founder of Soothe Records. Building production infrastructure and shipping web apps.
+          If I'm not sleeping, studying, or working my day job, I'm building tools that{' '}
+          <span className="inline-flex items-baseline">
+            <InlineUserCount />
+          </span>{' '}
+          people use.
         </motion.p>
-
-        {/* Quick stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex justify-center gap-12 md:gap-16 mb-10"
-        >
-          <AnimatedStat targetValue={25} label="Services" suffix="+" delay={200} />
-          <AnimatedStat targetValue={TARGET_STREAMS} label="Streams" delay={400} />
-        </motion.div>
 
         {/* CTA buttons */}
         <motion.div
@@ -234,24 +200,6 @@ export function Hero() {
             </svg>
             GitHub
           </a>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="text-neutral-700"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </motion.div>
         </motion.div>
       </div>
     </section>

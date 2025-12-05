@@ -52,9 +52,9 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/Bunzlimeter-static.jpg',
     href: 'https://bunzlimeter.ch',
-    description: 'Viral Swiss culture quiz that went viral and was featured on SRF Radio. Uses AI to analyze how "Swiss" your responses are.',
-    badges: ['SRF Radio Feature', 'Viral Project'],
-    tech: ['Next.js', 'TypeScript', 'Firebase', 'AI']
+    description: 'Viral Swiss culture quiz featured on SRF Radio. Uses Gemini AI to analyze how "Swiss" your responses are.',
+    badges: ['9K+ Quiz Takers', 'SRF Radio Feature'],
+    tech: ['Next.js', 'Firebase', 'Framer', 'AI']
   },
   {
     id: 'ttstats',
@@ -62,9 +62,9 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/TTStats-static.jpg',
     href: 'https://ttstats.ch',
-    description: 'Swiss Table Tennis Statistics with web app and native mobile apps (Kotlin Multiplatform for iOS/Android), with Python backend for data scraping.',
-    badges: ['Web App', 'Mobile App'],
-    tech: ['Kotlin', 'Python', 'Next.js', 'FastAPI'],
+    description: 'Next-gen Swiss Table Tennis statistics platform. Web app + native iOS/Android apps tracking 5,500+ players, 69K+ matches across 249 clubs.',
+    badges: ['1K+ Monthly Users', '2nd Place FHNW'],
+    tech: ['Kotlin', 'Next.js', 'Python', 'FastAPI'],
     appStoreUrl: 'https://apps.apple.com/ch/app/ttstats/id6744279609',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.peaktwilight.ttstats'
   },
@@ -75,9 +75,9 @@ export const projects: Project[] = [
     image: '/assets/images/FHNW_Dashboard-static.jpg',
     href: 'https://fhnw.doruk.ch',
     sourceUrl: 'https://github.com/peaktwilight/fhnw-dashboard',
-    description: 'Student dashboard for FHNW with dark mode, mobile-first design, and smooth animations.',
-    badges: ['Open Source', 'MIT License'],
-    tech: ['Next.js', 'Tailwind', 'Framer'],
+    description: 'Student dashboard for FHNW with i18n, dark mode, campus maps, and live transit info.',
+    badges: ['Open Source', 'Multi-language'],
+    tech: ['Next.js', 'Framer', 'Leaflet'],
     openSource: true
   },
   {
@@ -136,6 +136,16 @@ export const projects: Project[] = [
   },
   // Music & Labels
   {
+    id: 'peak-plugins',
+    title: 'Peak Plugins - Lofinator',
+    category: 'music',
+    image: '/assets/images/peak-plugins-lofinator.png',
+    href: 'https://plugins.peaktwilight.com',
+    description: 'Free VST/AU plugin that adds instant lofi sauce to any sound. One knob controls three effects: Saturate, Warmth, and Crush.',
+    badges: ['Free VST', 'macOS'],
+    tech: ['C++', 'React', 'Tailwind', 'Framer']
+  },
+  {
     id: 'dreamhop',
     title: 'Dreamhop Music',
     category: 'music',
@@ -176,9 +186,9 @@ export const projects: Project[] = [
     category: 'music',
     image: '/assets/images/peak-twilight-homepage.png',
     href: 'https://peaktwilight.com',
-    description: 'Personal artist homepage for Peak Twilight, a lofi music producer with 100M+ streams. Built with WordPress and Divi, optimized and compressed into a fast static page.',
-    badges: ['Artist Site', '100M+ Streams'],
-    tech: ['WordPress', 'Divi', 'Static']
+    description: 'Personal artist homepage with live Spotify stats, animated backgrounds, and immersive music experience.',
+    badges: ['100M+ Streams', 'Live Spotify Stats'],
+    tech: ['Next.js', 'Tailwind', 'Framer', 'Supabase']
   },
   {
     id: 'peak-twilight-spotify',

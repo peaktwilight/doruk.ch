@@ -1,7 +1,182 @@
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ExternalLink, Github, X } from 'lucide-react'
+import NumberFlow from '@number-flow/react'
 import { type Project } from '../../data/projects'
 import { cn } from '../../lib/utils'
+
+// Live counter config
+const START_DATE = new Date('2021-01-01T00:00:00')
+const TARGET_DATE = new Date('2025-12-31T23:59:59')
+const TARGET_STREAMS = 110000000
+const TARGET_BUNZLI = 9500
+const TARGET_TTSTATS_USERS = 1200
+
+function calculateCurrentValue(target: number) {
+  const now = new Date()
+  const totalDuration = TARGET_DATE.getTime() - START_DATE.getTime()
+  const elapsed = now.getTime() - START_DATE.getTime()
+  const progress = elapsed / totalDuration
+  return Math.floor(target * progress)
+}
+
+// Badge type detection
+function getBadgeType(badge: string, projectId?: string): 'metric' | 'media' | 'award' | 'live-streams' | 'live-bunzli' | 'live-ttstats' | 'default' {
+  // Live animated badges for specific projects
+  if (projectId === 'peak-twilight-web' && /Streams/i.test(badge)) return 'live-streams'
+  if (projectId === 'bunzlimeter' && /Quiz Takers/i.test(badge)) return 'live-bunzli'
+  if (projectId === 'ttstats' && /Monthly Users/i.test(badge)) return 'live-ttstats'
+
+  if (/Streams/i.test(badge) && /\d+M\+/.test(badge)) return 'metric'
+  if (/\d+[KMB]?\+/.test(badge) || /Monthly|Users|Takers/i.test(badge)) return 'metric'
+  if (/SRF|Radio|TV|Feature/i.test(badge)) return 'media'
+  if (/Place|Award|Winner/i.test(badge)) return 'award'
+  return 'default'
+}
+
+// Generic live counter badge for modal (larger size)
+function LiveCounterBadge({
+  target,
+  label,
+  colorScheme
+}: {
+  target: number
+  label: string
+  colorScheme: 'amber' | 'emerald' | 'blue'
+}) {
+  const [value, setValue] = useState(0)
+  const [hasInitialized, setHasInitialized] = useState(false)
+
+  const colors = {
+    amber: {
+      bg: 'from-amber-500/20 to-orange-500/20',
+      text: 'text-amber-300',
+      border: 'border-amber-400/30',
+      dot: 'bg-amber-400',
+      label: 'text-amber-300/70'
+    },
+    emerald: {
+      bg: 'from-emerald-500/20 to-teal-500/20',
+      text: 'text-emerald-300',
+      border: 'border-emerald-400/30',
+      dot: 'bg-emerald-400',
+      label: 'text-emerald-300/70'
+    },
+    blue: {
+      bg: 'from-blue-500/20 to-cyan-500/20',
+      text: 'text-blue-300',
+      border: 'border-blue-400/30',
+      dot: 'bg-blue-400',
+      label: 'text-blue-300/70'
+    }
+  }
+
+  const scheme = colors[colorScheme]
+
+  useEffect(() => {
+    const initTimer = setTimeout(() => {
+      setValue(calculateCurrentValue(target))
+      setHasInitialized(true)
+    }, 300)
+    return () => clearTimeout(initTimer)
+  }, [target])
+
+  useEffect(() => {
+    if (!hasInitialized) return
+    const interval = setInterval(() => {
+      setValue(calculateCurrentValue(target))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [hasInitialized, target])
+
+  return (
+    <span className={cn(
+      "inline-flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded-full bg-gradient-to-r border",
+      scheme.bg, scheme.text, scheme.border
+    )}>
+      <span className="relative flex h-2.5 w-2.5">
+        <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", scheme.dot)}></span>
+        <span className={cn("relative inline-flex rounded-full h-2.5 w-2.5", scheme.dot)}></span>
+      </span>
+      <NumberFlow
+        value={value}
+        format={{ notation: 'standard', useGrouping: true }}
+        className="tabular-nums"
+        transformTiming={{ duration: 0 }}
+        spinTiming={{ duration: 1500, easing: 'ease-out' }}
+      />
+      <span className={cn("font-medium", scheme.label)}>{label}</span>
+    </span>
+  )
+}
+
+// Specific live badges
+function LiveStreamBadge() {
+  return <LiveCounterBadge target={TARGET_STREAMS} label="streams" colorScheme="amber" />
+}
+
+function LiveBunzliBadge() {
+  return <LiveCounterBadge target={TARGET_BUNZLI} label="quiz takers" colorScheme="emerald" />
+}
+
+function LiveTTStatsBadge() {
+  return <LiveCounterBadge target={TARGET_TTSTATS_USERS} label="monthly users" colorScheme="blue" />
+}
+
+function ModalBadge({ badge, projectId }: { badge: string; projectId?: string }) {
+  const type = getBadgeType(badge, projectId)
+
+  if (type === 'live-streams') {
+    return <LiveStreamBadge />
+  }
+
+  if (type === 'live-bunzli') {
+    return <LiveBunzliBadge />
+  }
+
+  if (type === 'live-ttstats') {
+    return <LiveTTStatsBadge />
+  }
+
+  if (type === 'metric') {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/30">
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        {badge}
+      </span>
+    )
+  }
+
+  if (type === 'media') {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold rounded-full bg-gradient-to-r from-rose-500/20 to-pink-500/20 text-rose-300 border border-rose-500/30">
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+        {badge}
+      </span>
+    )
+  }
+
+  if (type === 'award') {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-300 border border-yellow-500/30">
+        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+        </svg>
+        {badge}
+      </span>
+    )
+  }
+
+  return (
+    <span className="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+      {badge}
+    </span>
+  )
+}
 
 // Tech badge color mapping
 const techColors: Record<string, string> = {
@@ -56,11 +231,15 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           />
 
           {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+            onClick={onClose}
+          >
             <motion.div
               layoutId={`project-card-${project.id}`}
               className="relative w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-3xl bg-neutral-950 border border-white/[0.08]"
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              transition={{ type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
             >
               {/* Close button */}
               <button
@@ -73,8 +252,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               <div className="max-h-[90vh] overflow-y-auto">
                 {/* Hero Image */}
                 <div className="relative h-64 md:h-80 overflow-hidden">
-                  <motion.img
-                    layoutId={`project-image-${project.id}`}
+                  <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover object-top"
@@ -83,8 +261,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
                   {/* Category + Live status overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
-                    <motion.span
-                      layoutId={`project-category-${project.id}`}
+                    <span
                       className={cn(
                         'px-3 py-1.5 text-xs font-bold uppercase tracking-widest rounded-full',
                         'bg-black/60 backdrop-blur-sm border',
@@ -94,7 +271,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       )}
                     >
                       {categoryLabels[project.category]}
-                    </motion.span>
+                    </span>
 
                     {project.href && (
                       <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30">
@@ -108,12 +285,9 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 {/* Content */}
                 <div className="p-6 md:p-8">
                   {/* Title */}
-                  <motion.h2
-                    layoutId={`project-title-${project.id}`}
-                    className="text-2xl md:text-3xl font-serif text-white mb-4 tracking-tight"
-                  >
+                  <h2 className="text-2xl md:text-3xl font-serif text-white mb-4 tracking-tight">
                     {project.title}
-                  </motion.h2>
+                  </h2>
 
                   {/* Tech stack */}
                   {project.tech && project.tech.length > 0 && (
@@ -137,12 +311,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   {project.badges && project.badges.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-5">
                       {project.badges.map((badge) => (
-                        <span
-                          key={badge}
-                          className="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                        >
-                          {badge}
-                        </span>
+                        <ModalBadge key={badge} badge={badge} projectId={project.id} />
                       ))}
                     </div>
                   )}

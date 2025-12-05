@@ -24,7 +24,7 @@ const achievements = {
 
 export function AboutStrip() {
   return (
-    <section id="languages" className="py-20 md:py-28 overflow-hidden">
+    <section id="languages" className="py-24 md:py-32 overflow-hidden">
       {/* Section header - matching other sections */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -32,9 +32,9 @@ export function AboutStrip() {
         viewport={{ once: true }}
         className="text-center mb-16"
       >
-        <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Multilingual</span>
+        <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">5 Languages</span>
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
-          Languages I Speak
+          How I Say Hello
         </h2>
       </motion.div>
 
@@ -72,7 +72,7 @@ export function AboutStrip() {
       </div>
 
       {/* Achievements - Featured + Credentials */}
-      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

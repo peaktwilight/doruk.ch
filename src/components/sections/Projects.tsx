@@ -1,8 +1,41 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import NumberFlow from '@number-flow/react'
 import { projects, type Project } from '../../data/projects'
 import { cn } from '../../lib/utils'
 import { ProjectModal } from '../ui/ProjectModal'
+
+// Live counter config
+const START_DATE = new Date('2021-01-01T00:00:00')
+const TARGET_DATE = new Date('2025-12-31T23:59:59')
+const TARGET_STREAMS = 110000000
+const TARGET_BUNZLI = 9500
+const TARGET_TTSTATS_USERS = 1200
+
+// Tech stack for marquee
+const techStack = {
+  row1: ['React', 'Python', 'PostgreSQL', 'Docker', 'SIEM', 'TypeScript', 'FastAPI', 'MongoDB', 'Kubernetes', 'EDR', 'Next.js', 'Node.js', 'MySQL', 'Prometheus', 'SOAR'],
+  row2: ['AWS', 'Git', 'Tailwind', 'Java', 'Grafana', 'Swimlane', 'Vercel', 'Linux', 'CSS3', 'PHP', 'Nginx', 'Incident Response', 'Firebase', 'Bash', 'HTML5'],
+  row3: ['Logic Pro', 'Ableton Live', 'Traefik', 'Loki', 'Redis', 'Spotify API', 'Audio Engineering', 'Mixing', 'Watchtower', 'Uptime Kuma', 'Firestore', 'REST APIs', 'Mastering'],
+}
+
+function calculateCurrentValue(target: number) {
+  const now = new Date()
+  const totalDuration = TARGET_DATE.getTime() - START_DATE.getTime()
+  const elapsed = now.getTime() - START_DATE.getTime()
+  const progress = elapsed / totalDuration
+  return Math.floor(target * progress)
+}
+
+function formatCompactNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M'
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(0) + 'K'
+  }
+  return num.toString()
+}
 
 // Tech badge color mapping
 const techColors: Record<string, string> = {
@@ -25,6 +58,7 @@ const techColors: Record<string, string> = {
   'WordPress': 'text-blue-400',
   'Traefik': 'text-cyan-300',
   'MQTT': 'text-lime-400',
+  'C++': 'text-blue-500',
 }
 
 // Bento grid cell sizes - 3 column grid
@@ -35,13 +69,15 @@ const cellConfig: Record<CellSize, {
   gridClass: string
   imgHeight: string
   showDescription: boolean
+  descriptionLines: number
   showAllTech: boolean
   titleSize: string
 }> = {
   single: {
     gridClass: 'col-span-1',
     imgHeight: 'h-28 sm:h-32',
-    showDescription: false,
+    showDescription: true,
+    descriptionLines: 1,
     showAllTech: false,
     titleSize: 'text-sm'
   },
@@ -49,6 +85,7 @@ const cellConfig: Record<CellSize, {
     gridClass: 'col-span-1 sm:col-span-2 sm:row-span-2',
     imgHeight: 'h-40 sm:h-[calc(100%-5rem)]',
     showDescription: true,
+    descriptionLines: 2,
     showAllTech: true,
     titleSize: 'text-lg sm:text-xl'
   },
@@ -56,23 +93,183 @@ const cellConfig: Record<CellSize, {
     gridClass: 'col-span-1 sm:col-span-2 sm:row-span-2 sm:col-start-2',
     imgHeight: 'h-40 sm:h-[calc(100%-5rem)]',
     showDescription: true,
+    descriptionLines: 2,
     showAllTech: true,
     titleSize: 'text-lg sm:text-xl'
   },
+}
+
+// Badge type detection for special styling
+function getBadgeType(badge: string, projectId?: string): 'metric' | 'media' | 'award' | 'live-streams' | 'live-bunzli' | 'live-ttstats' | 'default' {
+  // Live animated badges for specific projects
+  if (projectId === 'peak-twilight-web' && /Streams/i.test(badge)) return 'live-streams'
+  if (projectId === 'bunzlimeter' && /Quiz Takers/i.test(badge)) return 'live-bunzli'
+  if (projectId === 'ttstats' && /Monthly Users/i.test(badge)) return 'live-ttstats'
+
+  if (/Streams/i.test(badge) && /\d+M\+/.test(badge)) return 'metric'
+  if (/\d+[KMB]?\+/.test(badge) || /Monthly|Users|Takers/i.test(badge)) return 'metric'
+  if (/SRF|Radio|TV|Feature/i.test(badge)) return 'media'
+  if (/Place|Award|Winner/i.test(badge)) return 'award'
+  return 'default'
+}
+
+// Generic live counter badge component
+function LiveCounterBadge({
+  target,
+  label,
+  colorScheme
+}: {
+  target: number
+  label: string
+  colorScheme: 'amber' | 'emerald' | 'blue'
+}) {
+  const [value, setValue] = useState(0)
+  const [hasInitialized, setHasInitialized] = useState(false)
+
+  const colors = {
+    amber: {
+      bg: 'from-amber-500/30 to-orange-500/30',
+      text: 'text-amber-200',
+      border: 'border-amber-400/40',
+      shadow: 'shadow-amber-500/20',
+      dot: 'bg-amber-400',
+      label: 'text-amber-300/70'
+    },
+    emerald: {
+      bg: 'from-emerald-500/30 to-teal-500/30',
+      text: 'text-emerald-200',
+      border: 'border-emerald-400/40',
+      shadow: 'shadow-emerald-500/20',
+      dot: 'bg-emerald-400',
+      label: 'text-emerald-300/70'
+    },
+    blue: {
+      bg: 'from-blue-500/30 to-cyan-500/30',
+      text: 'text-blue-200',
+      border: 'border-blue-400/40',
+      shadow: 'shadow-blue-500/20',
+      dot: 'bg-blue-400',
+      label: 'text-blue-300/70'
+    }
+  }
+
+  const scheme = colors[colorScheme]
+
+  useEffect(() => {
+    const initTimer = setTimeout(() => {
+      setValue(calculateCurrentValue(target))
+      setHasInitialized(true)
+    }, 500)
+    return () => clearTimeout(initTimer)
+  }, [target])
+
+  useEffect(() => {
+    if (!hasInitialized) return
+    const interval = setInterval(() => {
+      setValue(calculateCurrentValue(target))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [hasInitialized, target])
+
+  return (
+    <span className={cn(
+      "inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold rounded-md bg-gradient-to-r border shadow-sm",
+      scheme.bg, scheme.text, scheme.border, scheme.shadow
+    )}>
+      <span className="relative flex h-2 w-2">
+        <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", scheme.dot)}></span>
+        <span className={cn("relative inline-flex rounded-full h-2 w-2", scheme.dot)}></span>
+      </span>
+      <NumberFlow
+        value={value}
+        format={{ notation: 'standard', useGrouping: true }}
+        className="tabular-nums"
+        transformTiming={{ duration: 0 }}
+        spinTiming={{ duration: 1500, easing: 'ease-out' }}
+      />
+      <span className={scheme.label}>{label}</span>
+    </span>
+  )
+}
+
+// Specific live badges
+function LiveStreamBadge() {
+  return <LiveCounterBadge target={TARGET_STREAMS} label="streams" colorScheme="amber" />
+}
+
+function LiveBunzliBadge() {
+  return <LiveCounterBadge target={TARGET_BUNZLI} label="quiz takers" colorScheme="emerald" />
+}
+
+function LiveTTStatsBadge() {
+  return <LiveCounterBadge target={TARGET_TTSTATS_USERS} label="monthly users" colorScheme="blue" />
+}
+
+function BadgeWithIcon({ badge, projectId }: { badge: string; projectId?: string }) {
+  const type = getBadgeType(badge, projectId)
+
+  if (type === 'live-streams') {
+    return <LiveStreamBadge />
+  }
+
+  if (type === 'live-bunzli') {
+    return <LiveBunzliBadge />
+  }
+
+  if (type === 'live-ttstats') {
+    return <LiveTTStatsBadge />
+  }
+
+  if (type === 'metric') {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/30 shadow-sm shadow-amber-500/10">
+        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        {badge}
+      </span>
+    )
+  }
+
+  if (type === 'media') {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-gradient-to-r from-rose-500/20 to-pink-500/20 text-rose-300 border border-rose-500/30">
+        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+        {badge}
+      </span>
+    )
+  }
+
+  if (type === 'award') {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-300 border border-yellow-500/30 shadow-sm shadow-yellow-500/10">
+        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+        </svg>
+        {badge}
+      </span>
+    )
+  }
+
+  return (
+    <span className="px-2 py-0.5 text-[10px] font-medium rounded-md bg-white/[0.04] border border-white/[0.08] text-neutral-400">
+      {badge}
+    </span>
+  )
 }
 
 function ProjectCard({
   project,
   size = 'single',
   index = 0,
-  onClick,
-  isRevealed = false
+  onClick
 }: {
   project: Project
   size?: CellSize
   index?: number
   onClick: () => void
-  isRevealed?: boolean
 }) {
   const config = cellConfig[size]
 
@@ -103,14 +300,13 @@ function ProjectCard({
         config.gridClass,
         'flex flex-col'
       )}
-      initial={isRevealed ? { opacity: 0 } : { opacity: 0, y: 30, scale: 0.95 }}
-      animate={isRevealed ? { opacity: 1 } : undefined}
-      whileInView={isRevealed ? undefined : { opacity: 1, y: 0, scale: 1 }}
-      viewport={isRevealed ? undefined : { once: true, margin: '-80px' }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: isRevealed ? 0.4 : 0.5,
-        delay: isRevealed ? Math.min((index - 12) * 0.05, 0.4) : Math.min(index * 0.03, 0.3),
-        ease: [0.21, 0.47, 0.32, 0.98]
+        duration: 0.4,
+        delay: Math.min(index * 0.04, 0.4),
+        ease: [0.21, 0.47, 0.32, 0.98],
+        layout: { type: 'tween', duration: 0.3, ease: [0.32, 0.72, 0, 1] }
       }}
       whileHover={{ y: -4 }}
     >
@@ -123,8 +319,7 @@ function ProjectCard({
 
       {/* Image section - grows to fill available space */}
       <div className="relative overflow-hidden flex-1 min-h-[100px]">
-        <motion.img
-          layoutId={`project-image-${project.id}`}
+        <img
           src={project.image}
           alt={project.title}
           className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
@@ -136,10 +331,7 @@ function ProjectCard({
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
 
         {/* Category pill */}
-        <motion.div
-          layoutId={`project-category-${project.id}`}
-          className="absolute top-3 left-3"
-        >
+        <div className="absolute top-3 left-3">
           <span className={cn(
             'px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full',
             'bg-black/60 backdrop-blur-sm border',
@@ -149,7 +341,7 @@ function ProjectCard({
           )}>
             {categoryLabels[project.category]}
           </span>
-        </motion.div>
+        </div>
 
         {/* Live indicator */}
         {project.href && (
@@ -166,8 +358,7 @@ function ProjectCard({
         isFeatured ? 'p-4 lg:p-5' : 'p-2.5 lg:p-3'
       )}>
         {/* Title */}
-        <motion.h3
-          layoutId={`project-title-${project.id}`}
+        <h3
           className={cn(
             'font-semibold text-white leading-tight',
             'group-hover:text-amber-200 transition-colors duration-300',
@@ -175,12 +366,21 @@ function ProjectCard({
           )}
         >
           {project.title}
-        </motion.h3>
+        </h3>
 
-        {/* Tech stack */}
-        {project.tech && project.tech.length > 0 && (
+        {/* Achievement badges - show prominently */}
+        {project.badges && project.badges.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2">
-            {project.tech.slice(0, config.showAllTech ? 6 : 2).map((tech) => (
+            {project.badges.slice(0, isFeatured ? 3 : 2).map((badge) => (
+              <BadgeWithIcon key={badge} badge={badge} projectId={project.id} />
+            ))}
+          </div>
+        )}
+
+        {/* Tech stack - only on featured cards */}
+        {isFeatured && project.tech && project.tech.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {project.tech.slice(0, 4).map((tech) => (
               <span
                 key={tech}
                 className={cn(
@@ -196,9 +396,12 @@ function ProjectCard({
           </div>
         )}
 
-        {/* Description for larger cards */}
+        {/* Description */}
         {config.showDescription && project.description && (
-          <p className="mt-2 text-xs text-neutral-500 leading-relaxed line-clamp-2 group-hover:text-neutral-400 transition-colors">
+          <p className={cn(
+            'mt-1.5 text-[11px] text-neutral-500 leading-relaxed group-hover:text-neutral-400 transition-colors',
+            config.descriptionLines === 1 ? 'line-clamp-1' : 'line-clamp-2'
+          )}>
             {project.description}
           </p>
         )}
@@ -244,34 +447,34 @@ export function Projects() {
   // Bento grid layout - 3 columns
   // Featured items span 2x2 (takes space of 4 singles)
   // Layout: Featured (2x2) + 2 singles stacked, or 3 singles in a row
+  // Order by importance: user count, awards, virality, impact
   const gridItems: Array<{ project: Project; size: CellSize }> = [
-    // Block 1: Featured left + 2 singles right
-    { project: getProject('peak-twilight-web')!, size: 'featured-left' },
-    { project: getProject('bunzlimeter')!, size: 'single' },
+    // Block 1: TTStats (1K+ users, 2nd FHNW award) - Most prominent
+    { project: getProject('ttstats')!, size: 'featured-left' },
     { project: getProject('fhnw-dashboard')!, size: 'single' },
-
-    // Block 2: 2 singles left + Featured right
-    { project: getProject('ttstats')!, size: 'single' },
     { project: getProject('linear-algebra')!, size: 'single' },
-    { project: getProject('migros-ai-search')!, size: 'featured-right' },
 
-    // Row of 3 singles
+    // Block 2: Bunzlimeter (9K+ users, SRF viral)
+    { project: getProject('bunzlimeter')!, size: 'featured-left' },
+    { project: getProject('migros-ai-search')!, size: 'single' },
     { project: getProject('witelli20')!, size: 'single' },
+
+    // Block 3: Peak Twilight (100M+ streams)
+    { project: getProject('peak-twilight-web')!, size: 'featured-left' },
     { project: getProject('galaxus')!, size: 'single' },
     { project: getProject('thatsapp')!, size: 'single' },
 
-    // Block 3: Featured left + 2 singles right
-    { project: getProject('peakops')!, size: 'featured-left' },
+    // Block 4: Infrastructure showcase
     { project: getProject('unidocs')!, size: 'single' },
-    { project: getProject('peak-twilight-spotify')!, size: 'single' },
-
-    // Block 4: 2 singles left + Featured right
-    { project: getProject('dreamhop')!, size: 'single' },
     { project: getProject('password-cleaner')!, size: 'single' },
-    { project: getProject('soothe-records')!, size: 'featured-right' },
+    { project: getProject('peakops')!, size: 'featured-right' },
+
+    // Block 5: Music label (30M+ streams)
+    { project: getProject('soothe-records')!, size: 'featured-left' },
+    { project: getProject('dreamhop')!, size: 'single' },
+    { project: getProject('soothe-studios')!, size: 'single' },
 
     // Rest as singles
-    { project: getProject('soothe-studios')!, size: 'single' },
     { project: getProject('uptime-kuma')!, size: 'single' },
     { project: getProject('glances')!, size: 'single' },
     { project: getProject('grafana')!, size: 'single' },
@@ -279,15 +482,16 @@ export function Projects() {
     { project: getProject('traefik')!, size: 'single' },
     { project: getProject('watchtower')!, size: 'single' },
     { project: getProject('nocodb')!, size: 'single' },
+    { project: getProject('peak-plugins')!, size: 'single' },
     { project: getProject('soothe-bot')!, size: 'single' },
     { project: getProject('playlist-rotator')!, size: 'single' },
     { project: getProject('waha')!, size: 'single' },
     { project: getProject('studio-dreamhop')!, size: 'single' },
   ].filter(item => item.project)
 
-  // Show first 12 items initially, all when expanded
-  const visibleItems = showAll ? gridItems : gridItems.slice(0, 12)
-  const hasMore = gridItems.length > 12
+  // Show first 6 items initially, all when expanded
+  const visibleItems = showAll ? gridItems : gridItems.slice(0, 6)
+  const hasMore = gridItems.length > 6
 
   return (
     <>
@@ -304,13 +508,65 @@ export function Projects() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-8"
           >
             <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Portfolio</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
-              Selected Work
+              What I Build
             </h2>
           </motion.div>
+
+          {/* Tech Stack Marquee */}
+          <div className="relative mb-12 overflow-hidden">
+            {/* Fade edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-neutral-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-neutral-950 to-transparent z-10 pointer-events-none" />
+
+            {/* Row 1 - Forward */}
+            <div
+              className="flex animate-marquee-forward mb-2"
+              style={{ '--duration': '35s' } as React.CSSProperties}
+            >
+              {[...techStack.row1, ...techStack.row1].map((tech, i) => (
+                <span
+                  key={i}
+                  className="mx-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* Row 2 - Reverse */}
+            <div
+              className="flex animate-marquee-reverse mb-2"
+              style={{ '--duration': '40s' } as React.CSSProperties}
+            >
+              {[...techStack.row2, ...techStack.row2].map((tech, i) => (
+                <span
+                  key={i}
+                  className="mx-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* Row 3 - Forward slower */}
+            <div
+              className="flex animate-marquee-forward"
+              style={{ '--duration': '45s' } as React.CSSProperties}
+            >
+              {[...techStack.row3, ...techStack.row3].map((tech, i) => (
+                <span
+                  key={i}
+                  className="mx-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
 
           {/* Bento Grid - 3 columns with auto rows */}
           <div className="relative">
@@ -322,7 +578,6 @@ export function Projects() {
                   size={item.size}
                   index={index}
                   onClick={() => setSelectedProject(item.project)}
-                  isRevealed={showAll && index >= 12}
                 />
               ))}
             </div>
@@ -342,7 +597,7 @@ export function Projects() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <span className="text-sm font-medium text-neutral-300 group-hover:text-white transition-colors">
-                      Show {gridItems.length - 12} more projects
+                      Show {gridItems.length - 6} more projects
                     </span>
                     <svg
                       className="w-4 h-4 text-amber-500 transition-transform duration-300 group-hover:translate-y-0.5"

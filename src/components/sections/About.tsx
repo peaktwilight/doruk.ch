@@ -1,15 +1,9 @@
 import { motion } from 'framer-motion'
 
-const techStack = {
-  row1: ['React', 'Python', 'PostgreSQL', 'Docker', 'SIEM', 'TypeScript', 'FastAPI', 'MongoDB', 'Kubernetes', 'EDR', 'Next.js', 'Node.js', 'MySQL', 'Prometheus', 'SOAR'],
-  row2: ['AWS', 'Git', 'Tailwind', 'Java', 'Grafana', 'Swimlane', 'Vercel', 'Linux', 'CSS3', 'PHP', 'Nginx', 'Incident Response', 'Firebase', 'Bash', 'HTML5'],
-  row3: ['Logic Pro', 'Ableton Live', 'Traefik', 'Loki', 'Redis', 'Spotify API', 'Audio Engineering', 'Mixing', 'Watchtower', 'Uptime Kuma', 'Firestore', 'REST APIs', 'Mastering'],
-}
-
 export function About() {
   return (
-    <section id="about" className="py-24 md:py-32 overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+    <section id="about" className="py-24 md:py-32">
+      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -55,70 +49,6 @@ export function About() {
             and create chill music for millions of people worldwide.
           </p>
         </motion.div>
-      </div>
-
-      {/* Tech Stack Marquee */}
-      <div className="relative">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-neutral-950 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-neutral-950 to-transparent z-10 pointer-events-none" />
-
-        {/* Label */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mb-6"
-        >
-          <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-700 font-mono">
-            "It Works on My Machine"
-          </span>
-        </motion.div>
-
-        {/* Row 1 - Forward */}
-        <div
-          className="flex animate-marquee-forward mb-3"
-          style={{ '--duration': '40s' } as React.CSSProperties}
-        >
-          {[...techStack.row1, ...techStack.row1].map((tech, i) => (
-            <span
-              key={i}
-              className="mx-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap hover:text-neutral-300 hover:border-white/[0.12] transition-colors"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        {/* Row 2 - Reverse */}
-        <div
-          className="flex animate-marquee-reverse mb-3"
-          style={{ '--duration': '45s' } as React.CSSProperties}
-        >
-          {[...techStack.row2, ...techStack.row2].map((tech, i) => (
-            <span
-              key={i}
-              className="mx-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap hover:text-neutral-300 hover:border-white/[0.12] transition-colors"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        {/* Row 3 - Forward slower */}
-        <div
-          className="flex animate-marquee-forward"
-          style={{ '--duration': '50s' } as React.CSSProperties}
-        >
-          {[...techStack.row3, ...techStack.row3].map((tech, i) => (
-            <span
-              key={i}
-              className="mx-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap hover:text-neutral-300 hover:border-white/[0.12] transition-colors"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   )
