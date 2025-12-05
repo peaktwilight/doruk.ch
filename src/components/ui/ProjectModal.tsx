@@ -236,10 +236,12 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             onClick={onClose}
           >
             <motion.div
-              layoutId={`project-card-${project.id}`}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
               className="relative w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-3xl bg-neutral-950 border border-white/[0.08]"
               onClick={(e) => e.stopPropagation()}
-              transition={{ type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
             >
               {/* Close button */}
               <button

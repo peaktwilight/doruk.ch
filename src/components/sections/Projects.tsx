@@ -273,12 +273,6 @@ function ProjectCard({
 }) {
   const config = cellConfig[size]
 
-  const categoryColors = {
-    webapp: 'from-blue-500/20 to-cyan-500/10 border-blue-500/30',
-    music: 'from-purple-500/20 to-pink-500/10 border-purple-500/30',
-    infrastructure: 'from-emerald-500/20 to-teal-500/10 border-emerald-500/30'
-  }
-
   const categoryLabels = {
     webapp: 'Web',
     music: 'Music',
@@ -288,37 +282,23 @@ function ProjectCard({
   const isFeatured = size === 'featured-left' || size === 'featured-right'
 
   return (
-    <motion.article
-      layoutId={`project-card-${project.id}`}
+    <article
       onClick={onClick}
       className={cn(
         'group relative cursor-pointer overflow-hidden rounded-2xl',
         'bg-gradient-to-br from-neutral-900/80 to-neutral-950/90',
         'border border-white/[0.06] hover:border-white/[0.12]',
-        'transition-all duration-500 ease-out',
+        'transition-all duration-300 ease-out',
         'hover:shadow-2xl hover:shadow-amber-500/5',
         config.gridClass,
         'flex flex-col'
       )}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.4,
-        delay: Math.min(index * 0.04, 0.4),
-        ease: [0.21, 0.47, 0.32, 0.98],
-        layout: { type: 'tween', duration: 0.3, ease: [0.32, 0.72, 0, 1] }
-      }}
-      whileHover={{ y: -4 }}
     >
-      {/* Glow effect on hover */}
+      {/* Image section */}
       <div className={cn(
-        'absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500',
-        'bg-gradient-to-br',
-        categoryColors[project.category]
-      )} />
-
-      {/* Image section - grows to fill available space */}
-      <div className="relative overflow-hidden flex-1 min-h-[100px]">
+        'relative overflow-hidden',
+        isFeatured ? 'h-56 sm:h-80' : 'h-32 sm:h-36'
+      )}>
         <img
           src={project.image}
           alt={project.title}
@@ -414,14 +394,24 @@ function ProjectCard({
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
 
+type FilterCategory = 'all' | 'webapp' | 'music' | 'infrastructure'
+
+const filterOptions: { value: FilterCategory; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'webapp', label: 'Web' },
+  { value: 'music', label: 'Music' },
+  { value: 'infrastructure', label: 'Infra' },
+]
+
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [showAll, setShowAll] = useState(false)
+  const [filter, setFilter] = useState<FilterCategory>('all')
   const showMoreRef = useRef<HTMLDivElement>(null)
 
   const handleShowMore = () => {
@@ -445,11 +435,9 @@ export function Projects() {
   const getProject = (id: string) => projects.find(p => p.id === id)
 
   // Bento grid layout - 3 columns
-  // Featured items span 2x2 (takes space of 4 singles)
-  // Layout: Featured (2x2) + 2 singles stacked, or 3 singles in a row
-  // Order by importance: user count, awards, virality, impact
+  // All featured items use featured-left for consistent layout
   const gridItems: Array<{ project: Project; size: CellSize }> = [
-    // Block 1: TTStats (1K+ users, 2nd FHNW award) - Most prominent
+    // Block 1: TTStats (1K+ users, 2nd FHNW award)
     { project: getProject('ttstats')!, size: 'featured-left' },
     { project: getProject('fhnw-dashboard')!, size: 'single' },
     { project: getProject('linear-algebra')!, size: 'single' },
@@ -464,17 +452,15 @@ export function Projects() {
     { project: getProject('galaxus')!, size: 'single' },
     { project: getProject('thatsapp')!, size: 'single' },
 
-    // Block 4: Infrastructure showcase
-    { project: getProject('unidocs')!, size: 'single' },
-    { project: getProject('password-cleaner')!, size: 'single' },
-    { project: getProject('peakops')!, size: 'featured-right' },
-
-    // Block 5: Music label (30M+ streams)
+    // Block 4: Soothe Records (30M+ streams)
     { project: getProject('soothe-records')!, size: 'featured-left' },
     { project: getProject('dreamhop')!, size: 'single' },
-    { project: getProject('soothe-studios')!, size: 'single' },
+    { project: getProject('peakops')!, size: 'single' },
 
     // Rest as singles
+    { project: getProject('unidocs')!, size: 'single' },
+    { project: getProject('password-cleaner')!, size: 'single' },
+    { project: getProject('soothe-studios')!, size: 'single' },
     { project: getProject('uptime-kuma')!, size: 'single' },
     { project: getProject('glances')!, size: 'single' },
     { project: getProject('grafana')!, size: 'single' },
@@ -489,9 +475,14 @@ export function Projects() {
     { project: getProject('studio-dreamhop')!, size: 'single' },
   ].filter(item => item.project)
 
-  // Show first 6 items initially, all when expanded
-  const visibleItems = showAll ? gridItems : gridItems.slice(0, 6)
-  const hasMore = gridItems.length > 6
+  // Filter items by category
+  const filteredItems = filter === 'all'
+    ? gridItems
+    : gridItems.filter(item => item.project.category === filter)
+
+  // Show first 9 items initially (3 complete blocks), all when expanded
+  const visibleItems = showAll ? filteredItems : filteredItems.slice(0, 9)
+  const hasMore = filteredItems.length > 9
 
   return (
     <>
@@ -514,6 +505,46 @@ export function Projects() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
               What I Build
             </h2>
+          </motion.div>
+
+          {/* Filter Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex justify-center mb-10"
+          >
+            <div className="relative flex">
+              {/* Sliding indicator */}
+              <motion.div
+                className="absolute inset-y-0 rounded-lg bg-amber-500/15 border border-amber-500/30"
+                initial={false}
+                animate={{
+                  left: `${filterOptions.findIndex(o => o.value === filter) * 25}%`,
+                }}
+                style={{ width: '25%' }}
+                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              />
+
+              {/* Filter buttons */}
+              {filterOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setFilter(option.value)
+                    setShowAll(false)
+                  }}
+                  className={cn(
+                    'relative z-10 w-20 py-2.5 text-xs font-medium transition-colors duration-200',
+                    filter === option.value
+                      ? 'text-amber-300'
+                      : 'text-neutral-500 hover:text-neutral-300'
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </motion.div>
 
           {/* Tech Stack Marquee */}
@@ -570,7 +601,7 @@ export function Projects() {
 
           {/* Bento Grid - 3 columns with auto rows */}
           <div className="relative">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 auto-rows-fr sm:[grid-auto-rows:minmax(160px,1fr)] sm:[grid-auto-flow:dense]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:[grid-auto-rows:minmax(140px,auto)] sm:[grid-auto-flow:dense]">
               {visibleItems.map((item, index) => (
                 <ProjectCard
                   key={item.project.id}
@@ -597,7 +628,7 @@ export function Projects() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <span className="text-sm font-medium text-neutral-300 group-hover:text-white transition-colors">
-                      Show {gridItems.length - 6} more projects
+                      Show {filteredItems.length - 9} more projects
                     </span>
                     <svg
                       className="w-4 h-4 text-amber-500 transition-transform duration-300 group-hover:translate-y-0.5"

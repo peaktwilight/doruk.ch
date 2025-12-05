@@ -62,9 +62,9 @@ export const projects: Project[] = [
     category: 'webapp',
     image: '/assets/images/TTStats-static.jpg',
     href: 'https://ttstats.ch',
-    description: 'Next-gen Swiss Table Tennis statistics platform. Web app + native iOS/Android apps tracking 5,500+ players, 69K+ matches across 249 clubs.',
-    badges: ['1K+ Monthly Users', '2nd Place FHNW'],
-    tech: ['Kotlin', 'Next.js', 'Python', 'FastAPI'],
+    description: 'Swiss Table Tennis statistics platform with web app + native iOS/Android apps (Kotlin Multiplatform). Tracking 5,500+ players, 69K+ matches across 249 clubs.',
+    badges: ['1K+ Monthly Users', '2nd Place Swiss Startup Award'],
+    tech: ['Kotlin Multiplatform', 'Next.js', 'Python', 'FastAPI'],
     appStoreUrl: 'https://apps.apple.com/ch/app/ttstats/id6744279609',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.peaktwilight.ttstats'
   },

@@ -155,7 +155,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-neutral-500 mb-10 max-w-xl mx-auto leading-relaxed"
         >
-          If I'm not sleeping, studying, or working my day job, I'm building tools that{' '}
+          Building tools that{' '}
           <span className="inline-flex items-baseline">
             <InlineUserCount />
           </span>{' '}

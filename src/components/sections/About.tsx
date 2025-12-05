@@ -1,4 +1,55 @@
-import { motion } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import NumberFlow from '@number-flow/react'
+
+// Live stream counter config
+const START_DATE = new Date('2021-01-01T00:00:00')
+const TARGET_DATE = new Date('2025-12-31T23:59:59')
+const TARGET_STREAMS = 110000000
+
+function calculateCurrentStreams() {
+  const now = new Date()
+  const totalDuration = TARGET_DATE.getTime() - START_DATE.getTime()
+  const elapsed = now.getTime() - START_DATE.getTime()
+  const progress = elapsed / totalDuration
+  return Math.floor(TARGET_STREAMS * progress)
+}
+
+function InlineStreamCount() {
+  const [displayValue, setDisplayValue] = useState(0)
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    if (isInView && !hasAnimated) {
+      const timer = setTimeout(() => {
+        setDisplayValue(calculateCurrentStreams())
+        setHasAnimated(true)
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [isInView, hasAnimated])
+
+  useEffect(() => {
+    if (!hasAnimated) return
+    const interval = setInterval(() => {
+      setDisplayValue(calculateCurrentStreams())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [hasAnimated])
+
+  return (
+    <span ref={ref} className="text-white font-medium tabular-nums">
+      <NumberFlow
+        value={displayValue}
+        format={{ notation: 'standard', useGrouping: true }}
+        transformTiming={{ duration: 0 }}
+        spinTiming={{ duration: 1500, easing: 'ease-out' }}
+      />
+    </span>
+  )
+}
 
 export function About() {
   return (
@@ -11,9 +62,9 @@ export function About() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Origin Story</span>
+          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">About Me</span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
-            How It Started
+            How It All Started
           </h2>
         </motion.div>
 
@@ -29,18 +80,15 @@ export function About() {
             When I was 7 years old, I tried downloading Minecraft beta on my dad's computer and
             accidentally installed malware instead. That epic fail sparked an obsession with
             figuring out how computers work <span className="text-neutral-500">(and how they break)</span>.
-          </p>
-
-          <p className="text-neutral-400 leading-relaxed text-center max-w-2xl mx-auto">
             Fast forward to today: I study CS at FHNW and work as a Cyber Defense Engineer at MGB,
-            protecting Switzerland's largest retail company. That "learning experience" sent me down
-            a rabbit hole through web development, digital marketing, and eventually cybersecurity.
+            protecting Switzerland's largest retail company.
           </p>
 
           <p className="text-neutral-400 leading-relaxed text-center max-w-2xl mx-auto">
-            Along the way, I discovered my love for producing lofi beats and co-founded
-            <span className="text-amber-400"> Soothe Records</span> — a music label that's now
-            achieved over <span className="text-white font-medium">100M+ streams</span> on Spotify.
+            That "learning experience" sent me down a rabbit hole through web development, digital marketing,
+            and eventually cybersecurity. Along the way, I discovered my love for producing lofi beats and
+            co-founded <span className="text-amber-400">Soothe Records</span> — a music label that's now
+            achieved over <InlineStreamCount /> streams on Spotify.
           </p>
 
           <p className="text-neutral-500 leading-relaxed text-center max-w-2xl mx-auto">
