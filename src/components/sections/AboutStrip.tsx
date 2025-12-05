@@ -55,7 +55,7 @@ export function AboutStrip() {
               key={i}
               className="flex items-baseline gap-3 mx-8 md:mx-12 shrink-0"
             >
-              <span className={`font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight ${item.native ? 'text-white/90' : 'text-neutral-500'}`}>
+              <span className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight text-white/90">
                 {item.word}
               </span>
               <div className="flex flex-col gap-0.5">
