@@ -225,13 +225,13 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[60]"
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[110]"
             onClick={onClose}
           />
 
           {/* Modal positioning wrapper */}
           <div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8"
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8"
             onClick={onClose}
           >
             <motion.div

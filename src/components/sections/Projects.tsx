@@ -416,7 +416,7 @@ function ProjectCard({
         'transition-all duration-300 ease-out',
         'hover:shadow-2xl hover:shadow-amber-500/5',
         config.gridClass,
-        'flex flex-col'
+        'flex flex-col h-full'
       )}
       style={{ opacity: isSelected ? 0 : 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -424,7 +424,7 @@ function ProjectCard({
       {/* Image section */}
       <div className={cn(
         'relative overflow-hidden',
-        isFeatured ? 'h-56 sm:h-80' : 'h-32 sm:h-36'
+        isFeatured ? 'flex-1' : 'h-32 sm:h-36'
       )}>
         <motion.img
           layoutId={`image-${project.id}`}
@@ -531,6 +531,18 @@ function ProjectCard({
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [showMore, setShowMore] = useState(false)
+
+  // Lock body scroll when overlay is open
+  useEffect(() => {
+    if (showMore) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [showMore])
 
   // Refs for horizontal scroll
   const sectionRef = useRef<HTMLElement>(null)
@@ -817,7 +829,7 @@ export function Projects() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-[100]"
               onClick={() => setShowMore(false)}
             />
 
@@ -827,7 +839,7 @@ export function Projects() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-50 overflow-y-auto"
+              className="fixed inset-0 z-[100] overflow-y-auto"
             >
               <div className="min-h-screen py-16 px-4 md:px-8">
                 {/* Header */}
@@ -851,7 +863,7 @@ export function Projects() {
                 </div>
 
                 {/* Bento Grid */}
-                <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 auto-rows-fr sm:[grid-auto-rows:minmax(180px,1fr)] sm:[grid-auto-flow:dense]">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 sm:[grid-auto-rows:200px] sm:[grid-auto-flow:dense]">
                   {bentoProjects.map((item, index) => (
                     <motion.div
                       key={item.project.id}

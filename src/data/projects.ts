@@ -223,16 +223,16 @@ export const projects: Project[] = [
     title: 'Portainer',
     category: 'infrastructure',
     image: '/assets/images/portainer-static.jpg',
-    description: 'Web-based Docker container management interface. Manages 20+ production containers.',
-    badges: ['Docker', 'Management']
+    description: 'Self-hosted Docker management for my 20+ production containers. Internal tool - no public access for security reasons.',
+    badges: ['Self-Hosted', 'Docker']
   },
   {
     id: 'traefik',
     title: 'Traefik',
     category: 'infrastructure',
     image: '/assets/images/traefik-static.jpg',
-    description: 'Modern reverse proxy and load balancer with automatic SSL.',
-    badges: ['SSL/TLS', 'Load Balancer']
+    description: 'My reverse proxy handling SSL and routing for all services. Internal dashboard - no public access for security reasons.',
+    badges: ['Self-Hosted', 'SSL/TLS']
   },
   {
     id: 'grafana',
@@ -248,24 +248,24 @@ export const projects: Project[] = [
     title: 'Watchtower',
     category: 'infrastructure',
     image: '/assets/images/watchtower-static.jpg',
-    description: 'Automated Docker container updates and deployment service.',
-    badges: ['Auto-update', 'Scheduled']
+    description: 'Keeps my Docker containers auto-updated with zero downtime. Runs internally on my infrastructure.',
+    badges: ['Self-Hosted', 'Auto-update']
   },
   {
     id: 'nocodb',
     title: 'NocoDB',
     category: 'infrastructure',
     image: '/assets/images/nocodb-static.jpg',
-    description: 'Self-hosted database management interface. Airtable alternative.',
-    badges: ['Database', 'Airtable Alternative']
+    description: 'Self-hosted Airtable alternative I use for internal data management. No public access for security reasons.',
+    badges: ['Self-Hosted', 'Database']
   },
   {
     id: 'soothe-bot',
     title: 'Soothe Discord Bot',
     category: 'infrastructure',
     image: '/assets/images/soothe-discord-bot-static.jpg',
-    description: 'Custom Discord bot for Soothe Records community management.',
-    badges: ['Discord', 'Music Community']
+    description: 'Custom Discord bot I built for Soothe Records community. Runs on my infrastructure.',
+    badges: ['Self-Hosted', 'Discord']
   },
   {
     id: 'playlist-rotator',
@@ -281,7 +281,7 @@ export const projects: Project[] = [
     title: 'Waha WhatsApp API',
     category: 'infrastructure',
     image: '/assets/images/waha-whatsapp-api-static.jpg',
-    description: 'Self-hosted WhatsApp HTTP REST API service.',
-    badges: ['WhatsApp', 'REST API']
+    description: 'Self-hosted WhatsApp API I use for automations. Internal service - no public access for security reasons.',
+    badges: ['Self-Hosted', 'REST API']
   }
 ]
