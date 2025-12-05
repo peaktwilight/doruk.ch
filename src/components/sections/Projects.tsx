@@ -337,7 +337,7 @@ export function Projects() {
                 <div className="relative flex justify-center">
                   <motion.button
                     onClick={handleShowMore}
-                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] transition-all duration-300"
+                    className="group flex items-center gap-3 px-8 py-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] transition-all duration-300"
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.98 }}
                   >

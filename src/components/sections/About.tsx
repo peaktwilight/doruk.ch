@@ -1,122 +1,125 @@
 import { motion } from 'framer-motion'
-import { techStack, languages, achievements } from '../../data/resume'
-import { CSSMarquee } from '../ui/Marquee'
+
+const techStack = {
+  row1: ['React', 'Python', 'PostgreSQL', 'Docker', 'SIEM', 'TypeScript', 'FastAPI', 'MongoDB', 'Kubernetes', 'EDR', 'Next.js', 'Node.js', 'MySQL', 'Prometheus', 'SOAR'],
+  row2: ['AWS', 'Git', 'Tailwind', 'Java', 'Grafana', 'Swimlane', 'Vercel', 'Linux', 'CSS3', 'PHP', 'Nginx', 'Incident Response', 'Firebase', 'Bash', 'HTML5'],
+  row3: ['Logic Pro', 'Ableton Live', 'Traefik', 'Loki', 'Redis', 'Spotify API', 'Audio Engineering', 'Mixing', 'Watchtower', 'Uptime Kuma', 'Firestore', 'REST APIs', 'Mastering'],
+}
 
 export function About() {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-      className="bg-noir-900 border border-noir-800 rounded-card p-6 md:p-8 shadow-elevated"
-    >
-      {/* Header */}
-      <header className="mb-8">
-        <span className="text-label text-amber">Introduction</span>
-        <h2 className="font-serif text-2xl md:text-3xl font-semibold text-noir-50 mt-1">
-          About Me
-        </h2>
-      </header>
+    <section id="about" className="py-24 md:py-32 overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-600">Origin Story</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white mt-3">
+            How It Started
+          </h2>
+        </motion.div>
 
-      {/* Bio */}
-      <div className="space-y-4 text-noir-400 leading-relaxed mb-10 font-sans text-sm">
-        <p>
-          At 7, I accidentally installed malware trying to download Minecraft. That "learning experience"
-          sparked an obsession with understanding how computers work—and how they break.
-        </p>
-        <p>
-          Today I work as a <strong className="text-amber font-medium">Cyber Defense Engineer at Migros</strong>,
-          protecting Switzerland's largest retailer. Alongside, I study CS at FHNW and co-founded{' '}
-          <strong className="text-rose-light font-medium">Soothe Records</strong>—a lofi label with{' '}
-          <strong className="text-amber font-medium">100M+ streams</strong> on Spotify.
-        </p>
-        <p>
-          I also coach table tennis, build AI tools, and create chill music for millions worldwide.
-        </p>
+        {/* Story Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="space-y-6 mb-20"
+        >
+          <p className="text-neutral-300 text-lg md:text-xl leading-relaxed text-center">
+            When I was 7 years old, I tried downloading Minecraft beta on my dad's computer and
+            accidentally installed malware instead. That epic fail sparked an obsession with
+            figuring out how computers work <span className="text-neutral-500">(and how they break)</span>.
+          </p>
+
+          <p className="text-neutral-400 leading-relaxed text-center max-w-2xl mx-auto">
+            Fast forward to today: I study CS at FHNW and work as a Cyber Defense Engineer at MGB,
+            protecting Switzerland's largest retail company. That "learning experience" sent me down
+            a rabbit hole through web development, digital marketing, and eventually cybersecurity.
+          </p>
+
+          <p className="text-neutral-400 leading-relaxed text-center max-w-2xl mx-auto">
+            Along the way, I discovered my love for producing lofi beats and co-founded
+            <span className="text-amber-400"> Soothe Records</span> — a music label that's now
+            achieved over <span className="text-white font-medium">100M+ streams</span> on Spotify.
+          </p>
+
+          <p className="text-neutral-500 leading-relaxed text-center max-w-2xl mx-auto">
+            In the evenings, I coach table tennis at Switzerland's largest academic club,
+            build AI tools that actually solve real problems <span className="text-neutral-600">(okay, most of the time :P)</span>,
+            and create chill music for millions of people worldwide.
+          </p>
+        </motion.div>
       </div>
 
       {/* Tech Stack Marquee */}
-      <section className="mb-8 -mx-6 md:-mx-8">
-        <div className="px-6 md:px-8 mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-mono text-noir-500 uppercase tracking-wider">Tech Stack</h3>
-        </div>
-        <div className="border-y border-noir-800 py-3 bg-noir-800/20">
-          <CSSMarquee speed={35}>
-            <div className="flex gap-3">
-              {techStack.map((tag, i) => (
-                <TechBadge key={i} name={tag.name} category={tag.category} />
-              ))}
-            </div>
-          </CSSMarquee>
-        </div>
-      </section>
+      <div className="relative">
+        {/* Fade edges */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-neutral-950 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-neutral-950 to-transparent z-10 pointer-events-none" />
 
-      {/* Languages */}
-      <section className="mb-8">
-        <h3 className="text-sm font-mono text-noir-500 uppercase tracking-wider mb-4">Languages</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-          {languages.map((lang, i) => (
-            <motion.div
-              key={lang.name}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className="bg-noir-800/30 border border-noir-700/50 rounded-soft p-3 text-center"
-            >
-              <span className="block font-sans font-medium text-noir-200 text-sm">{lang.name}</span>
-              <span className="block text-[10px] text-noir-500 mt-0.5">{lang.level}</span>
-              <div className="flex gap-1 justify-center mt-2">
-                {[1, 2, 3].map(n => (
-                  <div
-                    key={n}
-                    className={`w-4 h-1 rounded-full ${n <= lang.proficiency ? 'bg-amber' : 'bg-noir-700'}`}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+        {/* Label */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-center mb-6"
+        >
+          <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-700 font-mono">
+            "It Works on My Machine"
+          </span>
+        </motion.div>
 
-      {/* Achievements */}
-      <section>
-        <h3 className="text-sm font-mono text-noir-500 uppercase tracking-wider mb-4">Achievements</h3>
-        <div className="flex flex-wrap gap-2">
-          {achievements.map((achievement, i) => (
-            <motion.span
+        {/* Row 1 - Forward */}
+        <div
+          className="flex animate-marquee-forward mb-3"
+          style={{ '--duration': '40s' } as React.CSSProperties}
+        >
+          {[...techStack.row1, ...techStack.row1].map((tech, i) => (
+            <span
               key={i}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.03 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-noir-800/30 border border-noir-700/50 rounded-soft text-sm text-noir-300"
+              className="mx-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap hover:text-neutral-300 hover:border-white/[0.12] transition-colors"
             >
-              <ion-icon name={achievement.icon} class="text-amber text-sm"></ion-icon>
-              {achievement.text}
-            </motion.span>
+              {tech}
+            </span>
           ))}
         </div>
-      </section>
-    </motion.article>
-  )
-}
 
-const categoryColors: Record<string, string> = {
-  frontend: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-  backend: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
-  database: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-  devops: 'bg-orange-500/10 border-orange-500/20 text-orange-400',
-  security: 'bg-red-500/10 border-red-500/20 text-red-400',
-  cloud: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
-  tools: 'bg-noir-700/50 border-noir-600/50 text-noir-400',
-  music: 'bg-rose-500/10 border-rose-500/20 text-rose-400'
-}
+        {/* Row 2 - Reverse */}
+        <div
+          className="flex animate-marquee-reverse mb-3"
+          style={{ '--duration': '45s' } as React.CSSProperties}
+        >
+          {[...techStack.row2, ...techStack.row2].map((tech, i) => (
+            <span
+              key={i}
+              className="mx-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap hover:text-neutral-300 hover:border-white/[0.12] transition-colors"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
 
-function TechBadge({ name, category }: { name: string; category: string }) {
-  const colors = categoryColors[category] || categoryColors.tools
-  return (
-    <span className={`px-3 py-1.5 border rounded-soft text-xs font-mono whitespace-nowrap ${colors}`}>
-      {name}
-    </span>
+        {/* Row 3 - Forward slower */}
+        <div
+          className="flex animate-marquee-forward"
+          style={{ '--duration': '50s' } as React.CSSProperties}
+        >
+          {[...techStack.row3, ...techStack.row3].map((tech, i) => (
+            <span
+              key={i}
+              className="mx-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/[0.03] border border-white/[0.06] text-neutral-500 whitespace-nowrap hover:text-neutral-300 hover:border-white/[0.12] transition-colors"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }

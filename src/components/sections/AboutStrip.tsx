@@ -82,7 +82,7 @@ export function AboutStrip() {
           {/* Featured Achievement */}
           <div className="text-center md:text-left">
             <div className="inline-flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 rounded bg-amber-500/20 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-lg bg-amber-500/20 flex items-center justify-center">
                 <ion-icon name="trophy" class="text-amber-500 text-xs" />
               </div>
               <span className="text-[10px] uppercase tracking-widest text-amber-500/70">Featured</span>

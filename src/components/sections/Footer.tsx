@@ -92,7 +92,7 @@ export function Footer() {
           >
             <a
               href="mailto:hello@doruk.ch"
-              className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-medium text-neutral-900 transition-all hover:bg-amber-400"
+              className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 text-sm font-medium text-neutral-900 transition-all hover:bg-amber-400"
             >
               Let's Connect
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
