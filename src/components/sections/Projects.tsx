@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import NumberFlow from '@number-flow/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -700,7 +700,7 @@ export function Projects() {
     .filter((item): item is { project: Project; size: CellSize } => !!item.project)
 
   return (
-    <>
+    <LayoutGroup>
       <section ref={sectionRef} id="projects" className="relative">
         {/* Mobile: Simple vertical scroll */}
         {isMobile ? (
@@ -713,14 +713,18 @@ export function Projects() {
               {featuredProjects.map((project) => (
                 <motion.article
                   key={project.id}
+                  layoutId={`card-${project.id}`}
                   onClick={() => setSelectedProject(project)}
                   className="relative cursor-pointer rounded-2xl overflow-hidden bg-neutral-900/80 border border-white/[0.08]"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
                   <div className="relative h-48 overflow-hidden">
-                    <img
+                    <motion.img
+                      layoutId={`image-${project.id}`}
                       src={project.image}
                       alt={project.title}
                       className="w-full h-full object-cover object-top"
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
                   </div>
@@ -737,7 +741,13 @@ export function Projects() {
                         {categoryLabels[project.category]}
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-white mb-2">{project.title}</h3>
+                    <motion.h3
+                      layoutId={`title-${project.id}`}
+                      className="text-lg font-semibold text-white mb-2"
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    >
+                      {project.title}
+                    </motion.h3>
                     <p className="text-sm text-neutral-400 line-clamp-2">{project.description}</p>
                   </div>
                 </motion.article>
@@ -987,6 +997,6 @@ export function Projects() {
         isOpen={!!selectedProject}
         onClose={() => setSelectedProject(null)}
       />
-    </>
+    </LayoutGroup>
   )
 }
