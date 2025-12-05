@@ -75,7 +75,7 @@ export function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-amber-500/30 hover:bg-amber-500/10 transition-all"
+                className="p-3 rounded-xl border border-white/10 text-neutral-400 hover:text-white hover:border-white/20 transition-all"
                 aria-label={link.name}
               >
                 {link.icon}
