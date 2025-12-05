@@ -248,18 +248,18 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               <div className="max-h-[90vh] overflow-y-auto">
                 {/* Hero Image/Video */}
                 <div className="relative h-64 md:h-80 overflow-hidden">
-                  {/* Static image (hidden if video exists and is playing) */}
+                  {/* Image for shared element animation */}
                   <motion.img
                     layoutId={`image-${project.id}`}
                     src={project.image}
                     alt={project.title}
                     className={cn(
                       "w-full h-full object-cover object-top",
-                      project.video && "opacity-0"
+                      project.video && "invisible"
                     )}
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   />
-                  {/* Video (autoplay loop) */}
+                  {/* Video on top */}
                   {project.video && (
                     <video
                       src={project.video}
@@ -270,7 +270,6 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       className="absolute inset-0 w-full h-full object-cover object-top"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
                 </div>
 
                 {/* Content */}

@@ -29,6 +29,7 @@ export const projects: Project[] = [
     title: 'Migros AI Product Search',
     category: 'webapp',
     image: '/assets/images/migros-ai-search.png',
+    video: '/assets/images/migros-ai-search-video.mp4',
     description: 'AI-powered product search for Migros with intelligent shopping list creation. An AI agent helps you find products and build shopping lists directly on the website.',
     badges: ['Products Indexed', 'AI Agent'],
     tech: ['Next.js', 'TypeScript', 'AI']
@@ -159,6 +160,7 @@ export const projects: Project[] = [
     title: 'Peak Plugins - Lofinator',
     category: 'music',
     image: '/assets/images/peak-plugins-lofinator.png',
+    video: '/assets/images/peak-plugins-video.mp4',
     href: 'https://plugins.peaktwilight.com',
     description: 'Free VST/AU plugin that adds instant lofi sauce to any sound. One knob controls three effects: Saturate, Warmth, and Crush.',
     badges: ['Free VST', 'macOS'],
